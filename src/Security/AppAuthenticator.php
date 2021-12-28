@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Core\Dto\Controller\Api\Auth\LoginRequestDto;
 use App\Factory\Controller\ApiResponseFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const LOGIN_ROUTE = 'api_app_login';
 
     private UrlGeneratorInterface $urlGenerator;
 
@@ -51,24 +52,20 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $username = $request->request->get('username', '');
+        $loginRequest = LoginRequestDto::createFromRequest($request);
+
+        $username = $loginRequest->getUsername();
 
         $request->getSession()->set(Security::LAST_USERNAME, $username);
 
         return new Passport(
-            new UserBadge($username, function($username){
-
-            }),
-            new PasswordCredentials($request->request->get('password', ''))
+            new UserBadge($username),
+            new PasswordCredentials($loginRequest->getPassword())
         );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
-
         return $this->apiResponseFactory->json([
             'status' => true,
             'message' => 'OK'

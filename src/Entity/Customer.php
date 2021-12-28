@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampableTrait;
+use App\Entity\Traits\UuidTrait;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Customer
 {
+    use TimestampableTrait;
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

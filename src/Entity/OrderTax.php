@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampableTrait;
 use App\Repository\OrderTaxRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class OrderTax
 {
+    use TimestampableTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -43,12 +46,12 @@ class OrderTax
         return $this->id;
     }
 
-    public function getOrde(): ?Order
+    public function getOrder(): ?Order
     {
         return $this->order;
     }
 
-    public function setOrde(?Order $order): self
+    public function setOrder(?Order $order): self
     {
         $this->order = $order;
 

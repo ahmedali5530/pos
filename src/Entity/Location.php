@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\ActiveTrait;
+use App\Entity\Traits\TimestampableTrait;
+use App\Entity\Traits\UuidTrait;
 use App\Repository\LocationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,6 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Location
 {
+    use TimestampableTrait;
+    use ActiveTrait;
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

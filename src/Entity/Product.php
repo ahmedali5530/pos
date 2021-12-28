@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\ActiveTrait;
+use App\Entity\Traits\TimestampableTrait;
+use App\Entity\Traits\UuidTrait;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Product
 {
+    use ActiveTrait;
+    use TimestampableTrait;
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampableTrait;
+use App\Entity\Traits\UuidTrait;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Order
 {
+    use TimestampableTrait;
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -61,12 +66,14 @@ class Order
     private $items;
 
     /**
-     * @ORM\OneToOne(targetEntity=OrderDiscount::class, mappedBy="oder", cascade={"persist", "remove"})
+     * @var OrderDiscount
+     * @ORM\OneToOne(targetEntity=OrderDiscount::class, mappedBy="order", cascade={"persist", "remove"})
      */
     private $discount;
 
     /**
-     * @ORM\OneToOne(targetEntity=OrderTax::class, mappedBy="orde", cascade={"persist", "remove"})
+     * @var OrderTax
+     * @ORM\OneToOne(targetEntity=OrderTax::class, mappedBy="order", cascade={"persist", "remove"})
      */
     private $tax;
 
@@ -179,12 +186,12 @@ class Order
     {
         // unset the owning side of the relation if necessary
         if ($discount === null && $this->discount !== null) {
-            $this->discount->setOder(null);
+            $this->discount->setOrder(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($discount !== null && $discount->getOder() !== $this) {
-            $discount->setOder($this);
+        if ($discount !== null && $discount->getOrder() !== $this) {
+            $discount->setOrder($this);
         }
 
         $this->discount = $discount;
@@ -231,12 +238,12 @@ class Order
     {
         // unset the owning side of the relation if necessary
         if ($tax === null && $this->tax !== null) {
-            $this->tax->setOrde(null);
+            $this->tax->setOrder(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($tax !== null && $tax->getOrde() !== $this) {
-            $tax->setOrde($this);
+        if ($tax !== null && $tax->getOrder() !== $this) {
+            $tax->setOrder($this);
         }
 
         $this->tax = $tax;

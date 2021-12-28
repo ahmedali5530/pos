@@ -2,14 +2,23 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\ActiveTrait;
+use App\Entity\Traits\TimestampableTrait;
+use App\Entity\Traits\UuidTrait;
 use App\Repository\DiscountRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=DiscountRepository::class)
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Discount
 {
+    use ActiveTrait;
+    use TimestampableTrait;
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
+use App\Entity\Traits\UuidTrait;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -16,6 +17,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use ActiveTrait;
     use TimestampableTrait;
+    use UuidTrait;
 
     /**
      * @ORM\Id
