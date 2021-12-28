@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\OrderPaymentRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass=OrderPaymentRepository::class)
+ */
+class OrderPayment
+{
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="payments")
+     */
+    private $order;
+
+    /**
+     * @ORM\Column(type="decimal", precision=20, scale=2)
+     */
+    private $total;
+
+    /**
+     * @ORM\Column(type="decimal", precision=20, scale=2)
+     */
+    private $received;
+
+    /**
+     * @ORM\Column(type="decimal", precision=20, scale=2)
+     */
+    private $due;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $type;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getOrde(): ?Order
+    {
+        return $this->order;
+    }
+
+    public function setOrde(?Order $order): self
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+    public function getTotal(): ?string
+    {
+        return $this->total;
+    }
+
+    public function setTotal(string $total): self
+    {
+        $this->total = $total;
+
+        return $this;
+    }
+
+    public function getReceived(): ?string
+    {
+        return $this->received;
+    }
+
+    public function setReceived(string $received): self
+    {
+        $this->received = $received;
+
+        return $this;
+    }
+
+    public function getDue(): ?string
+    {
+        return $this->due;
+    }
+
+    public function setDue(string $due): self
+    {
+        $this->due = $due;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+}
