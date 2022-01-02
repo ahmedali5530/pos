@@ -44,7 +44,7 @@ class ProductDto
     private $baseQuantity;
 
     /**
-     * @var boolean|null
+     * @var bool|null
      */
     private $isAvailable;
 

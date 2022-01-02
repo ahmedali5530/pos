@@ -19,8 +19,6 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
         $user = new User();
         $user->setIsActive(true);
         $user->setUsername('admin');
@@ -28,6 +26,7 @@ class AppFixtures extends Fixture
         $user->setRoles(['ROLE_USER']);
         $user->setSalt(Uuid::uuid4());
         $user->setPassword($this->hasher->hashPassword($user, 'admin'));
+        $user->setEmail('admin@gmail.com');
 
         $manager->persist($user);
         $manager->flush();

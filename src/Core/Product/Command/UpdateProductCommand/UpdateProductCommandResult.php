@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Core\Product\Command\CreateProductCommand;
+namespace App\Core\Product\Command\UpdateProductCommand;
 
 use App\Core\Cqrs\Traits\CqrsResultEntityNotFoundTrait;
 use App\Core\Cqrs\Traits\CqrsResultValidationTrait;
 use App\Entity\Product;
 
-class CreateProductCommandResult
+class UpdateProductCommandResult
 {
-    use CqrsResultValidationTrait;
     use CqrsResultEntityNotFoundTrait;
-
-    private Product $product;
+    use CqrsResultValidationTrait;
     
-    public function setProduct(Product $product): self
+    private product $product;
+    
+    public function setProduct(product $product): self
     {
         $this->product = $product;
         return $this;
     }
     
-    public function getProduct(): Product
+    public function getProduct(): product
     {
         return $this->product;
     }

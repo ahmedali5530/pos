@@ -28,6 +28,11 @@ class UserDto
      */
     private $roles = [];
 
+    /**
+     * @var string|null
+     */
+    private $email;
+
 
     public static function createFromUser(?User $user): ?self
     {
@@ -40,6 +45,7 @@ class UserDto
         $dto->username = $user->getUsername();
         $dto->displayName = $user->getDisplayName();
         $dto->roles = $user->getRoles();
+        $dto->email = $user->getEmail();
 
         return $dto;
     }
@@ -106,5 +112,21 @@ class UserDto
     public function setRoles(array $roles): void
     {
         $this->roles = $roles;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string|null $email
+     */
+    public function setEmail(?string $email): void
+    {
+        $this->email = $email;
     }
 }

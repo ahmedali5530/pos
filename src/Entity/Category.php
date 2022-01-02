@@ -22,6 +22,8 @@ class Category
     use TimestampableTrait;
     use UuidTrait;
 
+    const TYPE_PRODUCT = 'product';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

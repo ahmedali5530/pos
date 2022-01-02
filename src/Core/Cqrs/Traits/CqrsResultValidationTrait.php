@@ -37,6 +37,18 @@ trait CqrsResultValidationTrait
         return static::createFromValidationResult($validationResult);
     }
 
+    public static function createFromConstraintViolations(iterable $violations): self
+    {
+        $list = [];
+        foreach($violations as $violation){
+            $list[] = new ConstraintViolation($violation->getPropertyPath(), $violation->getMessage());
+        }
+
+        $validationResult = new ValidationResult($list);
+
+        return static::createFromValidationResult($validationResult);
+    }
+
     public static function createFromValidationErrorMessage(string $validationErrorMessage): self
     {
         $commandResult = new self();

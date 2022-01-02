@@ -9,9 +9,13 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @UniqueEntity(fields={"barcode"})
+ * @UniqueEntity(fields={"sku"})
+ * @UniqueEntity(fields={"shortCode"})
  */
 class Product
 {
@@ -75,6 +79,16 @@ class Product
      * @ORM\OneToMany(targetEntity=ProductPrice::class, mappedBy="product")
      */
     private $prices;
+
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $uom;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $shortCode;
 
     public function __construct()
     {
@@ -239,6 +253,30 @@ class Product
                 $price->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUom(): ?string
+    {
+        return $this->uom;
+    }
+
+    public function setUom(?string $uom): self
+    {
+        $this->uom = $uom;
+
+        return $this;
+    }
+
+    public function getShortCode(): ?string
+    {
+        return $this->shortCode;
+    }
+
+    public function setShortCode(?string $shortCode): self
+    {
+        $this->shortCode = $shortCode;
 
         return $this;
     }

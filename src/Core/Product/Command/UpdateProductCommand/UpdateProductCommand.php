@@ -1,9 +1,14 @@
 <?php
 
-namespace App\Core\Product\Command\CreateProductCommand;
+namespace App\Core\Product\Command\UpdateProductCommand;
 
-class CreateProductCommand
+class UpdateProductCommand
 {
+    /**
+     * @var int
+     */
+    private $id;
+
     /**
      * @var string|null
      */
@@ -59,10 +64,16 @@ class CreateProductCommand
      */
     private $variants;
 
-    /**
-     * @var int|null
-     */
-    private $category;
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($field)
+    {
+        $this->id = $field;
+        return $this;
+    }
 
     public function getName()
     {
@@ -194,21 +205,4 @@ class CreateProductCommand
     {
         $this->variants = $variants;
     }
-
-    /**
-     * @return int|null
-     */
-    public function getCategory(): ?int
-    {
-        return $this->category;
-    }
-
-    /**
-     * @param int|null $category
-     */
-    public function setCategory(?int $category): void
-    {
-        $this->category = $category;
-    }
-
 }

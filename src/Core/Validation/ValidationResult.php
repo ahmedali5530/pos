@@ -4,6 +4,8 @@
 namespace App\Core\Validation;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class ValidationResult
 {
     /**
@@ -17,7 +19,7 @@ class ValidationResult
      */
     public function __construct(iterable $violations)
     {
-        $this->violations = $violations;
+        $this->violations = new ArrayCollection($violations);
     }
 
     /**
@@ -34,6 +36,11 @@ class ValidationResult
     public function setViolations(iterable $violations): void
     {
         $this->violations = $violations;
+    }
+
+    public function addViolation(ConstraintViolation $violation)
+    {
+        $this->violations->add($violation);
     }
 
     public function hasViolations(): bool

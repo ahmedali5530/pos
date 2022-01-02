@@ -30,8 +30,8 @@ abstract class EntityRepository
         return $this->em->getRepository($class);
     }
 
-    public function createQueryBuilder(string $alias): QueryBuilder
+    public function createQueryBuilder(string $alias, $class = null): QueryBuilder
     {
-        return $this->getRepository()->createQueryBuilder($alias);
+        return $this->getRepository($class)->createQueryBuilder($alias);
     }
 }

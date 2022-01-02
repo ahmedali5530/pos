@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Core\Product\Query\GetProductsListQuery\GetProductsListQueryResult;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -71,7 +72,53 @@ namespace App\Core\\$folder\Query\\$query;
 
 class $query
 {
-    
+    /**
+     * @var string|null
+     */
+    private \$q;
+
+    /**
+     * @var int|null
+     */
+    private \$limit;
+
+    /**
+     * @var int|null
+     */
+    private \$offset;
+
+    /**
+     * @return string|null
+     */
+    public function getQ(): ?string
+    {
+        return \$this->q;
+    }
+
+    public function setQ(?string \$q): void
+    {
+        \$this->q = \$q;
+    }
+
+    public function getLimit(): ?int
+    {
+        return \$this->limit;
+    }
+
+    public function setLimit(?int \$limit): void
+    {
+        \$this->limit = \$limit;
+    }
+
+    public function getOffset(): ?int
+    {
+        return \$this->offset;
+    }
+
+    public function setOffset(?int \$offset): void
+    {
+        \$this->offset = \$offset;
+    }
 }
 Command;
     }
@@ -85,7 +132,41 @@ namespace App\Core\\$folder\Query\\$query;
 
 class {$query}Result
 {
+    private array \$list = [];
+
+    private int \$count = 0;
+
+    private int \$total = 0;
     
+    public function getList(): array
+    {
+        return \$this->list;
+    }
+    
+    public function setList(array \$list): void
+    {
+        \$this->list = \$list;
+    }
+    
+    public function getCount(): int
+    {
+        return \$this->count;
+    }
+    
+    public function setCount(int \$count): void
+    {
+        \$this->count = \$count;
+    }
+
+    public function getTotal(): int
+    {
+        return \$this->total;
+    }
+
+    public function setTotal(int \$total): void
+    {
+        \$this->total = \$total;
+    }
 }
 CommandResult;
     }
@@ -117,13 +198,32 @@ class {$query}Handler extends EntityRepository implements {$query}HandlerInterfa
 {
     protected function getEntityClass(): string
     {
-        //TODO: return Entity class
-        return '';
+        return $folder::class;
     }
     
     public function handle($query \$query): {$query}Result
     {
+        //TODO: customize this method to return proper data
+        \$qb = \$this->createQueryBuilder('entity');
         
+        if(\$query->getQ() !== null){
+            \$qb->andWhere('entity. = :q');
+            \$qb->setParameter('q', \$query->getQ());
+        }
+        
+        if(\$query->getLimit() !== null){
+            \$qb->setMaxResults(\$query->getLimit());
+        }
+        
+        if(\$query->getOffset() !== null){
+            \$qb->setFirstResult(\$query->getOffset());
+        }
+        
+        \$list = \$qb->getQuery()->getResult();
+
+        \$result = new {$query}Result();
+        \$result->setList(\$list);
+        return \$result;
     }
 }
 CommandHandler;

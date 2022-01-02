@@ -33,6 +33,7 @@ security:
                 always_remember_me: true
                 samesite: none
                 secure: true
+                lifetime: 604800
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used

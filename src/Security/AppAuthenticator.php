@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Core\Dto\Common\User\UserDto;
 use App\Core\Dto\Controller\Api\Auth\LoginRequestDto;
 use App\Factory\Controller\ApiResponseFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,6 +14,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -60,7 +62,10 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
         return new Passport(
             new UserBadge($username),
-            new PasswordCredentials($loginRequest->getPassword())
+            new PasswordCredentials($loginRequest->getPassword()),
+            [
+                new RememberMeBadge()
+            ]
         );
     }
 
@@ -68,7 +73,8 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     {
         return $this->apiResponseFactory->json([
             'status' => true,
-            'message' => 'OK'
+            'message' => 'OK',
+            'data' => UserDto::createFromUser($token->getUser())
         ]);
     }
 

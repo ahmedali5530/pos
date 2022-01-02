@@ -7,7 +7,7 @@ namespace App\Core\Dto\Common\Common;
 trait ActiveDtoTrait
 {
     /**
-     * @var boolean|null;
+     * @var bool|null;
      */
     private $isActive;
 

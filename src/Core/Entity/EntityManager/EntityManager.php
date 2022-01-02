@@ -4,14 +4,16 @@
 namespace App\Core\Entity\EntityManager;
 
 
+use App\Core\Entity\Repository\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-abstract class EntityManager
+abstract class EntityManager extends EntityRepository
 {
     protected $em;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
+        parent::__construct($entityManager);
         $this->em = $entityManager;
     }
 
