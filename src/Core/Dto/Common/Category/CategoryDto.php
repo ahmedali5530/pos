@@ -63,6 +63,24 @@ class CategoryDto
         return $dto;
     }
 
+    public static function createFromArray(?array $data): ?self
+    {
+        if($data === null){
+            return null;
+        }
+
+        $dto = new self();
+        $dto->id = $data['id'] ?? null;
+        $dto->name = $data['name'] ?? null;
+        $dto->type = $data['type'] ?? null;
+        $dto->parent = CategoryDto::createFromArray($data['parent'] ?? null);
+        foreach($data['children'] ?? [] as $child){
+            $dto->children[] = CategoryDto::createFromArray($child);
+        }
+
+        return $dto;
+    }
+
     /**
      * @return int|null
      */

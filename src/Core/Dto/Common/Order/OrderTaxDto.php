@@ -6,12 +6,15 @@ namespace App\Core\Dto\Common\Order;
 
 use App\Core\Dto\Common\Discount\DiscountDto;
 use App\Core\Dto\Common\Tax\TaxDto;
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\OrderTax;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class OrderTaxDto
 {
     /**
      * @var int|null
+     * @ConstraintValidEntity(entityName="Order tax", class="App\Entity\OrderTax")
      */
     private $id;
 
@@ -27,6 +30,7 @@ class OrderTaxDto
 
     /**
      * @var TaxDto|null
+     * @Assert\Valid()
      */
     private $type;
 
@@ -41,6 +45,21 @@ class OrderTaxDto
         $dto->rate = $orderTax->getRate();
         $dto->amount = $orderTax->getAmount();
         $dto->type = TaxDto::createFromTax($orderTax->getType());
+
+        return $dto;
+    }
+
+    public static function createFromArray(?array $data): ?self
+    {
+        if($data === null){
+            return null;
+        }
+
+        $dto = new self();
+        $dto->id = $data['id'] ?? null;
+        $dto->rate = $data['rate'] ?? null;
+        $dto->amount = $data['amount'] ?? null;
+        $dto->type = TaxDto::createFromArray($data['type'] ?? null);
 
         return $dto;
     }

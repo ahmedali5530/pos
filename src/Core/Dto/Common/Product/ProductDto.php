@@ -9,6 +9,7 @@ use App\Core\Dto\Common\Common\ActiveDtoTrait;
 use App\Core\Dto\Common\Common\DateTimeDto;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
 use App\Core\Dto\Common\Common\UuidDtoTrait;
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\Product;
 
 class ProductDto
@@ -20,6 +21,7 @@ class ProductDto
 
     /**
      * @var int|null
+     * @ConstraintValidEntity(entityName="Product", class="App\Entity\Product")
      */
     private $id;
 
@@ -101,6 +103,34 @@ class ProductDto
 
         $dto->uuid = $product->getUuid();
         $dto->createdAt = DateTimeDto::createFromDateTime($product->getCreatedAt());
+
+        return $dto;
+    }
+
+    public static function createFromArray(?array $data): ?self
+    {
+        if($data === null){
+            return null;
+        }
+
+        $dto = new self();
+        $dto->id = $data['id'] ?? null;
+        $dto->name = $data['name'] ?? null;
+        $dto->sku = $data['sku'] ?? null;
+        $dto->barcode = $data['barcode'] ?? null;
+        $dto->baseQuantity = $data['baseQuantity'] ?? null;
+        $dto->isActive = $data['isActive'] ?? null;
+        $dto->isAvailable = $data['isAvailable'] ?? null;
+        $dto->quantity = $data['quantity'] ?? null;
+        $dto->basePrice = $data['basePrice'] ?? null;
+        $dto->category = CategoryDto::createFromArray($data['category'] ?? null);
+
+        foreach($data['variants'] ?? [] as $variant){
+            $dto->variants[] = ProductVariantDto::createFromArray($variant);
+        }
+        foreach($data['prices'] ?? [] as $productPrice){
+            $dto->prices[] = ProductPriceDto::createFromArray($productPrice);
+        }
 
         return $dto;
     }

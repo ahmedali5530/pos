@@ -6,22 +6,28 @@ namespace App\Core\Dto\Common\Order;
 
 use App\Core\Dto\Common\Product\ProductDto;
 use App\Core\Dto\Common\Product\ProductVariantDto;
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\OrderProduct;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class OrderProductDto
 {
     /**
      * @var int|null
+     * @ConstraintValidEntity(entityName="Order product", class="App\Entity\OrderProduct")
      */
     private $id;
 
     /**
      * @var ProductDto|null
+     * @Assert\NotBlank()
+     * @Assert\Valid()
      */
     private $product;
 
     /**
      * @var ProductVariantDto|null
+     * @Assert\Valid()
      */
     private $variant;
 
@@ -36,17 +42,17 @@ class OrderProductDto
     private $price;
 
     /**
-     * @var boolean|null
+     * @var bool|null
      */
     private $isSuspended;
 
     /**
-     * @var boolean|null
+     * @var bool|null
      */
     private $isDeleted;
 
     /**
-     * @var boolean|null
+     * @var bool|null
      */
     private $isReturned;
 
@@ -65,6 +71,25 @@ class OrderProductDto
         $dto->isSuspended = $orderProduct->getIsSuspended();
         $dto->isDeleted = $orderProduct->getIsDeleted();
         $dto->isReturned = $orderProduct->getIsReturned();
+
+        return $dto;
+    }
+
+    public static function createFromArray(?array $data): ?self
+    {
+        if($data === null){
+            return null;
+        }
+
+        $dto = new self();
+        $dto->id = $data['id'] ?? null;
+        $dto->product = ProductDto::createFromArray($data['product'] ?? null);
+        $dto->variant = ProductVariantDto::createFromArray($data['variant'] ?? null);
+        $dto->quantity = $data['quantity'] ?? null;
+        $dto->price = $data['price'] ?? null;
+        $dto->isSuspended = $data['isSuspended'] ?? null;
+        $dto->isDeleted = $data['isDeleted'] ?? null;
+        $dto->isReturned = $data['isReturned'] ?? null;
 
         return $dto;
     }

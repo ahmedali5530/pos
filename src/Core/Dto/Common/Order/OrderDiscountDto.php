@@ -5,12 +5,14 @@ namespace App\Core\Dto\Common\Order;
 
 
 use App\Core\Dto\Common\Discount\DiscountDto;
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\OrderDiscount;
 
 class OrderDiscountDto
 {
     /**
      * @var int|null
+     * @ConstraintValidEntity(entityName="Order discount", class="App\Entity\OrderDiscount")
      */
     private $id;
 
@@ -41,6 +43,21 @@ class OrderDiscountDto
         $dto->rate = $orderDiscount->getRate();
         $dto->amount = $orderDiscount->getAmount();
         $dto->type = DiscountDto::createFromDiscount($orderDiscount->getType());
+
+        return $dto;
+    }
+
+    public static function createFromArray(?array $data): ?self
+    {
+        if($data === null){
+            return null;
+        }
+
+        $dto = new self();
+        $dto->id = $data['id'] ?? null;
+        $dto->rate = $data['rate'] ?? null;
+        $dto->amount = $data['amount'] ?? null;
+        $dto->type = DiscountDto::createFromArray($data['type']);
 
         return $dto;
     }

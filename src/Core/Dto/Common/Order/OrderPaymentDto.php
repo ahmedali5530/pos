@@ -4,12 +4,14 @@
 namespace App\Core\Dto\Common\Order;
 
 
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\OrderPayment;
 
 class OrderPaymentDto
 {
     /**
      * @var int|null
+     * @ConstraintValidEntity(entityName="Order payment", class="App\Entity\OrderPayment")
      */
     private $id;
 
@@ -46,6 +48,22 @@ class OrderPaymentDto
         $dto->received = $orderPayment->getReceived();
         $dto->due = $orderPayment->getDue();
         $dto->type = $orderPayment->getType();
+
+        return $dto;
+    }
+
+    public static function createFromArray($data)
+    {
+        if($data === null){
+            return null;
+        }
+
+        $dto = new self();
+        $dto->id = $data['id'] ?? null;
+        $dto->total = $data['total'] ?? null;
+        $dto->received = $data['received'] ?? null;
+        $dto->due = $data['due'] ?? null;
+        $dto->type = $data['type'] ?? null;
 
         return $dto;
     }

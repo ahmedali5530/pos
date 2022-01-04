@@ -2,12 +2,13 @@
 
 namespace App\Command;
 
-use App\Core\Product\Query\GetProductsListQuery\GetProductsListQueryResult;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,47 +19,72 @@ class MakeQueryCommand extends Command
 
     private $container;
 
-    public function __construct(string $name = null, ContainerInterface $container)
+    private $entityManager;
+
+    public function __construct(
+        ContainerInterface $container,
+        EntityManagerInterface $entityManager,
+        string $name = null
+    )
     {
         parent::__construct($name);
         $this->container = $container;
+        $this->entityManager = $entityManager;
     }
 
     protected function configure(): void
     {
-        $this
-            ->addOption('folder', 'folder', InputOption::VALUE_REQUIRED, 'What is the name of folder')
-            ->addOption('query', 'query', InputOption::VALUE_REQUIRED, 'What is the query for')
-        ;
+
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $folder = $input->getOption('folder');
-        $query = $input->getOption('query');
+        $helper = $this->getHelper('question');
+
+        $folderQuestion = new Question('Please enter the name of the folder when your command will be inserted: ');
+        $folder = $helper->ask($input, $output, $folderQuestion);
+
+        $queryQuestion = new Question('What is the query name: ');
+        $query = $helper->ask($input, $output, $queryQuestion);
+
         if(strpos($query, 'Query') === false){
             $query .= 'Query';
         }
 
-        $path = sprintf('%s/src/Core/%s/Query/%s',$this->container->getParameter('PROJECT_DIR'), $folder, $query);
-        if(file_exists($path)){
-            $io->error('Query "'.$query.'" already exists');
+        $classes = $this->entityManager->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
+
+        $entities = [];
+        foreach($classes as $class){
+            $entities[] = str_replace('App\\Entity\\', '', $class);
+        }
+        $question = new Question('Please enter the name of entity: ');
+        $question->setAutocompleterValues($entities);
+
+
+        $entity = $helper->ask($input, $output, $question);
+
+        $entityWithNamespace = 'App\\Entity\\' . $entity;
+        $entityMetadata = $this->entityManager->getClassMetadata($entityWithNamespace)->getFieldNames();
+
+        $path = sprintf('%s/src/Core/%s/Query/%s', $this->container->getParameter('PROJECT_DIR'), $folder, $query);
+        if (file_exists($path)) {
+            $io->error('Query "' . $query . '" already exists');
             return Command::FAILURE;
         }
 
         mkdir($path, 0777, true);
 
         //create command
-        file_put_contents($path . '/'.$query.'.php', $this->getQueryMarkup($folder, $query));
+        file_put_contents($path . '/' . $query . '.php', $this->getQueryMarkup($folder, $query));
         //create query result
-        file_put_contents($path . '/'.$query.'Result.php', $this->getQueryResultMarkup($folder, $query));
+        file_put_contents($path . '/' . $query . 'Result.php', $this->getQueryResultMarkup($folder, $query));
         //create query handler interface
-        file_put_contents($path . '/'.$query.'HandlerInterface.php', $this->getQueryHandlerInterfaceMarkup($folder, $query));
+        file_put_contents($path . '/' . $query . 'HandlerInterface.php', $this->getQueryHandlerInterfaceMarkup($folder, $query));
         //create query handler
-        file_put_contents($path . '/'.$query.'Handler.php', $this->getQueryHandlerMarkup($folder, $query));
+        file_put_contents($path . '/' . $query . 'Handler.php', $this->getQueryHandlerMarkup($folder, $query, $entity));
 
-        $io->success('Query "'.$query.'" Created');
+        $io->success('Query "' . $query . '" Created');
 
         return Command::SUCCESS;
     }
@@ -130,20 +156,26 @@ Command;
 
 namespace App\Core\\$folder\Query\\$query;
 
+use App\Core\Cqrs\Traits\CqrsResultEntityNotFoundTrait;
+use App\Core\Cqrs\Traits\CqrsResultValidationTrait;
+
 class {$query}Result
 {
-    private array \$list = [];
+    use CqrsResultEntityNotFoundTrait;
+    use CqrsResultValidationTrait;
+    
+    private iterable \$list = [];
 
     private int \$count = 0;
 
     private int \$total = 0;
     
-    public function getList(): array
+    public function getList(): iterable
     {
         return \$this->list;
     }
     
-    public function setList(array \$list): void
+    public function setList(iterable \$list): void
     {
         \$this->list = \$list;
     }
@@ -185,7 +217,7 @@ interface {$query}HandlerInterface
 CommandHandlerInterface;
     }
 
-    private function getQueryHandlerMarkup($folder, $query)
+    private function getQueryHandlerMarkup($folder, $query, $entity)
     {
         return <<<CommandHandler
 <?php
@@ -193,17 +225,18 @@ CommandHandlerInterface;
 namespace App\Core\\$folder\Query\\$query;
 
 use App\Core\Entity\Repository\EntityRepository;
+use App\Entity\\$entity;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class {$query}Handler extends EntityRepository implements {$query}HandlerInterface
 {
     protected function getEntityClass(): string
     {
-        return $folder::class;
+        return $entity::class;
     }
     
     public function handle($query \$query): {$query}Result
     {
-        //TODO: customize this method to return proper data
         \$qb = \$this->createQueryBuilder('entity');
         
         if(\$query->getQ() !== null){
@@ -219,10 +252,12 @@ class {$query}Handler extends EntityRepository implements {$query}HandlerInterfa
             \$qb->setFirstResult(\$query->getOffset());
         }
         
-        \$list = \$qb->getQuery()->getResult();
+        \$list = new Paginator(\$qb->getQuery());
 
         \$result = new {$query}Result();
         \$result->setList(\$list);
+        \$result->setTotal(\$list->count());
+        \$result->setCount(count(\$list));
         return \$result;
     }
 }

@@ -1,31 +1,18 @@
 <?php
 
+namespace App\Core\Order\Command\CreateOrderCommand;
 
-namespace App\Core\Dto\Common\Order;
+use App\Core\Dto\Common\Order\OrderDiscountDto;
+use App\Core\Dto\Common\Order\OrderPaymentDto;
+use App\Core\Dto\Common\Order\OrderProductDto;
+use App\Core\Dto\Common\Order\OrderTaxDto;
 
-
-use App\Core\Dto\Common\Customer\CustomerDto;
-use App\Core\Dto\Common\User\UserDto;
-use App\Entity\Order;
-use App\Entity\OrderDiscount;
-use App\Entity\OrderTax;
-
-class OrderDto
+class CreateOrderCommand
 {
     /**
      * @var int|null
      */
-    private $id;
-
-    /**
-     * @var int|null
-     */
-    private $orderId;
-
-    /**
-     * @var CustomerDto|null
-     */
-    private $customer;
+    private $customerId;
 
     /**
      * @var bool|null
@@ -48,9 +35,9 @@ class OrderDto
     private $isDispatched;
 
     /**
-     * @var UserDto|null
+     * @var int|null
      */
-    private $user;
+    private $userId;
 
     /**
      * @var OrderProductDto[]
@@ -72,79 +59,20 @@ class OrderDto
      */
     private $payments = [];
 
-    public static function createFromOrder(?Order $order): ?self
-    {
-        if($order === null){
-            return null;
-        }
-
-        $dto = new self();
-        $dto->id = $order->getId();
-        $dto->orderId = $order->getOrderId();
-        $dto->customer = CustomerDto::createFromCustomer($order->getCustomer());
-        $dto->isSuspended = $order->getIsSuspended();
-        $dto->isDeleted = $order->getIsDeleted();
-        $dto->isReturned = $order->getIsReturned();
-        $dto->isDispatched = $order->getIsDispatched();
-        $dto->user = UserDto::createFromUser($order->getUser());
-        foreach($order->getItems() as $item){
-            $dto->items[] = OrderProductDto::createFromOrderProduct($item);
-        }
-        $dto->discount = OrderDiscountDto::createFromOrderDiscount($order->getDiscount());
-        $dto->tax = OrderTaxDto::createFromOrderTax($order->getTax());
-        foreach($order->getPayments() as $payment){
-            $dto->payments[] = OrderPaymentDto::createFromOrderPayment($payment);
-        }
-
-        return $dto;
-    }
-
     /**
      * @return int|null
      */
-    public function getId(): ?int
+    public function getCustomerId(): ?int
     {
-        return $this->id;
+        return $this->customerId;
     }
 
     /**
-     * @param int|null $id
+     * @param int|null $customerId
      */
-    public function setId(?int $id): void
+    public function setCustomerId(?int $customerId): void
     {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getOrderId(): ?int
-    {
-        return $this->orderId;
-    }
-
-    /**
-     * @param int|null $orderId
-     */
-    public function setOrderId(?int $orderId): void
-    {
-        $this->orderId = $orderId;
-    }
-
-    /**
-     * @return CustomerDto|null
-     */
-    public function getCustomer(): ?CustomerDto
-    {
-        return $this->customer;
-    }
-
-    /**
-     * @param CustomerDto|null $customer
-     */
-    public function setCustomer(?CustomerDto $customer): void
-    {
-        $this->customer = $customer;
+        $this->customerId = $customerId;
     }
 
     /**
@@ -212,19 +140,19 @@ class OrderDto
     }
 
     /**
-     * @return UserDto|null
+     * @return int|null
      */
-    public function getUser(): ?UserDto
+    public function getUserId(): ?int
     {
-        return $this->user;
+        return $this->userId;
     }
 
     /**
-     * @param UserDto|null $user
+     * @param int|null $userId
      */
-    public function setUser(?UserDto $user): void
+    public function setUserId(?int $userId): void
     {
-        $this->user = $user;
+        $this->userId = $userId;
     }
 
     /**

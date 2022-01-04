@@ -11,33 +11,56 @@ use \DateTimeZone;
 
 class DateTimeDto
 {
-    public static function createFromDateTime($datetime): ?DateTimeInterface
+    public ?DateTimeInterface $datetime;
+
+    public static function createFromDateTime($datetime): ?self
     {
         if($datetime === null){
             return null;
         }
 
+        $dto = new self();
         try {
             $date = new DateTime($datetime);
             $date->setTimezone(new DateTimeZone('utc'));
 
-            return $date;
+            $dto->datetime = $date;
+            return $dto;
 
         }catch (Exception $exception) {
             return null;
         }
     }
 
-    public static function createFromCarbon($datetime): ?DateTimeInterface
+    public static function createFromCarbon($datetime): ?self
     {
         if($datetime === null){
             return null;
         }
 
+        $dto = new self();
         try {
-            return Carbon::parse($datetime, 'utc');
+            $dto->datetime = Carbon::parse($datetime, 'utc');
+
+            return $dto;
         }catch (Exception $exception) {
             return null;
         }
+    }
+
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getDatetime(): ?DateTimeInterface
+    {
+        return $this->datetime;
+    }
+
+    /**
+     * @param DateTimeInterface|null $datetime
+     */
+    public function setDatetime(?DateTimeInterface $datetime): void
+    {
+        $this->datetime = $datetime;
     }
 }

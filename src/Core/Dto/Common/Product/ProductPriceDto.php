@@ -79,6 +79,26 @@ class ProductPriceDto
         return $dto;
     }
 
+    public static function createFromArray(?array $data): ?self
+    {
+        if($data === null){
+            return null;
+        }
+
+        $dto = new self();
+        $dto->id = $data['id'] ?? null;
+        $dto->date = DateTimeDto::createFromDateTime($data['date']['datetime'] ?? null);
+        $dto->time = DateTimeDto::createFromDateTime($data['time']['datetime'] ?? null);
+        $dto->day = $data['day'] ?? null;
+        $dto->rate = $data['rate'] ?? null;
+        $dto->minQuantity = $data['minQuantity'] ?? null;
+        $dto->maxQuantity = $data['maxQuantity'] ?? null;
+        $dto->basePrice = $data['basePrice'] ?? null;
+        $dto->baseQuantity = $data['baseQuantity'] ?? null;
+
+        return $dto;
+    }
+
     /**
      * @return int|null
      */

@@ -6,6 +6,7 @@ namespace App\Core\Dto\Common\Product;
 
 use App\Core\Dto\Common\Common\DateTimeDto;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\ProductVariant;
 
 class ProductVariantDto
@@ -14,6 +15,7 @@ class ProductVariantDto
 
     /**
      * @var int|null
+     * @ConstraintValidEntity(entityName="Product variant", class="App\Entity\ProductVariant")
      */
     private $id;
 
@@ -78,6 +80,28 @@ class ProductVariantDto
         }
 
         $dto->createdAt = DateTimeDto::createFromDateTime($productVariant->getCreatedAt());
+
+        return $dto;
+    }
+
+    public static function createFromArray(?array $data): ?self
+    {
+        if($data === null){
+            return null;
+        }
+
+        $dto = new self();
+        $dto->id = $data['id'] ?? null;
+        $dto->name = $data['name'] ?? null;
+        $dto->size = $data['size'] ?? null;
+        $dto->color = $data['color'] ?? null;
+        $dto->weight = $data['weight'] ?? null;
+        $dto->barcode = $data['barcode'] ?? null;
+        $dto->sku = $data['sku'] ?? null;
+        $dto->price = $data['price'] ?? null;
+        foreach($data['prices'] ?? null as $price){
+            $dto->prices[] = ProductPriceDto::createFromArray($price);
+        }
 
         return $dto;
     }

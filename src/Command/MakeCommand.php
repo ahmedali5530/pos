@@ -49,7 +49,9 @@ class MakeCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $helper = $this->getHelper('question');
 
-        $isCreate = $input->getOption('create');
+        $operationQuestion = new Question('Please enter the operation type: ');
+        $operationQuestion->setAutocompleterValues(['create', 'update', 'delete']);
+        $isCreate = $helper->ask($input, $output, $operationQuestion);
 
         $folderQuestion = new Question('Please enter the name of the folder when your command will be inserted: ');
         $folder = $helper->ask($input, $output, $folderQuestion);
@@ -99,7 +101,7 @@ class MakeCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function getCommandMarkup($folder, $command, $entityFields, $isCreate = false)
+    private function getCommandMarkup($folder, $command, $entityFields, $isCreate)
     {
         $fields = $this->_getEntityFields($entityFields, $isCreate);
         return <<<Command
@@ -163,23 +165,37 @@ interface {$command}HandlerInterface
 CommandHandlerInterface;
     }
 
-    private function getCommandHandlerMarkup($folder, $command, $fields, $entity, $entityWithNamespace, $isCreate = false)
+    private function getCommandHandlerMarkup($folder, $command, $fields, $entity, $entityWithNamespace, $isCreate)
     {
         $handle = '';
-        if($isCreate){
+        if($isCreate === 'create'){
             $handle = $this->_createEntityCommand($entity, $fields);
-        }else{
+        }else if($isCreate === 'update'){
             $handle = $this->_updateEntityCommand($entity, $fields, $command);
+        }else if($isCreate === 'delete'){
+            $handle = $this->_deleteEntityCommand($entity, $fields, $command);
         }
 
         $entityUpper = ucfirst($entity);
         $entity = lcfirst($entity);
+
+        $persistOperation = <<<OPERATION
+\$this->persist(\$item);
+OPERATION;
+
+        if($isCreate === 'delete'){
+            $persistOperation = <<<OPERATION
+\$this->remove(\$item);
+OPERATION;
+        }
+
 
         return <<<CommandHandler
 <?php
 
 namespace App\Core\\$folder\Command\\$command;
 
+use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use $entityWithNamespace;
@@ -212,7 +228,7 @@ class {$command}Handler extends EntityManager implements {$command}HandlerInterf
             return {$command}Result::createFromConstraintViolations(\$violations);
         }
         
-        \$this->persist(\$item);
+        $persistOperation
         \$this->flush();
         
         \$result = new {$command}Result();
@@ -228,7 +244,7 @@ CommandHandler;
     {
         $exclude = $this->exclude;
 
-        if($isCreate === false){
+        if($isCreate === 'create'){
             array_shift($exclude);
         }
 
@@ -314,6 +330,21 @@ HTML;
 
 HTML;
         }
+
+        return $string;
+    }
+
+    private function _deleteEntityCommand($entity, $fields, $command): string
+    {
+        $exclude = $this->exclude;
+
+        $string = <<<HTML
+        /** @var $entity \$item */
+        \$item = \$this->getRepository()->find(\$command->getId());\n
+        if(\$item === null){
+            return {$command}Result::createNotFound();
+        }
+HTML;
 
         return $string;
     }

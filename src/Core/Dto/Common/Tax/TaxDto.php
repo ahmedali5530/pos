@@ -4,12 +4,14 @@
 namespace App\Core\Dto\Common\Tax;
 
 
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\Tax;
 
 class TaxDto
 {
     /**
      * @var int|null
+     * @ConstraintValidEntity(entityName="Tax", class="App\Entity\Tax")
      */
     private $id;
 
@@ -33,6 +35,20 @@ class TaxDto
         $dto->id = $tax->getId();
         $dto->name = $tax->getName();
         $dto->rate = $tax->getRate();
+
+        return $dto;
+    }
+
+    public static function createFromArray(?array $tax): ?self
+    {
+        if($tax === null){
+            return null;
+        }
+
+        $dto = new self();
+        $dto->id = $tax['id'] ?? null;
+        $dto->name = $tax['name'] ?? null;
+        $dto->rate = $tax['rate'] ?? null;
 
         return $dto;
     }
