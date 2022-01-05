@@ -75,6 +75,11 @@ class ProductDto
      */
     private $prices = [];
 
+    /**
+     * @var string|null
+     */
+    private $uom;
+
 
     public static function createFromProduct(?Product $product): ?self
     {
@@ -92,6 +97,8 @@ class ProductDto
         $dto->isAvailable = $product->getIsAvailable();
         $dto->quantity = $product->getQuantity();
         $dto->basePrice = $product->getBasePrice();
+        $dto->uom = $product->getUom();
+
         $dto->category = CategoryDto::createFromCategory($product->getCategory());
 
         foreach($product->getVariants() as $variant){
@@ -311,5 +318,19 @@ class ProductDto
         $this->prices = $prices;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getUom(): ?string
+    {
+        return $this->uom;
+    }
 
+    /**
+     * @param string|null $uom
+     */
+    public function setUom(?string $uom): void
+    {
+        $this->uom = $uom;
+    }
 }
