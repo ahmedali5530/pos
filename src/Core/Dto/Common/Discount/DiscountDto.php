@@ -28,6 +28,11 @@ class DiscountDto
      */
     private $rateType;
 
+    /**
+     * @var string|null
+     */
+    private $scope;
+
     public static function createFromDiscount(?Discount $discount): ?self
     {
         if($discount === null){
@@ -39,6 +44,7 @@ class DiscountDto
         $dto->name = $discount->getName();
         $dto->rate = $discount->getRate();
         $dto->rateType = $discount->getRateType();
+        $dto->scope = $discount->getScope();
 
         return $dto;
     }
@@ -120,5 +126,21 @@ class DiscountDto
     public function setRateType(?string $rateType): void
     {
         $this->rateType = $rateType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getScope(): ?string
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param string|null $scope
+     */
+    public function setScope(?string $scope): void
+    {
+        $this->scope = $scope;
     }
 }

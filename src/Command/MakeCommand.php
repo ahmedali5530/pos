@@ -2,16 +2,15 @@
 
 namespace App\Command;
 
-use App\Core\Cqrs\Traits\CqrsResultEntityNotFoundTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Laminas\Code\Generator\ClassGenerator;
+use Laminas\Code\Generator\MethodGenerator;
+use Laminas\Code\Generator\PropertyGenerator;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MakeCommand extends Command
@@ -40,8 +39,7 @@ class MakeCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption('create', 'c')
-        ;
+            ->addOption('create', 'c');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -59,20 +57,20 @@ class MakeCommand extends Command
         $commandQuestion = new Question('What is the command name: ');
         $command = $helper->ask($input, $output, $commandQuestion);
 
-        if(strpos($command, 'Command') === false){
+        if (strpos($command, 'Command') === false) {
             $command .= 'Command';
         }
 
-        $path = sprintf('%s/src/Core/%s/Command/%s',$this->container->getParameter('PROJECT_DIR'), $folder, $command);
-        if(file_exists($path)){
-            $io->error('Command "'.$command.'" already exists');
+        $path = sprintf('%s/src/Core/%s/Command/%s', $this->container->getParameter('PROJECT_DIR'), $folder, $command);
+        if (file_exists($path)) {
+            $io->error('Command "' . $command . '" already exists');
             return Command::FAILURE;
         }
 
         $classes = $this->entityManager->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
 
         $entities = [];
-        foreach($classes as $class){
+        foreach ($classes as $class) {
             $entities[] = str_replace('App\\Entity\\', '', $class);
         }
         $question = new Question('Please enter the name of entity: ');
@@ -82,38 +80,86 @@ class MakeCommand extends Command
         $entity = $helper->ask($input, $output, $question);
 
         $entityWithNamespace = 'App\\Entity\\' . $entity;
+
+
         $entityMetadata = $this->entityManager->getClassMetadata($entityWithNamespace)->getFieldNames();
+        $fields = $this->entityManager->getClassMetadata($entityWithNamespace)->fieldMappings;
 
         mkdir($path, 0777, true);
 
         // create command
-        file_put_contents($path . '/'.$command.'.php', $this->getCommandMarkup($folder, $command, $entityMetadata, $isCreate));
+        file_put_contents($path . '/' . $command . '.php', $this->getCommandMarkup($folder, $command, $fields, $isCreate));
         // create command result
-        file_put_contents($path . '/'.$command.'Result.php', $this->getCommandResultMarkup($folder, $command, $entity, $entityWithNamespace));
+        file_put_contents($path . '/' . $command . 'Result.php', $this->getCommandResultMarkup($folder, $command, $entity, $entityWithNamespace));
         // create command handler interface
-        file_put_contents($path . '/'.$command.'HandlerInterface.php', $this->getCommandHandlerInterfaceMarkup($folder, $command));
+        file_put_contents($path . '/' . $command . 'HandlerInterface.php', $this->getCommandHandlerInterfaceMarkup($folder, $command));
         // create command handler
-        file_put_contents($path . '/'.$command.'Handler.php', $this->getCommandHandlerMarkup($folder, $command, $entityMetadata, $entity, $entityWithNamespace, $isCreate));
+        file_put_contents($path . '/' . $command . 'Handler.php', $this->getCommandHandlerMarkup($folder, $command, $entityMetadata, $entity, $entityWithNamespace, $isCreate));
 
 
-        $io->success('Command "'.$command.'" Created');
+        $io->success('Command "' . $command . '" Created');
 
         return Command::SUCCESS;
     }
 
+    public function getPhpType($type)
+    {
+        $phpTypes = [
+            'integer' => 'int',
+            'datetime' => '\DateTimeInterface',
+            'date' => '\DateTimeInterface',
+
+        ];
+
+        return $phpTypes[$type] ?? $type;
+    }
+
     private function getCommandMarkup($folder, $command, $entityFields, $isCreate)
     {
-        $fields = $this->_getEntityFields($entityFields, $isCreate);
-        return <<<Command
-<?php
+        $exclude = $this->exclude;
 
-namespace App\Core\\$folder\Command\\$command;
+        if ($isCreate === 'create') {
+            array_shift($exclude);
+        }
 
-class $command
-{
-    $fields
-}
-Command;
+        if($isCreate === 'delete'){
+            $exclude = ['id'];
+        }
+
+        $generator = new ClassGenerator();
+        $generator->setName($command);
+        $generator->setNamespaceName(sprintf("App\Core\%s\Command\%s", $folder, $command));
+        foreach ($entityFields as $field) {
+            if($isCreate !== 'delete' && in_array($field['fieldName'], $exclude)){
+                continue;
+            }
+
+            if($isCreate === 'delete' && $field['fieldName'] !== 'id'){
+                continue;
+            }
+
+            $generator->addProperty(
+                $field['fieldName'], null, PropertyGenerator::FLAG_PRIVATE
+            );
+
+            $generator->addMethod(
+                'set' . ucfirst($field['fieldName']), [$field['fieldName'] => $this->getPhpType($field['type'])],
+                MethodGenerator::FLAG_PUBLIC, <<<SIGNATURE
+                \$this->$field[fieldName] = ${$field};
+                return \$this;
+SIGNATURE
+            );
+
+            $generator->addMethod(
+                'get'.ucfirst($field['fieldName']), null, MethodGenerator::FLAG_PUBLIC,
+                <<<SIGNATURE
+                return \$this->$field[fieldName];
+SIGNATURE
+
+            );
+        }
+
+        return "<?php \n\n" . $generator->generate();
     }
 
     private function getCommandResultMarkup($folder, $command, $entity, $entityWithNamespace)
@@ -168,11 +214,11 @@ CommandHandlerInterface;
     private function getCommandHandlerMarkup($folder, $command, $fields, $entity, $entityWithNamespace, $isCreate)
     {
         $handle = '';
-        if($isCreate === 'create'){
+        if ($isCreate === 'create') {
             $handle = $this->_createEntityCommand($entity, $fields);
-        }else if($isCreate === 'update'){
+        } else if ($isCreate === 'update') {
             $handle = $this->_updateEntityCommand($entity, $fields, $command);
-        }else if($isCreate === 'delete'){
+        } else if ($isCreate === 'delete') {
             $handle = $this->_deleteEntityCommand($entity, $fields, $command);
         }
 
@@ -183,7 +229,7 @@ CommandHandlerInterface;
 \$this->persist(\$item);
 OPERATION;
 
-        if($isCreate === 'delete'){
+        if ($isCreate === 'delete') {
             $persistOperation = <<<OPERATION
 \$this->remove(\$item);
 OPERATION;
@@ -244,13 +290,13 @@ CommandHandler;
     {
         $exclude = $this->exclude;
 
-        if($isCreate === 'create'){
+        if ($isCreate === 'create') {
             array_shift($exclude);
         }
 
         $string = '';
-        foreach($fields as $field){
-            if(in_array($field, $exclude)){
+        foreach ($fields as $field) {
+            if (in_array($field, $exclude)) {
                 continue;
             }
 
@@ -259,8 +305,8 @@ CommandHandler;
 HTML;
         }
 
-        foreach($fields as $field){
-            if(in_array($field, $exclude)){
+        foreach ($fields as $field) {
+            if (in_array($field, $exclude)) {
                 continue;
             }
 
@@ -291,8 +337,8 @@ HTML;
 
 HTML;
 
-        foreach($fields as $field){
-            if(in_array($field, $exclude)){
+        foreach ($fields as $field) {
+            if (in_array($field, $exclude)) {
                 continue;
             }
 
@@ -317,8 +363,8 @@ HTML;
         }
 
 HTML;
-        foreach($fields as $field){
-            if(in_array($field, $exclude)){
+        foreach ($fields as $field) {
+            if (in_array($field, $exclude)) {
                 continue;
             }
 

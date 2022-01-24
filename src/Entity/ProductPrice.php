@@ -27,7 +27,7 @@ class ProductPrice
     private $product;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $date;
 
@@ -37,9 +37,29 @@ class ProductPrice
     private $time;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $timeTo;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $day;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $week;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $month;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quarter;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
@@ -88,12 +108,12 @@ class ProductPrice
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?int
     {
         return $this->date;
     }
 
-    public function setDate(?\DateTimeInterface $date): self
+    public function setDate(?int $date): self
     {
         $this->date = $date;
 
@@ -112,12 +132,12 @@ class ProductPrice
         return $this;
     }
 
-    public function getDay(): ?string
+    public function getDay(): ?int
     {
         return $this->day;
     }
 
-    public function setDay(?string $day): self
+    public function setDay(?int $day): self
     {
         $this->day = $day;
 
@@ -192,6 +212,54 @@ class ProductPrice
     public function setBaseQuantity(?string $baseQuantity): self
     {
         $this->baseQuantity = $baseQuantity;
+
+        return $this;
+    }
+
+    public function getTimeTo(): ?\DateTimeInterface
+    {
+        return $this->timeTo;
+    }
+
+    public function setTimeTo(?\DateTimeInterface $timeTo): self
+    {
+        $this->timeTo = $timeTo;
+
+        return $this;
+    }
+
+    public function getWeek(): ?int
+    {
+        return $this->week;
+    }
+
+    public function setWeek(?int $week): self
+    {
+        $this->week = $week;
+
+        return $this;
+    }
+
+    public function getMonth(): ?int
+    {
+        return $this->month;
+    }
+
+    public function setMonth(?int $month): self
+    {
+        $this->month = $month;
+
+        return $this;
+    }
+
+    public function getQuarter(): ?int
+    {
+        return $this->quarter;
+    }
+
+    public function setQuarter(?int $quarter): self
+    {
+        $this->quarter = $quarter;
 
         return $this;
     }

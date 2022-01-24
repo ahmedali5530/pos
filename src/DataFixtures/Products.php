@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Entity\Product;
+use App\Entity\ProductPrice;
 use App\Entity\ProductVariant;
 use App\Factory\Faker\FakerFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -44,34 +45,36 @@ class Products extends Fixture
 
             $manager->persist($product);
 
-            if($i % 2 === 0) {
-                $color = $this->faker->colorName;
-                $productVariant = new ProductVariant();
-                $productVariant->setName($color);
-                $productVariant->setColor($color);
-                $productVariant->setPrice($this->faker->randomNumber(4));
-                $productVariant->setProduct($product);
+            $color = $this->faker->colorName;
+            $productVariant = new ProductVariant();
+            $productVariant->setName($color);
+            $productVariant->setColor($color);
+            $productVariant->setPrice($this->faker->randomNumber(4));
+            $productVariant->setProduct($product);
+            $manager->persist($productVariant);
 
-                $manager->persist($productVariant);
-            }else if($i % 3  === 0){
-                $size = $this->faker->randomNumber(4);
-                $productVariant = new ProductVariant();
-                $productVariant->setName($size);
-                $productVariant->setSize($size);
-                $productVariant->setPrice(null);
-                $productVariant->setProduct($product);
+            $size = $this->faker->randomNumber(4);
+            $productVariant = new ProductVariant();
+            $productVariant->setName($size);
+            $productVariant->setSize($size);
+            $productVariant->setPrice(null);
+            $productVariant->setProduct($product);
+            $manager->persist($productVariant);
 
-                $manager->persist($productVariant);
-            }else if($i % 7 === 0){
-                $weight = $this->faker->randomNumber(4);
-                $productVariant = new ProductVariant();
-                $productVariant->setName($weight);
-                $productVariant->setWeight($weight);
-                $productVariant->setPrice(null);
-                $productVariant->setProduct($product);
+            $weight = $this->faker->randomNumber(4);
+            $productVariant = new ProductVariant();
+            $productVariant->setName($weight);
+            $productVariant->setWeight($weight);
+            $productVariant->setPrice(null);
+            $productVariant->setProduct($product);
+            $manager->persist($productVariant);
 
-                $manager->persist($productVariant);
-            }
+            $price = new ProductPrice();
+            $price->setProduct($product);
+            $price->setBasePrice($this->faker->randomNumber(4));
+            $price->setMonth(1);
+
+            $manager->persist($price);
         }
 
         $manager->flush();

@@ -19,6 +19,12 @@ class Discount
     use TimestampableTrait;
     use UuidTrait;
 
+    const SCOPE_OPEN = 'open';
+    const SCOPE_EXACT = 'exact';
+
+    const RATE_FIXED = 'fixed';
+    const RATE_PERCENT = 'percent';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -32,14 +38,19 @@ class Discount
     private $name;
 
     /**
-     * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      */
     private $rate;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $rateType;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $scope;
 
     public function getId(): ?int
     {
@@ -63,7 +74,7 @@ class Discount
         return $this->rate;
     }
 
-    public function setRate(string $rate): self
+    public function setRate(?string $rate): self
     {
         $this->rate = $rate;
 
@@ -75,9 +86,21 @@ class Discount
         return $this->rateType;
     }
 
-    public function setRateType(string $rateType): self
+    public function setRateType(?string $rateType): self
     {
         $this->rateType = $rateType;
+
+        return $this;
+    }
+
+    public function getScope(): ?string
+    {
+        return $this->scope;
+    }
+
+    public function setScope(?string $scope): self
+    {
+        $this->scope = $scope;
 
         return $this;
     }

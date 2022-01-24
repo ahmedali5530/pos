@@ -18,7 +18,7 @@ class ProductPriceDto
     private $id;
 
     /**
-     * @var DateTimeDto|null
+     * @var int|null
      */
     private $date;
 
@@ -57,6 +57,26 @@ class ProductPriceDto
      */
     private $baseQuantity;
 
+    /**
+     * @var int|null
+     */
+    private $week;
+
+    /**
+     * @var int|null
+     */
+    private $month;
+
+    /**
+     * @var int|null
+     */
+    private $quarter;
+
+    /**
+     * @var DateTimeDto|null
+     */
+    private $timeTo;
+
     public static function createFromProductPrice(?ProductPrice $productPrice): ?self
     {
         if($productPrice === null){
@@ -65,14 +85,18 @@ class ProductPriceDto
 
         $dto = new self();
         $dto->id = $productPrice->getId();
-        $dto->date = DateTimeDto::createFromDateTime($productPrice->getDate());
+        $dto->date = $productPrice->getDate();
         $dto->time = DateTimeDto::createFromDateTime($productPrice->getTime());
+        $dto->timeTo = DateTimeDto::createFromDateTime($productPrice->getTimeTo());
         $dto->day = $productPrice->getDay();
         $dto->rate = $productPrice->getRate();
         $dto->minQuantity = $productPrice->getMinQuantity();
         $dto->maxQuantity = $productPrice->getMaxQuantity();
         $dto->basePrice = $productPrice->getBasePrice();
         $dto->baseQuantity = $productPrice->getBaseQuantity();
+        $dto->week = $productPrice->getWeek();
+        $dto->month = $productPrice->getMonth();
+        $dto->quarter = $productPrice->getQuarter();
 
         $dto->createdAt = DateTimeDto::createFromDateTime($productPrice->getCreatedAt());
 
@@ -87,14 +111,18 @@ class ProductPriceDto
 
         $dto = new self();
         $dto->id = $data['id'] ?? null;
-        $dto->date = DateTimeDto::createFromDateTime($data['date']['datetime'] ?? null);
+        $dto->date = $data['date'] ?? null;
         $dto->time = DateTimeDto::createFromDateTime($data['time']['datetime'] ?? null);
+        $dto->timeTo = DateTimeDto::createFromDateTime($data['timeTo']['datetime'] ?? null);
         $dto->day = $data['day'] ?? null;
         $dto->rate = $data['rate'] ?? null;
         $dto->minQuantity = $data['minQuantity'] ?? null;
         $dto->maxQuantity = $data['maxQuantity'] ?? null;
         $dto->basePrice = $data['basePrice'] ?? null;
         $dto->baseQuantity = $data['baseQuantity'] ?? null;
+        $dto->week = $data['week'] ?? null;
+        $dto->month = $data['month'] ?? null;
+        $dto->quarter = $data['quarter'] ?? null;
 
         return $dto;
     }
@@ -116,17 +144,17 @@ class ProductPriceDto
     }
 
     /**
-     * @return DateTimeDto|null
+     * @return int|null
      */
-    public function getDate(): ?DateTimeDto
+    public function getDate(): ?int
     {
         return $this->date;
     }
 
     /**
-     * @param DateTimeDto|null $date
+     * @param int|null $date
      */
-    public function setDate(?DateTimeDto $date): void
+    public function setDate(?int $date): void
     {
         $this->date = $date;
     }
@@ -241,5 +269,69 @@ class ProductPriceDto
     public function setBaseQuantity(?float $baseQuantity): void
     {
         $this->baseQuantity = $baseQuantity;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getWeek(): ?int
+    {
+        return $this->week;
+    }
+
+    /**
+     * @param int|null $week
+     */
+    public function setWeek(?int $week): void
+    {
+        $this->week = $week;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMonth(): ?int
+    {
+        return $this->month;
+    }
+
+    /**
+     * @param int|null $month
+     */
+    public function setMonth(?int $month): void
+    {
+        $this->month = $month;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getQuarter(): ?int
+    {
+        return $this->quarter;
+    }
+
+    /**
+     * @param int|null $quarter
+     */
+    public function setQuarter(?int $quarter): void
+    {
+        $this->quarter = $quarter;
+    }
+
+    /**
+     * @return DateTimeDto|null
+     */
+    public function getTimeTo(): ?DateTimeDto
+    {
+        return $this->timeTo;
+    }
+
+    /**
+     * @param DateTimeDto|null $timeTo
+     */
+    public function setTimeTo(?DateTimeDto $timeTo): void
+    {
+        $this->timeTo = $timeTo;
     }
 }

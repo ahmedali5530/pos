@@ -21,7 +21,12 @@ class DateTimeDto
 
         $dto = new self();
         try {
-            $date = new DateTime($datetime);
+            if($datetime instanceof DateTimeInterface){
+                $date = $datetime;
+            }else {
+                $date = new DateTime($datetime);
+            }
+
             $date->setTimezone(new DateTimeZone('utc'));
 
             $dto->datetime = $date;

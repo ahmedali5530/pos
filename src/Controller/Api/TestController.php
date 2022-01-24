@@ -4,19 +4,35 @@
 namespace App\Controller\Api;
 
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TestController
+class TestController extends AbstractController
 {
     /**
      * @Route("/test")
      */
-    public function test()
+    public function test(
+        EntityManagerInterface $entityManager
+    )
     {
-        $list = array_is_list([
-            1, 2, 3
-        ]);
+        $entityWithNamespace = 'App\Entity\Customer';
+        $fields = $entityManager->getClassMetadata($entityWithNamespace)->getFieldNames();
 
-        dd($list);
+        $phpTypes = [
+            'integer' => 'int',
+            'datetime' => '\DateTimeInterface',
+            'date' => '\DateTimeInterface',
+
+        ];
+
+        dd($entityManager->getClassMetadata($entityWithNamespace)->fieldMappings);
+
+        foreach($fields as $field){
+            dump($phpTypes[$entityManager->getClassMetadata($entityWithNamespace)->getTypeOfField($field)] ?? $entityManager->getClassMetadata($entityWithNamespace)->getTypeOfField($field));
+        }
+
+        dd();
     }
 }
