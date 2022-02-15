@@ -99,7 +99,7 @@ class OrderController extends AbstractController
     )
     {
         $requestDto = CreateOrderRequestDto::createFromRequest($request);
-        $requestDto->setUserId($this->getUser()->getId());
+        $requestDto->setUserId(19/*$this->getUser()->getId()*/);
         if(null !== $violations = $requestDtoValidator->validate($requestDto)){
             return $responseFactory->validationError($violations);
         }

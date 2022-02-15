@@ -2,10 +2,11 @@
 
 namespace App\Core\Order\Command\CreateOrderCommand;
 
-use App\Core\Dto\Common\Order\OrderDiscountDto;
+use App\Core\Dto\Common\Discount\DiscountDto;
 use App\Core\Dto\Common\Order\OrderPaymentDto;
-use App\Core\Dto\Common\Order\OrderProductDto;
-use App\Core\Dto\Common\Order\OrderTaxDto;
+use App\Core\Dto\Common\Product\CartProductDto;
+use App\Core\Dto\Common\Product\ProductDto;
+use App\Core\Dto\Common\Tax\TaxDto;
 
 class CreateOrderCommand
 {
@@ -40,17 +41,17 @@ class CreateOrderCommand
     private $userId;
 
     /**
-     * @var OrderProductDto[]
+     * @var CartProductDto[]
      */
     private $items = [];
 
     /**
-     * @var OrderDiscountDto|null
+     * @var DiscountDto|null
      */
     private $discount;
 
     /**
-     * @var OrderTaxDto|null
+     * @var TaxDto|null
      */
     private $tax;
 
@@ -156,7 +157,7 @@ class CreateOrderCommand
     }
 
     /**
-     * @return OrderProductDto[]
+     * @return CartProductDto[]
      */
     public function getItems(): array
     {
@@ -164,7 +165,7 @@ class CreateOrderCommand
     }
 
     /**
-     * @param OrderProductDto[] $items
+     * @param CartProductDto[] $items
      */
     public function setItems(array $items): void
     {
@@ -172,33 +173,33 @@ class CreateOrderCommand
     }
 
     /**
-     * @return OrderDiscountDto|null
+     * @return DiscountDto|null
      */
-    public function getDiscount(): ?OrderDiscountDto
+    public function getDiscount(): ?DiscountDto
     {
         return $this->discount;
     }
 
     /**
-     * @param OrderDiscountDto|null $discount
+     * @param DiscountDto|null $discount
      */
-    public function setDiscount(?OrderDiscountDto $discount): void
+    public function setDiscount(?DiscountDto $discount): void
     {
         $this->discount = $discount;
     }
 
     /**
-     * @return OrderTaxDto|null
+     * @return TaxDto|null
      */
-    public function getTax(): ?OrderTaxDto
+    public function getTax(): ?TaxDto
     {
         return $this->tax;
     }
 
     /**
-     * @param OrderTaxDto|null $tax
+     * @param TaxDto|null $tax
      */
-    public function setTax(?OrderTaxDto $tax): void
+    public function setTax(?TaxDto $tax): void
     {
         $this->tax = $tax;
     }

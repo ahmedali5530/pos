@@ -43,12 +43,11 @@ class ConstraintBelongsToMeValidator extends ConstraintValidator
         }
 
         $value = null;
-        if($constraint->platform === 'player'){
-            $value = $this->tokenStorage->getToken()->getUser()->getUserAccount()->getPlayer();
-        }else if($constraint->platform === 'provider'){
-            $value = $this->tokenStorage->getToken()->getUser()->getUserAccount()->getFacilityProviderManager()->getFacilityProvider();
-        }else if($constraint->platform === 'coach'){
-            $value = $this->tokenStorage->getToken()->getUser()->getUserAccount()->getPlayer()->getCoach();
+        if($constraint->userId !== null){
+            $value = $constraint->userId;
+        }else {
+            //get logged in user
+            $value = $this->tokenStorage->getToken()->getUser();
         }
 
         $entity = $this->entityManager->getRepository($constraint->class)->findBy([

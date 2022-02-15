@@ -62,6 +62,11 @@ class OrderProduct
      */
     private $order;
 
+    /**
+     * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     */
+    private $discount;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -159,6 +164,18 @@ class OrderProduct
     public function setOrder(?Order $order): self
     {
         $this->order = $order;
+
+        return $this;
+    }
+
+    public function getDiscount(): ?string
+    {
+        return $this->discount;
+    }
+
+    public function setDiscount(?string $discount): self
+    {
+        $this->discount = $discount;
 
         return $this;
     }

@@ -63,7 +63,7 @@ class Order
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderProduct::class, mappedBy="order")
+     * @ORM\OneToMany(targetEntity=OrderProduct::class, mappedBy="order", cascade={"persist", "remove"})
      */
     private $items;
 
@@ -80,7 +80,7 @@ class Order
     private $tax;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderPayment::class, mappedBy="orde")
+     * @ORM\OneToMany(targetEntity=OrderPayment::class, mappedBy="order", cascade={"persist", "remove"})
      */
     private $payments;
 
@@ -265,7 +265,7 @@ class Order
     {
         if (!$this->payments->contains($payment)) {
             $this->payments[] = $payment;
-            $payment->setOrde($this);
+            $payment->setOrder($this);
         }
 
         return $this;
@@ -275,8 +275,8 @@ class Order
     {
         if ($this->payments->removeElement($payment)) {
             // set the owning side to null (unless already changed)
-            if ($payment->getOrde() === $this) {
-                $payment->setOrde(null);
+            if ($payment->getOrder() === $this) {
+                $payment->setOrder(null);
             }
         }
 

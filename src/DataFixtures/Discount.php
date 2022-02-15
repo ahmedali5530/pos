@@ -13,7 +13,7 @@ class Discount extends Fixture
 
         foreach($types as $type){
             $discount = new \App\Entity\Discount();
-            $discount->setName($type);
+            $discount->setName('Discount '.$type);
             $discount->setRate($type);
             $discount->setRateType(\App\Entity\Discount::RATE_PERCENT);
             $discount->setScope(\App\Entity\Discount::SCOPE_EXACT);

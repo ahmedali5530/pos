@@ -41,7 +41,7 @@ class OrderPayment
     private $due;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=Payment::class)
      */
     private $type;
 
@@ -98,12 +98,12 @@ class OrderPayment
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): ?Payment
     {
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(?Payment $type): self
     {
         $this->type = $type;
 

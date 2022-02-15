@@ -9,8 +9,12 @@ use App\Entity\Discount;
 use App\Entity\Order;
 use App\Entity\OrderDiscount;
 use App\Entity\OrderPayment;
+use App\Entity\OrderProduct;
 use App\Entity\OrderTax;
+use App\Entity\Payment;
 use App\Entity\Product;
+use App\Entity\ProductVariant;
+use App\Entity\Tax;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -53,28 +57,39 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
         );
 
         foreach($command->getItems() as $itemDto){
-            $item->addItem(
-                $this->getRepository(Product::class)->find($itemDto->getProduct()->getId())
-            );
+            $orderProduct = new OrderProduct();
+            $orderProduct->setProduct($this->getRepository(Product::class)->find($itemDto->getProduct()->getId()));
+            $orderProduct->setDiscount($itemDto->getDiscount());
+            $orderProduct->setPrice($itemDto->getPrice());
+            $orderProduct->setQuantity($itemDto->getQuantity());
+            $orderProduct->setVariant($this->getRepository(ProductVariant::class)->find($itemDto->getVariant()->getId()));
+
+            $item->addItem($orderProduct);
         }
 
         if(null !== $discount = $command->getDiscount()){
             $item->setDiscount(
-                $this->getRepository(OrderDiscount::class)->find($discount->getId())
+                $this->getRepository(Discount::class)->find($discount->getId())
             );
         }
 
         if(null !== $tax = $command->getTax()){
             $item->setTax(
-                $this->getRepository(OrderTax::class)->find($tax->getId())
+                $this->getRepository(Tax::class)->find($tax->getId())
             );
         }
 
         if(null !== $payments = $command->getPayments()){
             foreach($payments as $paymentDto){
-                $item->addPayment(
-                    $this->getRepository(OrderPayment::class)->find($paymentDto->getId())
+                $payment = new OrderPayment();
+                $payment->setTotal($paymentDto->getTotal());
+                $payment->setType(
+                    $this->getRepository(Payment::class)->find($paymentDto->getType()->getId())
                 );
+                $payment->setDue($paymentDto->getDue());
+                $payment->setReceived($paymentDto->getReceived());
+
+                $item->addPayment($payment);
             }
         }
 
@@ -97,7 +112,7 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
     {
         try{
             return $this->createQueryBuilder('entity')
-                ->select('MAX(entity.orderId) + 1')
+                ->select('COALESCE(MAX(entity.orderId) + 1, 1)')
                 ->getQuery()->getSingleScalarResult();
         }catch (\Exception $exception){
             return 1;

@@ -27,7 +27,7 @@ class ConstraintBelogsToMe extends Constraint
     public $field;
 
     /**
-     * @var string specify which platform we are using, provider, player, coach
+     * @var string|null Search for a userId other then logged in
      */
-    public $platform;
+    public $userId;
 }
