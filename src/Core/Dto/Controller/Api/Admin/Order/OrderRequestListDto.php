@@ -3,12 +3,14 @@
 namespace App\Core\Dto\Controller\Api\Admin\Order;
 
 use App\Core\Dto\Common\Common\LimitTrait;
+use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQuery;
 use Symfony\Component\HttpFoundation\Request;
 
 class OrderRequestListDto
 {
     use LimitTrait;
+    use OrderTrait;
 
     /**
      * @var int|null
@@ -74,6 +76,16 @@ class OrderRequestListDto
      * @var int[]|null
      */
     private $ids;
+
+    /**
+     * @var \DateTimeInterface|null
+     */
+    private $dateTimeFrom;
+
+    /**
+     * @var \DateTimeInterface|null
+     */
+    private $dateTimeTo;
 
     /**
      * @return int|null
@@ -302,12 +314,20 @@ class OrderRequestListDto
         $dto->ids = $request->query->get('ids');
         $dto->limit = $request->query->get('limit');
         $dto->offset = $request->query->get('offset');
+        $dto->orderBy = $request->query->get('orderBy');
+        $dto->orderMode = $request->query->get('orderMode');
 
         return $dto;
     }
 
     public function populateQuery(GetOrdersListQuery $query)
     {
+        $this->allowedFields = [
+            'orderId' => 'entity.orderId',
+            'id' => 'entity.id',
+            'createdAt' => 'entity.createdAt'
+        ];
+
         $query->setCustomerId($this->customerId);
         $query->setUserId($this->userId);
         $query->setItemId($this->itemId);
@@ -323,5 +343,39 @@ class OrderRequestListDto
         $query->setIds($this->ids);
         $query->setLimit($this->limit);
         $query->setOffset($this->offset);
+        $query->setOrderMode($this->orderMode);
+        $query->setOrderBy($this->getOrderBy());
+    }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getDateTimeFrom(): ?\DateTimeInterface
+    {
+        return $this->dateTimeFrom;
+    }
+
+    /**
+     * @param \DateTimeInterface|null $dateTimeFrom
+     */
+    public function setDateTimeFrom(?\DateTimeInterface $dateTimeFrom): void
+    {
+        $this->dateTimeFrom = $dateTimeFrom;
+    }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getDateTimeTo(): ?\DateTimeInterface
+    {
+        return $this->dateTimeTo;
+    }
+
+    /**
+     * @param \DateTimeInterface|null $dateTimeTo
+     */
+    public function setDateTimeTo(?\DateTimeInterface $dateTimeTo): void
+    {
+        $this->dateTimeTo = $dateTimeTo;
     }
 }

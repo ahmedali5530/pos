@@ -4,15 +4,19 @@
 namespace App\Core\Dto\Common\Common;
 
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 trait LimitTrait
 {
     /**
      * @var int|null
+     * @Assert\PositiveOrZero()
      */
     private $limit;
 
     /**
      * @var int|null
+     * @Assert\PositiveOrZero()
      */
     private $offset;
 

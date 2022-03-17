@@ -72,6 +72,11 @@ class OrderDto
      */
     private $payments = [];
 
+    /**
+     * @var \DateTimeInterface|null
+     */
+    private $createdAt;
+
     public static function createFromOrder(?Order $order): ?self
     {
         if($order === null){
@@ -95,6 +100,7 @@ class OrderDto
         foreach($order->getPayments() as $payment){
             $dto->payments[] = OrderPaymentDto::createFromOrderPayment($payment);
         }
+        $dto->createdAt = $order->getCreatedAt();
 
         return $dto;
     }
@@ -289,5 +295,21 @@ class OrderDto
     public function setPayments(array $payments): void
     {
         $this->payments = $payments;
+    }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTimeInterface|null $createdAt
+     */
+    public function setCreatedAt(?\DateTimeInterface $createdAt): void
+    {
+        $this->createdAt = $createdAt;
     }
 }

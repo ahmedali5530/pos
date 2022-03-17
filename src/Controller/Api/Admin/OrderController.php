@@ -60,6 +60,10 @@ class OrderController extends AbstractController
      *
      * @OA\Parameter(name="ids[]", in="query", description="search in ids", @OA\Schema(type="array", @OA\Items(type="string")))
      *
+     * @OA\Parameter(name="dateTimeFrom", in="query", description="Date of order create start")
+     *
+     * @OA\Parameter(name="dateTimeTo", in="query", description="Date of order create end")
+     *
      * @OA\Response(
      *     response="200", description="OK", @Model(type=OrderListResponseDto::class)
      * )
@@ -71,6 +75,7 @@ class OrderController extends AbstractController
     )
     {
         $requestDto = OrderRequestListDto::createFromRequest($request);
+        $requestDto->setUserId($this->getUser()->getId());
 
         $query = new GetOrdersListQuery();
         $requestDto->populateQuery($query);
@@ -99,7 +104,7 @@ class OrderController extends AbstractController
     )
     {
         $requestDto = CreateOrderRequestDto::createFromRequest($request);
-        $requestDto->setUserId(19/*$this->getUser()->getId()*/);
+        $requestDto->setUserId($this->getUser()->getId());
         if(null !== $violations = $requestDtoValidator->validate($requestDto)){
             return $responseFactory->validationError($violations);
         }

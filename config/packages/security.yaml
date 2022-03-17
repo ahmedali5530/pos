@@ -23,8 +23,10 @@ security:
             lazy: true
             provider: user_provider
             custom_authenticator: App\Security\AppAuthenticator
+
             logout:
-                path: app_logout
+                path: api_app_logout
+                success_handler: App\Security\LogoutSuccessHandler
                 # where to redirect after logout
                 # target: app_any_route
             remember_me:
@@ -33,14 +35,13 @@ security:
                 always_remember_me: true
                 samesite: none
                 secure: true
-                lifetime: 604800
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-#        - { path: ^/api/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/, roles: ROLE_USER }
+#        - { path: ^/admin, roles: ROLE_USER }
+        - { path: ^/api/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:

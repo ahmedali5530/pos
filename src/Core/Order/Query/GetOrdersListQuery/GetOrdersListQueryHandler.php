@@ -59,6 +59,10 @@ class GetOrdersListQueryHandler extends EntityRepository implements GetOrdersLis
         if($query->getOffset() !== null){
             $qb->setFirstResult($query->getOffset());
         }
+
+        if($query->getOrderBy() !== null){
+            $qb->orderBy($query->getOrderBy(), $query->getOrderMode());
+        }
         
         $list = new Paginator($qb->getQuery());
 

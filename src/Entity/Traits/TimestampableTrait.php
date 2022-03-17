@@ -5,11 +5,13 @@ namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use \DateTime;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 trait TimestampableTrait
 {
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
@@ -20,6 +22,7 @@ trait TimestampableTrait
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
