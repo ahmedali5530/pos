@@ -52,6 +52,20 @@ class CustomerDto
      */
     private $lng;
 
+    /**
+     * @var float|null
+     */
+    private $sale;
+
+    /**
+     * @var float|null
+     */
+    private $paid;
+
+    /**
+     * @var float|null
+     */
+    private $outstanding;
 
     public static function createFromCustomer(?Customer $customer): ?self
     {
@@ -68,6 +82,11 @@ class CustomerDto
         $dto->address = $customer->getAddress();
         $dto->lat = $customer->getLat();
         $dto->lng = $customer->getLng();
+        foreach($customer->getOrders() as $order){
+            foreach($order->getPayments() as $payment){
+                $dto->sale += $payment->getTotal();
+            }
+        }
 
         return $dto;
     }
@@ -199,5 +218,53 @@ class CustomerDto
     public function setLng(?string $lng): void
     {
         $this->lng = $lng;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getSale(): ?float
+    {
+        return $this->sale;
+    }
+
+    /**
+     * @param float|null $sale
+     */
+    public function setSale(?float $sale): void
+    {
+        $this->sale = $sale;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getPaid(): ?float
+    {
+        return $this->paid;
+    }
+
+    /**
+     * @param float|null $paid
+     */
+    public function setPaid(?float $paid): void
+    {
+        $this->paid = $paid;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getOutstanding(): ?float
+    {
+        return $this->outstanding;
+    }
+
+    /**
+     * @param float|null $outstanding
+     */
+    public function setOutstanding(?float $outstanding): void
+    {
+        $this->outstanding = $outstanding;
     }
 }
