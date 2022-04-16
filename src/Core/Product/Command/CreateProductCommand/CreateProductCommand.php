@@ -64,6 +64,11 @@ class CreateProductCommand
      */
     private $category;
 
+    /**
+     * @var float|null
+     */
+    private $cost;
+
     public function getName()
     {
         return $this->name;
@@ -209,6 +214,22 @@ class CreateProductCommand
     public function setCategory(?int $category): void
     {
         $this->category = $category;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getCost(): ?float
+    {
+        return $this->cost;
+    }
+
+    /**
+     * @param float|null $cost
+     */
+    public function setCost(?float $cost): void
+    {
+        $this->cost = $cost;
     }
 
 }

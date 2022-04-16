@@ -12,7 +12,7 @@ class ProductListResponseDto
     /**
      * @var ProductDto[]
      */
-    private $list;
+    private $list = [];
 
     /**
      * @var int

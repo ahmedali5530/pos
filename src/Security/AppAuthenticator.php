@@ -22,8 +22,6 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AppAuthenticator extends AbstractLoginFormAuthenticator
 {
-    use TargetPathTrait;
-
     public const LOGIN_ROUTE = 'api_app_login';
 
     private UrlGeneratorInterface $urlGenerator;
@@ -42,18 +40,18 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
         return $this->apiResponseFactory->json([
-            'status' => false,
+
         ], Response::HTTP_UNAUTHORIZED);
     }
 
     public function supports(Request $request): bool
     {
-        return self::LOGIN_ROUTE === $request->attributes->get('_route')
-            && $request->isMethod('POST');
+        return $request->headers->has('authorization');
     }
 
     public function authenticate(Request $request): Passport
     {
+        dd();
         $loginRequest = LoginRequestDto::createFromRequest($request);
 
         $username = $loginRequest->getUsername();

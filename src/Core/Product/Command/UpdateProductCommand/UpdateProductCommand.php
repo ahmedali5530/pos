@@ -64,6 +64,11 @@ class UpdateProductCommand
      */
     private $variants;
 
+    /**
+     * @var float|null
+     */
+    private $cost;
+
     public function getId()
     {
         return $this->id;
@@ -204,5 +209,21 @@ class UpdateProductCommand
     public function setVariants(?array $variants): void
     {
         $this->variants = $variants;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getCost(): ?float
+    {
+        return $this->cost;
+    }
+
+    /**
+     * @param float|null $cost
+     */
+    public function setCost(?float $cost): void
+    {
+        $this->cost = $cost;
     }
 }

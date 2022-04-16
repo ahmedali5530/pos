@@ -51,6 +51,11 @@ class CreateOrderCommand
     private $discount;
 
     /**
+     * @var string|null
+     */
+    private $discountAmount;
+
+    /**
      * @var TaxDto|null
      */
     private $tax;
@@ -218,5 +223,21 @@ class CreateOrderCommand
     public function setPayments(array $payments): void
     {
         $this->payments = $payments;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDiscountAmount(): ?string
+    {
+        return $this->discountAmount;
+    }
+
+    /**
+     * @param string|null $discountAmount
+     */
+    public function setDiscountAmount(?string $discountAmount): void
+    {
+        $this->discountAmount = $discountAmount;
     }
 }

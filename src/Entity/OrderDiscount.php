@@ -46,18 +46,6 @@ class OrderDiscount
         return $this->id;
     }
 
-    public function getOder(): ?Order
-    {
-        return $this->order;
-    }
-
-    public function setOder(?Order $order): self
-    {
-        $this->order = $order;
-
-        return $this;
-    }
-
     public function getRate(): ?string
     {
         return $this->rate;

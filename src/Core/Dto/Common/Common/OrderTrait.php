@@ -21,8 +21,6 @@ trait OrderTrait
      */
     private $orderBy;
 
-    public $allowedFields = [];
-
     /**
      * @return string|null
      */
@@ -44,7 +42,7 @@ trait OrderTrait
      */
     public function getOrderBy(): ?string
     {
-        return $this->allowedFields[$this->orderBy] ?? null;
+        return $this->orderBy;
     }
 
     /**

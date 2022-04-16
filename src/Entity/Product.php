@@ -13,9 +13,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
- * @UniqueEntity(fields={"barcode"})
- * @UniqueEntity(fields={"sku"})
- * @UniqueEntity(fields={"shortCode"})
+ * @UniqueEntity(fields={"barcode"}, message="Use a different value")
+ * @UniqueEntity(fields={"sku"}, message="Use a different value")
+ * @UniqueEntity(fields={"shortCode"}, message="Use a different value")
  */
 class Product
 {
@@ -59,6 +59,11 @@ class Product
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      */
     private $basePrice;
+
+    /**
+     * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     */
+    private $cost;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class)
@@ -277,6 +282,18 @@ class Product
     public function setShortCode(?string $shortCode): self
     {
         $this->shortCode = $shortCode;
+
+        return $this;
+    }
+
+    public function getCost(): ?string
+    {
+        return $this->cost;
+    }
+
+    public function setCost(?string $cost): self
+    {
+        $this->cost = $cost;
 
         return $this;
     }

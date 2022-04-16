@@ -43,12 +43,21 @@ class GetProductsListQueryHandler extends EntityRepository implements GetProduct
             $qb->setParameter('priceTo', $priceTo);
         }
 
+        if($query->getQ() !== null){
+            $qb->andWhere('product.name LIKE :q OR product.barcode LIKE :q OR product.basePrice LIKE :q');
+            $qb->setParameter('q', '%'.$query->getQ().'%');
+        }
+
         if($query->getLimit() !== null){
             $qb->setMaxResults($query->getLimit());
         }
 
         if($query->getOffset() !== null){
             $qb->setFirstResult($query->getOffset());
+        }
+
+        if($query->getOrderBy() !== null){
+            $qb->orderBy($query->getOrderBy(), $query->getOrderMode());
         }
 
         $list = new Paginator($qb->getQuery());

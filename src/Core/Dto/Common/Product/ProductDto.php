@@ -80,6 +80,11 @@ class ProductDto
      */
     private $uom;
 
+    /**
+     * @var float|null
+     */
+    private $cost;
+
 
     public static function createFromProduct(?Product $product): ?self
     {
@@ -110,6 +115,7 @@ class ProductDto
 
         $dto->uuid = $product->getUuid();
         $dto->createdAt = DateTimeDto::createFromDateTime($product->getCreatedAt());
+        $dto->cost = $product->getCost();
 
         return $dto;
     }
@@ -138,6 +144,8 @@ class ProductDto
         foreach($data['prices'] ?? [] as $productPrice){
             $dto->prices[] = ProductPriceDto::createFromArray($productPrice);
         }
+
+        $dto->cost = $data['cost'] ?? null;
 
         return $dto;
     }
@@ -332,5 +340,21 @@ class ProductDto
     public function setUom(?string $uom): void
     {
         $this->uom = $uom;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getCost(): ?float
+    {
+        return $this->cost;
+    }
+
+    /**
+     * @param float|null $cost
+     */
+    public function setCost(?float $cost): void
+    {
+        $this->cost = $cost;
     }
 }

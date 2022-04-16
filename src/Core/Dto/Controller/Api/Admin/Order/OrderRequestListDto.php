@@ -12,6 +12,12 @@ class OrderRequestListDto
     use LimitTrait;
     use OrderTrait;
 
+    const ORDERS_LIST = [
+        'orderId' => 'entity.orderId',
+        'id' => 'entity.id',
+        'createdAt' => 'entity.createdAt'
+    ];
+
     /**
      * @var int|null
      */
@@ -314,20 +320,14 @@ class OrderRequestListDto
         $dto->ids = $request->query->get('ids');
         $dto->limit = $request->query->get('limit');
         $dto->offset = $request->query->get('offset');
-        $dto->orderBy = $request->query->get('orderBy');
-        $dto->orderMode = $request->query->get('orderMode');
+        $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
+        $dto->orderMode = $request->query->get('orderMode', 'ASC');
 
         return $dto;
     }
 
     public function populateQuery(GetOrdersListQuery $query)
     {
-        $this->allowedFields = [
-            'orderId' => 'entity.orderId',
-            'id' => 'entity.id',
-            'createdAt' => 'entity.createdAt'
-        ];
-
         $query->setCustomerId($this->customerId);
         $query->setUserId($this->userId);
         $query->setItemId($this->itemId);

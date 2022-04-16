@@ -64,6 +64,11 @@ class CreateOrderRequestDto
     private $discount;
 
     /**
+     * @var string|null
+     */
+    private $discountAmount;
+
+    /**
      * @var TaxDto|null
      * @Assert\Valid()
      */
@@ -98,6 +103,8 @@ class CreateOrderRequestDto
             $dto->payments[] = OrderPaymentDto::createFromArray($item);
         }
 
+        $dto->discountAmount = $data['discountAmount'] ?? null;
+
         return $dto;
     }
 
@@ -113,6 +120,7 @@ class CreateOrderRequestDto
         $command->setDiscount($this->discount);
         $command->setTax($this->tax);
         $command->setPayments($this->payments);
+        $command->setDiscountAmount($this->discountAmount);
     }
 
     /**
@@ -273,5 +281,21 @@ class CreateOrderRequestDto
     public function setPayments(array $payments): void
     {
         $this->payments = $payments;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDiscountAmount(): ?string
+    {
+        return $this->discountAmount;
+    }
+
+    /**
+     * @param string|null $discountAmount
+     */
+    public function setDiscountAmount(?string $discountAmount): void
+    {
+        $this->discountAmount = $discountAmount;
     }
 }

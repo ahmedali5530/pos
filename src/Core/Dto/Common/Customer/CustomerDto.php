@@ -67,6 +67,11 @@ class CustomerDto
      */
     private $outstanding;
 
+    /**
+     * @var string|null
+     */
+    private $cnic;
+
     public static function createFromCustomer(?Customer $customer): ?self
     {
         if($customer === null){
@@ -87,6 +92,7 @@ class CustomerDto
                 $dto->sale += $payment->getTotal();
             }
         }
+        $dto->cnic = $customer->getCnic();
 
         return $dto;
     }
@@ -266,5 +272,21 @@ class CustomerDto
     public function setOutstanding(?float $outstanding): void
     {
         $this->outstanding = $outstanding;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCnic(): ?string
+    {
+        return $this->cnic;
+    }
+
+    /**
+     * @param string|null $cnic
+     */
+    public function setCnic(?string $cnic): void
+    {
+        $this->cnic = $cnic;
     }
 }

@@ -28,7 +28,7 @@ class Order
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $orderId;
 
@@ -100,7 +100,7 @@ class Order
         return $this->orderId;
     }
 
-    public function setOrderId(int $orderId): self
+    public function setOrderId(?int $orderId): self
     {
         $this->orderId = $orderId;
 

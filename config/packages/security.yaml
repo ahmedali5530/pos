@@ -18,29 +18,48 @@ security:
             pattern: ^/api/doc
             security: false
 
-        main:
-            pattern: ^/api
-            lazy: true
-            provider: user_provider
-            custom_authenticator: App\Security\AppAuthenticator
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: api_login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-            logout:
-                path: api_app_logout
-                success_handler: App\Security\LogoutSuccessHandler
-                # where to redirect after logout
-                # target: app_any_route
-            remember_me:
-                secret: '%kernel.secret%'
-                path: /api
-                always_remember_me: true
-                samesite: none
-                secure: true
+        api_token_refresh:
+            pattern: ^/api/token/refresh
+            stateless: true
+            refresh_jwt: ~
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            provider: user_provider
+            jwt: ~
+
+#        main:
+#            pattern: ^/api
+#            lazy: true
+#            provider: user_provider
+#            custom_authenticator: App\Security\AppAuthenticator
+#
+#            logout:
+#                path: api_app_logout
+#                success_handler: App\Security\LogoutSuccessHandler
+#                # where to redirect after logout
+#                # target: app_any_route
+#            remember_me:
+#                secret: '%kernel.secret%'
+#                path: /api
+#                always_remember_me: true
+#                samesite: none
+#                secure: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-#        - { path: ^/admin, roles: ROLE_USER }
-        - { path: ^/api/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/token/refresh, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }
 
 when@test:

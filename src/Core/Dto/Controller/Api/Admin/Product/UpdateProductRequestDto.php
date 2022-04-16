@@ -70,6 +70,11 @@ class UpdateProductRequestDto
      */
     private $prices;
 
+    /**
+     * @var float|null
+     */
+    private $cost;
+
     public static function createFromRequest(Request $request)
     {
         $dto = new self();
@@ -86,6 +91,7 @@ class UpdateProductRequestDto
         $dto->shortCode = $data['shortCode'] ?? null;
         $dto->variants = $data['variants'] ?? null;
         $dto->prices = $data['prices'] ?? null;
+        $dto->cost = $data['cost'] ?? null;
 
         return $dto;
     }
@@ -104,6 +110,7 @@ class UpdateProductRequestDto
         $command->setPrices($this->prices);
         $command->setVariants($this->variants);
         $command->setId($this->id);
+        $command->setCost($this->cost);
     }
 
     /**
@@ -296,5 +303,21 @@ class UpdateProductRequestDto
     public function setId(?int $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getCost(): ?float
+    {
+        return $this->cost;
+    }
+
+    /**
+     * @param float|null $cost
+     */
+    public function setCost(?float $cost): void
+    {
+        $this->cost = $cost;
     }
 }

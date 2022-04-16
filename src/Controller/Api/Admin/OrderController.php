@@ -9,14 +9,12 @@ use App\Core\Dto\Controller\Api\Admin\Order\OrderListResponseDto;
 use App\Core\Dto\Controller\Api\Admin\Order\OrderRequestListDto;
 use App\Core\Dto\Controller\Api\Admin\Order\OrderResponseDto;
 use App\Core\Order\Command\CreateOrderCommand\CreateOrderCommand;
-use App\Core\Order\Command\CreateOrderCommand\CreateOrderCommandHandler;
 use App\Core\Order\Command\CreateOrderCommand\CreateOrderCommandHandlerInterface;
 use App\Core\Order\Command\DeleteOrderCommand\DeleteOrderCommand;
 use App\Core\Order\Command\DeleteOrderCommand\DeleteOrderCommandHandlerInterface;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQuery;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQueryHandlerInterface;
 use App\Core\Validation\ApiRequestDtoValidator;
-use App\Entity\Order;
 use App\Factory\Controller\ApiResponseFactory;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
@@ -126,7 +124,6 @@ class OrderController extends AbstractController
             OrderResponseDto::createFromOrder($result->getOrder())
         );
     }
-
 
     /**
      * @Route("/{id}", methods={"DELETE"}, name="delete")

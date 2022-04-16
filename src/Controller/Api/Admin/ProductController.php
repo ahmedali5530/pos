@@ -44,6 +44,12 @@ class ProductController extends AbstractController
      * )
      *
      * @OA\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Search in title, description, category, tags"
+     * )
+     *
+     * @OA\Parameter(
      *     name="categoryName",
      *     in="query",
      *     description="Search in categoryName"

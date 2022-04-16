@@ -72,6 +72,7 @@ class CreateProductCommandHandler extends EntityManager implements CreateProduct
         $item->setUom($command->getUom());
         $item->setShortCode($command->getShortCode());
         $item->setCategory($category);
+        $item->setCost($command->getCost());
 
         foreach($prices as $price){
             $item->addPrice($price);

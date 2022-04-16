@@ -64,6 +64,11 @@ class Customer
      */
     private $orders;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $cnic;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -184,6 +189,18 @@ class Customer
                 $order->setCustomer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCnic(): ?string
+    {
+        return $this->cnic;
+    }
+
+    public function setCnic(?string $cnic): self
+    {
+        $this->cnic = $cnic;
 
         return $this;
     }

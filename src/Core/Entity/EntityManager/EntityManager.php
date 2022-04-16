@@ -47,4 +47,17 @@ abstract class EntityManager extends EntityRepository
             $this->em->remove($object);
         }
     }
+
+    public function save($object){
+        $this->persist($object);
+        $this->flush();
+    }
+
+    public function saveAll(array $objects){
+        foreach($objects as $object){
+            $this->em->persist($object);
+        }
+
+        $this->flush();
+    }
 }

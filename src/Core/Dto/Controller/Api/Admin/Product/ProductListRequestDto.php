@@ -5,12 +5,19 @@ namespace App\Core\Dto\Controller\Api\Admin\Product;
 
 
 use App\Core\Dto\Common\Common\LimitTrait;
+use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Product\Query\GetProductsListQuery\GetProductsListQuery;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProductListRequestDto
 {
     use LimitTrait;
+    use OrderTrait;
+
+    const ORDERS_LIST = [
+        'id' => 'product.id',
+        'name' => 'product.name'
+    ];
 
     /**
      * @var string|null
@@ -37,6 +44,11 @@ class ProductListRequestDto
      */
     private $priceTo;
 
+    /**
+     * @var string|null
+     */
+    private $q;
+
     public static function createFromRequest(Request $request): self
     {
         $dto = new self();
@@ -47,6 +59,9 @@ class ProductListRequestDto
         $dto->priceTo = $request->query->get('priceTo');
         $dto->limit = $request->query->get('limit');
         $dto->offset = $request->query->get('offset');
+        $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
+        $dto->orderMode = $request->query->get('orderMode', 'ASC');
+        $dto->q = $request->query->get('q');
 
         return $dto;
     }
@@ -60,6 +75,9 @@ class ProductListRequestDto
         $query->setPriceTo($this->priceTo);
         $query->setLimit($this->getLimit());
         $query->setOffset($this->getOffset());
+        $query->setOrderBy($this->getOrderBy());
+        $query->setOrderMode($this->getOrderMode());
+        $query->setQ($this->q);
     }
 
     /**
@@ -140,5 +158,21 @@ class ProductListRequestDto
     public function setPriceTo(?float $priceTo): void
     {
         $this->priceTo = $priceTo;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getQ(): ?string
+    {
+        return $this->q;
+    }
+
+    /**
+     * @param string|null $q
+     */
+    public function setQ(?string $q): void
+    {
+        $this->q = $q;
     }
 }

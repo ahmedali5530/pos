@@ -36,17 +36,12 @@ class ProductVariant
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $size;
+    private $attributeName;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      */
-    private $color;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $weight;
+    private $attributeValue;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -98,42 +93,6 @@ class ProductVariant
     public function setName(?string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getSize(): ?string
-    {
-        return $this->size;
-    }
-
-    public function setSize(?string $size): self
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
-    public function getColor(): ?string
-    {
-        return $this->color;
-    }
-
-    public function setColor(?string $color): self
-    {
-        $this->color = $color;
-
-        return $this;
-    }
-
-    public function getWeight(): ?string
-    {
-        return $this->weight;
-    }
-
-    public function setWeight(?string $weight): self
-    {
-        $this->weight = $weight;
 
         return $this;
     }
@@ -200,6 +159,30 @@ class ProductVariant
                 $price->setProductVariant(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAttributeName(): ?string
+    {
+        return $this->attributeName;
+    }
+
+    public function setAttributeName(?string $attributeName): self
+    {
+        $this->attributeName = $attributeName;
+
+        return $this;
+    }
+
+    public function getAttributeValue(): ?string
+    {
+        return $this->attributeValue;
+    }
+
+    public function setAttributeValue(?string $attributeValue): self
+    {
+        $this->attributeValue = $attributeValue;
 
         return $this;
     }

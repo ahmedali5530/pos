@@ -44,7 +44,6 @@ class CreateProductRequestDto
 
     /**
      * @var float|null
-     * @Assert\NotBlank(normalizer="trim")
      */
     private $quantity;
 
@@ -76,6 +75,12 @@ class CreateProductRequestDto
      */
     private $category;
 
+    /**
+     * @var float|null
+     * @Assert\NotBlank(normalizer="trim")
+     */
+    private $cost;
+
     public static function createFromRequest(Request $request)
     {
         $dto = new self();
@@ -93,6 +98,7 @@ class CreateProductRequestDto
         $dto->variants = $data['variants'] ?? null;
         $dto->prices = $data['prices'] ?? null;
         $dto->category = $data['category'] ?? null;
+        $dto->cost = $data['cost'] ?? null;
 
         return $dto;
     }
@@ -111,6 +117,7 @@ class CreateProductRequestDto
         $command->setPrices($this->prices);
         $command->setVariants($this->variants);
         $command->setCategory($this->category);
+        $command->setCost($this->cost);
     }
 
     /**
@@ -303,5 +310,21 @@ class CreateProductRequestDto
     public function setCategory(?int $category): void
     {
         $this->category = $category;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getCost(): ?float
+    {
+        return $this->cost;
+    }
+
+    /**
+     * @param float|null $cost
+     */
+    public function setCost(?float $cost): void
+    {
+        $this->cost = $cost;
     }
 }

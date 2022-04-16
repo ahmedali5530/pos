@@ -10,9 +10,7 @@ class SelectTaxListResponseDto
     /**
      * @var TaxDto[]
      */
-    private $list = [
-        
-    ];
+    private $list = [];
 
     /**
      * @var int

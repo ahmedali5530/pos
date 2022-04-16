@@ -10,9 +10,7 @@ class SelectPaymentListResponseDto
     /**
      * @var PaymentDto[]
      */
-    private $list = [
-        
-    ];
+    private $list = [];
 
     /**
      * @var int

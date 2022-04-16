@@ -27,17 +27,12 @@ class ProductVariantDto
     /**
      * @var string|null
      */
-    private $size;
+    private $attributeName;
 
     /**
      * @var string|null
      */
-    private $color;
-
-    /**
-     * @var string|null
-     */
-    private $weight;
+    private $attributeValue;
 
     /**
      * @var string|null
@@ -69,9 +64,8 @@ class ProductVariantDto
         $dto = new self();
         $dto->id = $productVariant->getId();
         $dto->name = $productVariant->getName();
-        $dto->size = $productVariant->getSize();
-        $dto->color = $productVariant->getColor();
-        $dto->weight = $productVariant->getWeight();
+        $dto->attributeName = $productVariant->getAttributeName();
+        $dto->attributeValue = $productVariant->getAttributeValue();
         $dto->barcode = $productVariant->getBarcode();
         $dto->sku = $productVariant->getSku();
         $dto->price = $productVariant->getPrice();
@@ -93,9 +87,8 @@ class ProductVariantDto
         $dto = new self();
         $dto->id = $data['id'] ?? null;
         $dto->name = $data['name'] ?? null;
-        $dto->size = $data['size'] ?? null;
-        $dto->color = $data['color'] ?? null;
-        $dto->weight = $data['weight'] ?? null;
+        $dto->attributeName = $data['attributeName'] ?? null;
+        $dto->attributeValue = $data['attributeValue'] ?? null;
         $dto->barcode = $data['barcode'] ?? null;
         $dto->sku = $data['sku'] ?? null;
         $dto->price = $data['price'] ?? null;
@@ -137,54 +130,6 @@ class ProductVariantDto
     public function setName(?string $name): void
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getSize(): ?string
-    {
-        return $this->size;
-    }
-
-    /**
-     * @param string|null $size
-     */
-    public function setSize(?string $size): void
-    {
-        $this->size = $size;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getColor(): ?string
-    {
-        return $this->color;
-    }
-
-    /**
-     * @param string|null $color
-     */
-    public function setColor(?string $color): void
-    {
-        $this->color = $color;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getWeight(): ?string
-    {
-        return $this->weight;
-    }
-
-    /**
-     * @param string|null $weight
-     */
-    public function setWeight(?string $weight): void
-    {
-        $this->weight = $weight;
     }
 
     /**
@@ -249,5 +194,37 @@ class ProductVariantDto
     public function setPrices(array $prices): void
     {
         $this->prices = $prices;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAttributeName(): ?string
+    {
+        return $this->attributeName;
+    }
+
+    /**
+     * @param string|null $attributeName
+     */
+    public function setAttributeName(?string $attributeName): void
+    {
+        $this->attributeName = $attributeName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAttributeValue(): ?string
+    {
+        return $this->attributeValue;
+    }
+
+    /**
+     * @param string|null $attributeValue
+     */
+    public function setAttributeValue(?string $attributeValue): void
+    {
+        $this->attributeValue = $attributeValue;
     }
 }

@@ -48,24 +48,24 @@ class Products extends Fixture
             $color = $this->faker->colorName;
             $productVariant = new ProductVariant();
             $productVariant->setName($color);
-            $productVariant->setColor($color);
-            $productVariant->setPrice($this->faker->randomNumber(4));
+            $productVariant->setAttributeName('Color');
+            $productVariant->setAttributeValue($color);
             $productVariant->setProduct($product);
             $manager->persist($productVariant);
 
             $size = $this->faker->randomNumber(4);
             $productVariant = new ProductVariant();
             $productVariant->setName($size);
-            $productVariant->setSize($size);
-            $productVariant->setPrice(null);
+            $productVariant->setAttributeName('Size');
+            $productVariant->setAttributeValue(sprintf('%sx%s', $this->faker->randomNumber(2), $this->faker->randomNumber(2)));
             $productVariant->setProduct($product);
             $manager->persist($productVariant);
 
             $weight = $this->faker->randomNumber(4);
             $productVariant = new ProductVariant();
             $productVariant->setName($weight);
-            $productVariant->setWeight($weight);
-            $productVariant->setPrice(null);
+            $productVariant->setAttributeName('Weight');
+            $productVariant->setAttributeValue($this->faker->randomNumber(2) . ' KG');
             $productVariant->setProduct($product);
             $manager->persist($productVariant);
 

@@ -88,6 +88,9 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
         if ($command->getShortCode() !== null) {
             $item->setShortCode($command->getShortCode());
         }
+        if($command->getCost() !== null){
+            $item->setCost($command->getCost());
+        }
 
         foreach($prices as $price){
             $item->addPrice($price);

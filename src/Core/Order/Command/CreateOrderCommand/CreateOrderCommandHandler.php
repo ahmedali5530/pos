@@ -41,7 +41,9 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
     {
         $item = new Order();
 
-        $item->setOrderId($this->getNewOrderId());
+        if(!$command->getIsSuspended()) {
+            $item->setOrderId($this->getNewOrderId());
+        }
         $item->setIsSuspended($command->getIsSuspended());
         $item->setIsDeleted($command->getIsDeleted());
         $item->setIsReturned($command->getIsReturned());
@@ -62,23 +64,14 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
             $orderProduct->setDiscount($itemDto->getDiscount());
             $orderProduct->setPrice($itemDto->getPrice());
             $orderProduct->setQuantity($itemDto->getQuantity());
-            $orderProduct->setVariant($this->getRepository(ProductVariant::class)->find($itemDto->getVariant()->getId()));
+            if($itemDto->getVariant() !== null) {
+                $orderProduct->setVariant($this->getRepository(ProductVariant::class)->find($itemDto->getVariant()->getId()));
+            }
 
             $item->addItem($orderProduct);
         }
 
-        if(null !== $discount = $command->getDiscount()){
-            $item->setDiscount(
-                $this->getRepository(Discount::class)->find($discount->getId())
-            );
-        }
-
-        if(null !== $tax = $command->getTax()){
-            $item->setTax(
-                $this->getRepository(Tax::class)->find($tax->getId())
-            );
-        }
-
+        $orderTotal = 0;
         if(null !== $payments = $command->getPayments()){
             foreach($payments as $paymentDto){
                 $payment = new OrderPayment();
@@ -89,8 +82,37 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
                 $payment->setDue($paymentDto->getDue());
                 $payment->setReceived($paymentDto->getReceived());
 
+                $orderTotal += $paymentDto->getTotal();
+
                 $item->addPayment($payment);
             }
+        }
+
+        if(null !== $command->getDiscount()){
+            /** @var Discount $discount */
+            $discount = $this->getRepository(Discount::class)->find($command->getDiscount()->getId());
+
+            $orderDiscount = new OrderDiscount();
+            $orderDiscount->setAmount($command->getDiscountAmount());
+            $orderDiscount->setRate($command->getDiscount()->getRate());
+            $orderDiscount->setType($discount);
+            $orderDiscount->setOrder($item);
+            $this->persist($orderDiscount);
+
+            $item->setDiscount($orderDiscount);
+        }
+
+        if(null !== $command->getTax()){
+            /** @var Tax $tax */
+            $tax = $this->getRepository(Tax::class)->find($command->getTax()->getId());
+            $orderTax = new OrderTax();
+            $orderTax->setType($tax);
+            $orderTax->setOrder($item);
+            $orderTax->setRate($command->getTax()->getRate());
+            $orderTax->setAmount($orderTotal * $tax->getRate() / 100);
+            $this->persist($orderTax);
+
+            $item->setTax($orderTax);
         }
 
         //validate item before creation
