@@ -2,6 +2,7 @@
 
 namespace App\Core\Dto\Controller\Api\Admin\Order;
 
+use App\Core\Dto\Common\Common\DateTimeDto;
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQuery;
@@ -84,12 +85,12 @@ class OrderRequestListDto
     private $ids;
 
     /**
-     * @var \DateTimeInterface|null
+     * @var DateTimeDto|null
      */
     private $dateTimeFrom;
 
     /**
-     * @var \DateTimeInterface|null
+     * @var DateTimeDto|null
      */
     private $dateTimeTo;
 
@@ -322,6 +323,8 @@ class OrderRequestListDto
         $dto->offset = $request->query->get('offset');
         $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
         $dto->orderMode = $request->query->get('orderMode', 'ASC');
+        $dto->dateTimeFrom = DateTimeDto::createFromDateTime($request->query->get('dateTimeFrom'));
+        $dto->dateTimeTo = DateTimeDto::createFromDateTime($request->query->get('dateTimeTo'));
 
         return $dto;
     }
@@ -345,36 +348,38 @@ class OrderRequestListDto
         $query->setOffset($this->offset);
         $query->setOrderMode($this->orderMode);
         $query->setOrderBy($this->getOrderBy());
+        $query->setDateTimeFrom($this->dateTimeFrom);
+        $query->setDateTimeTo($this->dateTimeTo);
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return DateTimeDto|null
      */
-    public function getDateTimeFrom(): ?\DateTimeInterface
+    public function getDateTimeFrom(): ?DateTimeDto
     {
         return $this->dateTimeFrom;
     }
 
     /**
-     * @param \DateTimeInterface|null $dateTimeFrom
+     * @param DateTimeDto|null $dateTimeFrom
      */
-    public function setDateTimeFrom(?\DateTimeInterface $dateTimeFrom): void
+    public function setDateTimeFrom(?DateTimeDto $dateTimeFrom): void
     {
         $this->dateTimeFrom = $dateTimeFrom;
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return DateTimeDto|null
      */
-    public function getDateTimeTo(): ?\DateTimeInterface
+    public function getDateTimeTo(): ?DateTimeDto
     {
         return $this->dateTimeTo;
     }
 
     /**
-     * @param \DateTimeInterface|null $dateTimeTo
+     * @param DateTimeDto|null $dateTimeTo
      */
-    public function setDateTimeTo(?\DateTimeInterface $dateTimeTo): void
+    public function setDateTimeTo(?DateTimeDto $dateTimeTo): void
     {
         $this->dateTimeTo = $dateTimeTo;
     }

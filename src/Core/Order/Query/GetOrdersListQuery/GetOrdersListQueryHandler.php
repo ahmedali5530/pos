@@ -51,6 +51,16 @@ class GetOrdersListQueryHandler extends EntityRepository implements GetOrdersLis
             $qb->andWhere('entity.id IN (:ids)');
             $qb->setParameter('ids', $query->getIds());
         }
+
+        if($query->getDateTimeFrom() !== null){
+            $qb->andWhere('entity.createdAt >= :dateFrom');
+            $qb->setParameter('dateFrom', $query->getDateTimeFrom()->getDatetime());
+        }
+
+        if($query->getDateTimeTo() !== null){
+            $qb->andWhere('entity.createdAt <= :dateTo');
+            $qb->setParameter('dateTo', $query->getDateTimeTo()->getDatetime());
+        }
         
         if($query->getLimit() !== null){
             $qb->setMaxResults($query->getLimit());
@@ -63,6 +73,8 @@ class GetOrdersListQueryHandler extends EntityRepository implements GetOrdersLis
         if($query->getOrderBy() !== null){
             $qb->orderBy($query->getOrderBy(), $query->getOrderMode());
         }
+
+
         
         $list = new Paginator($qb->getQuery());
 

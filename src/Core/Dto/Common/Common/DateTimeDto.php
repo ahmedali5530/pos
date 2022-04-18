@@ -27,7 +27,7 @@ class DateTimeDto
                 $date = new DateTime($datetime);
             }
 
-            $date->setTimezone(new DateTimeZone('utc'));
+//            $date->setTimezone(new DateTimeZone('utc'));
 
             $dto->datetime = $date;
             return $dto;
@@ -45,7 +45,7 @@ class DateTimeDto
 
         $dto = new self();
         try {
-            $dto->datetime = Carbon::parse($datetime, 'utc');
+            $dto->datetime = Carbon::parse($datetime/*, 'utc'*/);
 
             return $dto;
         }catch (Exception $exception) {

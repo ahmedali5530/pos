@@ -33,7 +33,7 @@ class Order
     private $orderId;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Customer::class)
+     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="orders")
      */
     private $customer;
 
