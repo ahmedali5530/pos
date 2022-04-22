@@ -10,6 +10,7 @@ use App\Entity\Order;
 use App\Entity\OrderDiscount;
 use App\Entity\OrderPayment;
 use App\Entity\OrderProduct;
+use App\Entity\OrderStatus;
 use App\Entity\OrderTax;
 use App\Entity\Payment;
 use App\Entity\Product;
@@ -41,8 +42,10 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
     {
         $item = new Order();
 
+        $item->setStatus(OrderStatus::HOLD);
         if(!$command->getIsSuspended()) {
             $item->setOrderId($this->getNewOrderId());
+            $item->setStatus(OrderStatus::COMPLETED);
         }
         $item->setIsSuspended($command->getIsSuspended());
         $item->setIsDeleted($command->getIsDeleted());

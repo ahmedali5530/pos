@@ -95,6 +95,11 @@ class OrderRequestListDto
     private $dateTimeTo;
 
     /**
+     * @var string|null
+     */
+    private $q;
+
+    /**
      * @return int|null
      */
     public function getCustomerId() : ?int
@@ -302,6 +307,22 @@ class OrderRequestListDto
         $this->ids = $ids;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getQ(): ?string
+    {
+        return $this->q;
+    }
+
+    /**
+     * @param string|null $q
+     */
+    public function setQ(?string $q): void
+    {
+        $this->q = $q;
+    }
+
     public static function createFromRequest(Request $request)
     {
         $dto = new self();
@@ -325,6 +346,7 @@ class OrderRequestListDto
         $dto->orderMode = $request->query->get('orderMode', 'ASC');
         $dto->dateTimeFrom = DateTimeDto::createFromDateTime($request->query->get('dateTimeFrom'));
         $dto->dateTimeTo = DateTimeDto::createFromDateTime($request->query->get('dateTimeTo'));
+        $dto->q = $request->query->get('q');
 
         return $dto;
     }
@@ -350,6 +372,7 @@ class OrderRequestListDto
         $query->setOrderBy($this->getOrderBy());
         $query->setDateTimeFrom($this->dateTimeFrom);
         $query->setDateTimeTo($this->dateTimeTo);
+        $query->setQ($this->q);
     }
 
     /**

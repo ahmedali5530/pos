@@ -32,7 +32,6 @@ class CreateCustomerRequestDto
 
     /**
      * @var null|string
-     * @Assert\NotBlank(normalizer="trim")
      */
     private $address = null;
 
@@ -45,6 +44,11 @@ class CreateCustomerRequestDto
      * @var null|float
      */
     private $lng = null;
+
+    /**
+     * @var string|null
+     */
+    private $cnic;
 
     public function setName(?string $name)
     {
@@ -123,6 +127,22 @@ class CreateCustomerRequestDto
         return $this->lng;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getCnic(): ?string
+    {
+        return $this->cnic;
+    }
+
+    /**
+     * @param string|null $cnic
+     */
+    public function setCnic(?string $cnic): void
+    {
+        $this->cnic = $cnic;
+    }
+
     public static function createFromRequest(Request $request) : self
     {
         $dto = new self();
@@ -135,6 +155,7 @@ class CreateCustomerRequestDto
         $dto->address = $data['address'] ?? null;
         $dto->lat = $data['lat'] ?? null;
         $dto->lng = $data['lng'] ?? null;
+        $dto->cnic = $data['cnic'] ?? null;
 
 
         return $dto;
@@ -149,5 +170,6 @@ class CreateCustomerRequestDto
         $command->setAddress($this->address);
         $command->setLat($this->lat);
         $command->setLng($this->lng);
+        $command->setCnic($this->cnic);
     }
 }

@@ -16,6 +16,7 @@ class Payment
     const PAYMENT_TYPE_CASH = 'cash';
     const PAYMENT_TYPE_CREDIT_CARD = 'credit card';
     const PAYMENT_TYPE_POINTS = 'points';
+    const PAYMENT_TYPE_CREDIT = 'credit';
 
 
     use ActiveTrait;

@@ -84,6 +84,11 @@ class Order
      */
     private $payments;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $status;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -279,6 +284,18 @@ class Order
                 $payment->setOrder(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

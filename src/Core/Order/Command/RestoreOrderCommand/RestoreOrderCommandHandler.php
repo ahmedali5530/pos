@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Order\Command\DeleteOrderCommand;
+namespace App\Core\Order\Command\RestoreOrderCommand;
 
 use App\Core\Entity\EntityManager\EntityManager;
 use App\Entity\Order;
@@ -8,7 +8,7 @@ use App\Entity\OrderStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class DeleteOrderCommandHandler extends EntityManager implements DeleteOrderCommandHandlerInterface
+class RestoreOrderCommandHandler extends EntityManager implements RestoreOrderCommandHandlerInterface
 {
     protected function getEntityClass(): string
     {
@@ -26,34 +26,28 @@ class DeleteOrderCommandHandler extends EntityManager implements DeleteOrderComm
         $this->validator = $validator;
     }
 
-    public function handle(DeleteOrderCommand $command): DeleteOrderCommandResult
+    public function handle(RestoreOrderCommand $command): RestoreOrderCommandResult
     {
         /** @var Order $item */
         $item = $this->getRepository()->find($command->getId());
 
         if ($item === null) {
-            return DeleteOrderCommandResult::createNotFound();
+            return RestoreOrderCommandResult::createNotFound();
         }
 
-        $item->setIsDeleted(true);
-        $item->setStatus(OrderStatus::DELETED);
+        $item->setIsDeleted(null);
+        $item->setStatus(OrderStatus::COMPLETED);
 
         //validate item before creation
         $violations = $this->validator->validate($item);
         if ($violations->count() > 0) {
-            return DeleteOrderCommandResult::createFromConstraintViolations($violations);
+            return RestoreOrderCommandResult::createFromConstraintViolations($violations);
         }
 
-        //completely remove if order is suspended
-        if($item->getIsSuspended()){
-            $this->remove($item);
-        }else{
-            $this->persist($item);
-        }
-
+        $this->persist($item);
         $this->flush();
 
-        $result = new DeleteOrderCommandResult();
+        $result = new RestoreOrderCommandResult();
         $result->setOrder($item);
 
         return $result;

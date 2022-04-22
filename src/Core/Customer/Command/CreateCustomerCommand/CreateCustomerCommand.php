@@ -39,6 +39,11 @@ class CreateCustomerCommand
      */
     private $lng = null;
 
+    /**
+     * @var null|string
+     */
+    private $cnic = null;
+
     public function setName(?string $name)
     {
         $this->name = $name;
@@ -114,5 +119,21 @@ class CreateCustomerCommand
     public function getLng()
     {
         return $this->lng;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCnic(): ?string
+    {
+        return $this->cnic;
+    }
+
+    /**
+     * @param string|null $cnic
+     */
+    public function setCnic(?string $cnic): void
+    {
+        $this->cnic = $cnic;
     }
 }

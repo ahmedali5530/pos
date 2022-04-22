@@ -77,6 +77,11 @@ class OrderDto
      */
     private $createdAt;
 
+    /**
+     * @var string
+     */
+    private $status;
+
     public static function createFromOrder(?Order $order): ?self
     {
         if($order === null){
@@ -101,6 +106,7 @@ class OrderDto
             $dto->payments[] = OrderPaymentDto::createFromOrderPayment($payment);
         }
         $dto->createdAt = $order->getCreatedAt();
+        $dto->status = $order->getStatus();
 
         return $dto;
     }
@@ -311,5 +317,21 @@ class OrderDto
     public function setCreatedAt(?\DateTimeInterface $createdAt): void
     {
         $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
     }
 }

@@ -17,8 +17,8 @@ class GetOrdersListQueryHandler extends EntityRepository implements GetOrdersLis
     {
         $qb = $this->createQueryBuilder('entity');
 
+        $qb->leftJoin('entity.customer', 'customer');
         if($query->getCustomerId() !== null){
-            $qb->join('entity.customer', 'customer');
             $qb->andWhere('customer.id = :customerId');
             $qb->setParameter('customerId', $query->getCustomerId());
         }
@@ -60,6 +60,11 @@ class GetOrdersListQueryHandler extends EntityRepository implements GetOrdersLis
         if($query->getDateTimeTo() !== null){
             $qb->andWhere('entity.createdAt <= :dateTo');
             $qb->setParameter('dateTo', $query->getDateTimeTo()->getDatetime());
+        }
+
+        if($query->getQ() !== null){
+            $qb->andWhere('customer.name LIKE :q OR entity.orderId LIKE :q OR entity.status LIKE :q');
+            $qb->setParameter('q', '%'.$query->getQ().'%');
         }
         
         if($query->getLimit() !== null){

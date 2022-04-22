@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Order\Command\DeleteOrderCommand;
+namespace App\Core\Order\Command\DispatchOrderCommand;
 
 use App\Core\Entity\EntityManager\EntityManager;
 use App\Entity\Order;
@@ -8,7 +8,7 @@ use App\Entity\OrderStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class DeleteOrderCommandHandler extends EntityManager implements DeleteOrderCommandHandlerInterface
+class DispatchOrderCommandHandler extends EntityManager implements DispatchOrderCommandHandlerInterface
 {
     protected function getEntityClass(): string
     {
@@ -26,34 +26,28 @@ class DeleteOrderCommandHandler extends EntityManager implements DeleteOrderComm
         $this->validator = $validator;
     }
 
-    public function handle(DeleteOrderCommand $command): DeleteOrderCommandResult
+    public function handle(DispatchOrderCommand $command): DispatchOrderCommandResult
     {
         /** @var Order $item */
         $item = $this->getRepository()->find($command->getId());
 
         if ($item === null) {
-            return DeleteOrderCommandResult::createNotFound();
+            return DispatchOrderCommandResult::createNotFound();
         }
 
-        $item->setIsDeleted(true);
-        $item->setStatus(OrderStatus::DELETED);
+        $item->setStatus(OrderStatus::DISPATCHED);
+        $item->setIsDispatched(true);
 
         //validate item before creation
         $violations = $this->validator->validate($item);
         if ($violations->count() > 0) {
-            return DeleteOrderCommandResult::createFromConstraintViolations($violations);
+            return DispatchOrderCommandResult::createFromConstraintViolations($violations);
         }
 
-        //completely remove if order is suspended
-        if($item->getIsSuspended()){
-            $this->remove($item);
-        }else{
-            $this->persist($item);
-        }
-
+        $this->persist($item);
         $this->flush();
 
-        $result = new DeleteOrderCommandResult();
+        $result = new DispatchOrderCommandResult();
         $result->setOrder($item);
 
         return $result;

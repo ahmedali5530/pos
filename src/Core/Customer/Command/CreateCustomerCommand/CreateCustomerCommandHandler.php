@@ -28,6 +28,7 @@ class CreateCustomerCommandHandler extends EntityManager implements CreateCustom
         $item->setAddress($command->getAddress());
         $item->setLat($command->getLat());
         $item->setLng($command->getLng());
+        $item->setCnic($command->getCnic());
 
 
         //validate item before creation

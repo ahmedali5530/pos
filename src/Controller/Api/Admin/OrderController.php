@@ -12,6 +12,10 @@ use App\Core\Order\Command\CreateOrderCommand\CreateOrderCommand;
 use App\Core\Order\Command\CreateOrderCommand\CreateOrderCommandHandlerInterface;
 use App\Core\Order\Command\DeleteOrderCommand\DeleteOrderCommand;
 use App\Core\Order\Command\DeleteOrderCommand\DeleteOrderCommandHandlerInterface;
+use App\Core\Order\Command\DispatchOrderCommand\DispatchOrderCommand;
+use App\Core\Order\Command\DispatchOrderCommand\DispatchOrderCommandHandlerInterface;
+use App\Core\Order\Command\RestoreOrderCommand\RestoreOrderCommand;
+use App\Core\Order\Command\RestoreOrderCommand\RestoreOrderCommandHandlerInterface;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQuery;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQueryHandlerInterface;
 use App\Core\Validation\ApiRequestDtoValidator;
@@ -61,6 +65,8 @@ class OrderController extends AbstractController
      * @OA\Parameter(name="dateTimeFrom", in="query", description="Date of order create start")
      *
      * @OA\Parameter(name="dateTimeTo", in="query", description="Date of order create end")
+     *
+     * @OA\Parameter(name="q", in="query", description="Search in orderid and customer")
      *
      * @OA\Response(
      *     response="200", description="OK", @Model(type=OrderListResponseDto::class)
@@ -115,6 +121,56 @@ class OrderController extends AbstractController
         if($result->hasValidationError()){
             return $responseFactory->validationError($result->getValidationError());
         }
+
+        if($result->isNotFound()){
+            return $responseFactory->notFound($result->getNotFoundMessage());
+        }
+
+        return $responseFactory->json(
+            OrderResponseDto::createFromOrder($result->getOrder())
+        );
+    }
+
+    /**
+     * @Route("/restore/{id}", methods={"POST"}, name="restore")
+     *
+     * @OA\Response(response="200", description="Order Created", @Model(type=OrderResponseDto::class))
+     */
+    public function restore(
+        $id,
+        ApiResponseFactory $responseFactory,
+        RestoreOrderCommandHandlerInterface $handler
+    )
+    {
+        $command = new RestoreOrderCommand();
+        $command->setId($id);
+
+        $result = $handler->handle($command);
+
+        if($result->isNotFound()){
+            return $responseFactory->notFound($result->getNotFoundMessage());
+        }
+
+        return $responseFactory->json(
+            OrderResponseDto::createFromOrder($result->getOrder())
+        );
+    }
+
+    /**
+     * @Route("/dispatch/{id}", methods={"POST"}, name="dispatch")
+     *
+     * @OA\Response(response="200", description="Order Created", @Model(type=OrderResponseDto::class))
+     */
+    public function dispatch(
+        $id,
+        ApiResponseFactory $responseFactory,
+        DispatchOrderCommandHandlerInterface $handler
+    )
+    {
+        $command = new DispatchOrderCommand();
+        $command->setId($id);
+
+        $result = $handler->handle($command);
 
         if($result->isNotFound()){
             return $responseFactory->notFound($result->getNotFoundMessage());

@@ -206,10 +206,13 @@ class ProductController extends AbstractController
         Request $request,
         ApiRequestDtoValidator $requestDtoValidator,
         ApiResponseFactory $responseFactory,
-        UpdateProductCommandHandlerInterface $handler
+        UpdateProductCommandHandlerInterface $handler,
+        $id
     )
     {
         $requestDto = UpdateProductRequestDto::createFromRequest($request);
+        $requestDto->setId($id);
+
         if(null !== $violations = $requestDtoValidator->validate($requestDto)){
             return $responseFactory->validationError($violations);
         }
