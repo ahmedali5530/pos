@@ -66,6 +66,11 @@ class CreateOrderCommand
     private $payments = [];
 
     /**
+     * @var int|null
+     */
+    private $returnedFrom;
+
+    /**
      * @return int|null
      */
     public function getCustomerId(): ?int
@@ -239,5 +244,21 @@ class CreateOrderCommand
     public function setDiscountAmount(?string $discountAmount): void
     {
         $this->discountAmount = $discountAmount;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getReturnedFrom(): ?int
+    {
+        return $this->returnedFrom;
+    }
+
+    /**
+     * @param int|null $returnedFrom
+     */
+    public function setReturnedFrom(?int $returnedFrom): void
+    {
+        $this->returnedFrom = $returnedFrom;
     }
 }

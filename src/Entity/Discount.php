@@ -12,6 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\Entity(repositoryClass=DiscountRepository::class)
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ * @Gedmo\Loggable()
  */
 class Discount
 {
@@ -34,21 +35,25 @@ class Discount
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Versioned()
      */
     private $name;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $rate;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $rateType;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $scope;
 

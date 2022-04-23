@@ -81,6 +81,11 @@ class CreateOrderRequestDto
      */
     private $payments = [];
 
+    /**
+     * @var int|null
+     */
+    private $refundingFrom;
+
     public static function createFromRequest(Request $request)
     {
         $dto = new self();
@@ -104,6 +109,7 @@ class CreateOrderRequestDto
         }
 
         $dto->discountAmount = $data['discountAmount'] ?? null;
+        $dto->refundingFrom = $data['refundingFrom'] ?? null;
 
         return $dto;
     }
@@ -121,6 +127,7 @@ class CreateOrderRequestDto
         $command->setTax($this->tax);
         $command->setPayments($this->payments);
         $command->setDiscountAmount($this->discountAmount);
+        $command->setReturnedFrom($this->refundingFrom);
     }
 
     /**
@@ -297,5 +304,21 @@ class CreateOrderRequestDto
     public function setDiscountAmount(?string $discountAmount): void
     {
         $this->discountAmount = $discountAmount;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getRefundingFrom(): ?int
+    {
+        return $this->refundingFrom;
+    }
+
+    /**
+     * @param int|null $refundingFrom
+     */
+    public function setRefundingFrom(?int $refundingFrom): void
+    {
+        $this->refundingFrom = $refundingFrom;
     }
 }

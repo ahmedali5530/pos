@@ -7,9 +7,12 @@ use App\Repository\ProductVariantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 /**
  * @ORM\Entity(repositoryClass=ProductVariantRepository::class)
+ * @Gedmo\Loggable()
  */
 class ProductVariant
 {
@@ -25,36 +28,43 @@ class ProductVariant
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="variants")
      * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Versioned()
      */
     private $product;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $attributeName;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $attributeValue;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $barcode;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $sku;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $price;
 

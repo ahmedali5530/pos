@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\OrderPaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=OrderPaymentRepository::class)
+ * @Gedmo\Loggable()
  */
 class OrderPayment
 {
@@ -22,44 +24,37 @@ class OrderPayment
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="payments")
+     * @Gedmo\Versioned()
      */
     private $order;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $total;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $received;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $due;
 
     /**
      * @ORM\ManyToOne(targetEntity=Payment::class)
+     * @Gedmo\Versioned()
      */
     private $type;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getOrde(): ?Order
-    {
-        return $this->order;
-    }
-
-    public function setOrde(?Order $order): self
-    {
-        $this->order = $order;
-
-        return $this;
     }
 
     public function getTotal(): ?string

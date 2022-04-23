@@ -2,6 +2,9 @@
 
 namespace App\Controller\Api\Admin;
 
+use App\Core\Customer\Command\CreatePaymentCommand\CreatePaymentCommand;
+use App\Core\Customer\Command\CreatePaymentCommand\CreatePaymentCommandHandlerInterface;
+use App\Core\Dto\Controller\Api\Admin\Customer\CreateCustomerPaymentRequestDto;
 use App\Core\Dto\Controller\Api\Admin\Customer\CreateCustomerRequestDto;
 use App\Core\Dto\Controller\Api\Admin\Customer\SelectCustomerListResponseDto;
 use App\Core\Dto\Controller\Api\Admin\Customer\SelectCustomerRequestDto;
@@ -122,11 +125,60 @@ class CustomerController extends AbstractController
     }
 
     /**
+     * @Route("/payment/{id}", methods={"POST"}, name="add_payment")
+     *
+     * @OA\RequestBody(
+     *   @Model(type=CreateCustomerRequestDto::class)
+     * )
+     *
+     * @OA\Response(
+     *   response="200", description="OK",
+     *   @Model(type=SelectCustomerResponseDto::class)
+     * )
+     *
+     * @OA\Response(
+     *   response="404", description="Not found"
+     * )
+     */
+    public function addPayment(
+        $id, Request $request,
+        ApiRequestDtoValidator $requestDtoValidator,
+        ApiResponseFactory $responseFactory,
+        CreatePaymentCommandHandlerInterface $handler
+    ){
+        $requestDto = CreateCustomerPaymentRequestDto::createFromRequest($request);
+        if(null !== $violations = $requestDtoValidator->validate($requestDto)){
+            return $responseFactory->validationError($violations);
+        }
+
+        $command = new CreatePaymentCommand();
+        $command->setAmount($requestDto->getAmount());
+        $command->setUser($this->getUser());
+        $command->setCustomerId($id);
+        $command->setDescription($requestDto->getDescription());
+        $command->setOrderId($requestDto->getOrderId());
+
+        $result = $handler->handle($command);
+
+        if($result->hasValidationError()){
+            return $responseFactory->validationError($result->getValidationError());
+        }
+
+        if($result->isNotFound()){
+            return $responseFactory->notFound($result->getNotFoundMessage());
+        }
+
+        return $responseFactory->json(
+            SelectCustomerResponseDto::createFromCustomer($result->getCustomer())
+        );
+    }
+
+    /**
      * @Route("/{id}", methods={"GET"}, name="get")
      *
      * @OA\Response(
      *   response="200", description="OK",
-     * @Model(type=SelectCustomerResponseDto::class)
+     *   @Model(type=SelectCustomerResponseDto::class)
      * )
      *
      * @OA\Response(

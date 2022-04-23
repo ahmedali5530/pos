@@ -8,9 +8,11 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
+ * @Gedmo\Loggable()
  */
 class Customer
 {
@@ -26,36 +28,43 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Versioned()
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $phone;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $birthday;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $address;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $lat;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $lng;
 
@@ -66,12 +75,19 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $cnic;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CustomerPayment::class, mappedBy="customer")
+     */
+    private $payments;
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -201,6 +217,36 @@ class Customer
     public function setCnic(?string $cnic): self
     {
         $this->cnic = $cnic;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CustomerPayment[]
+     */
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(CustomerPayment $payment): self
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments[] = $payment;
+            $payment->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(CustomerPayment $payment): self
+    {
+        if ($this->payments->removeElement($payment)) {
+            // set the owning side to null (unless already changed)
+            if ($payment->getCustomer() === $this) {
+                $payment->setCustomer(null);
+            }
+        }
 
         return $this;
     }

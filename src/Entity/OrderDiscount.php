@@ -5,9 +5,12 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\OrderDiscountRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 /**
  * @ORM\Entity(repositoryClass=OrderDiscountRepository::class)
+ * @Gedmo\Loggable()
  */
 class OrderDiscount
 {
@@ -23,21 +26,25 @@ class OrderDiscount
     /**
      * @ORM\OneToOne(targetEntity=Order::class, inversedBy="discount", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="orderId")
+     * @Gedmo\Versioned()
      */
     private $order;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $rate;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $amount;
 
     /**
      * @ORM\ManyToOne(targetEntity=Discount::class)
+     * @Gedmo\Versioned()
      */
     private $type;
 

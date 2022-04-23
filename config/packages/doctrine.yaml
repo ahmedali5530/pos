@@ -16,6 +16,12 @@ doctrine:
                 prefix: 'App\Entity'
                 alias: App
 
+            loggable:
+                type: annotation # or attribute
+                alias: Gedmo
+                prefix: Gedmo\Loggable\Entity
+                dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Loggable/Entity"
+
         filters:
             softdeleteable:
                 class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter

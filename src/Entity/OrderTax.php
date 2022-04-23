@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\OrderTaxRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=OrderTaxRepository::class)
+ * @Gedmo\Loggable()
  */
 class OrderTax
 {
@@ -23,21 +25,25 @@ class OrderTax
     /**
      * @ORM\OneToOne(targetEntity=Order::class, inversedBy="tax", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="orderId")
+     * @Gedmo\Versioned()
      */
     private $order;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $rate;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $amount;
 
     /**
      * @ORM\ManyToOne(targetEntity=Tax::class)
+     * @Gedmo\Versioned()
      */
     private $type;
 

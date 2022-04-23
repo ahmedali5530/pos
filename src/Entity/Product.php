@@ -10,12 +10,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  * @UniqueEntity(fields={"barcode"}, message="Use a different value")
  * @UniqueEntity(fields={"sku"}, message="Use a different value")
  * @UniqueEntity(fields={"shortCode"}, message="Use a different value")
+ * @Gedmo\Loggable()
  */
 class Product
 {
@@ -32,46 +35,55 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Versioned()
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $sku;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $barcode;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $baseQuantity;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $isAvailable;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $basePrice;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $cost;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class)
+     * @Gedmo\Versioned()
      */
     private $category;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $quantity;
 
@@ -87,11 +99,13 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $uom;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $shortCode;
 

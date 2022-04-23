@@ -9,11 +9,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=OrderRepository::class)
  * @ORM\Table(name="`order`")
  * @UniqueEntity(fields={"orderId"})
+ * @Gedmo\Loggable()
  */
 class Order
 {
@@ -29,36 +31,43 @@ class Order
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $orderId;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="orders")
+     * @Gedmo\Versioned()
      */
     private $customer;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $isSuspended;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $isDeleted;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $isReturned;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $isDispatched;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
+     * @Gedmo\Versioned()
      */
     private $user;
 
@@ -70,12 +79,14 @@ class Order
     /**
      * @var OrderDiscount
      * @ORM\OneToOne(targetEntity=OrderDiscount::class, mappedBy="order", cascade={"persist", "remove"})
+     * @Gedmo\Versioned()
      */
     private $discount;
 
     /**
      * @var OrderTax
      * @ORM\OneToOne(targetEntity=OrderTax::class, mappedBy="order", cascade={"persist", "remove"})
+     * @Gedmo\Versioned()
      */
     private $tax;
 
@@ -86,8 +97,16 @@ class Order
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $status;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Order::class)
+     * @ORM\JoinColumn(nullable=true)
+     * @Gedmo\Versioned()
+     */
+    private $returnedFrom;
 
     public function __construct()
     {
@@ -296,6 +315,18 @@ class Order
     public function setStatus(?string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getReturnedFrom(): ?self
+    {
+        return $this->returnedFrom;
+    }
+
+    public function setReturnedFrom(?self $returnedFrom): self
+    {
+        $this->returnedFrom = $returnedFrom;
 
         return $this;
     }

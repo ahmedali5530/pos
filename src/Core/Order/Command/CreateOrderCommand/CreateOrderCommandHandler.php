@@ -47,6 +47,12 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
             $item->setOrderId($this->getNewOrderId());
             $item->setStatus(OrderStatus::COMPLETED);
         }
+
+        if($command->getReturnedFrom() !== null) {
+            $item->setReturnedFrom(
+                $this->getRepository(Order::class)->find($command->getReturnedFrom())
+            );
+        }
         $item->setIsSuspended($command->getIsSuspended());
         $item->setIsDeleted($command->getIsDeleted());
         $item->setIsReturned($command->getIsReturned());

@@ -21,7 +21,6 @@ class CreateCustomerRequestDto
 
     /**
      * @var null|string
-     * @Assert\NotBlank(normalizer="trim")
      */
     private $phone = null;
 

@@ -7,9 +7,11 @@ use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\StoreRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=StoreRepository::class)
+ * @Gedmo\Loggable()
  */
 class Store
 {
@@ -27,11 +29,13 @@ class Store
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Versioned()
      */
     private $name;
 
     /**
      * @ORM\ManyToOne(targetEntity=Location::class)
+     * @Gedmo\Versioned()
      */
     private $location;
 

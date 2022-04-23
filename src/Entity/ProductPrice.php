@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\ProductPriceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=ProductPriceRepository::class)
+ * @Gedmo\Loggable()
  */
 class ProductPrice
 {
@@ -23,71 +25,85 @@ class ProductPrice
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="prices")
      * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Versioned()
      */
     private $product;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $date;
 
     /**
      * @ORM\Column(type="time", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $time;
 
     /**
      * @ORM\Column(type="time", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $timeTo;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $day;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $week;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $month;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $quarter;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $rate;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $minQuantity;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $maxQuantity;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductVariant::class, inversedBy="prices")
+     * @Gedmo\Versioned()
      */
     private $productVariant;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $basePrice;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $baseQuantity;
 

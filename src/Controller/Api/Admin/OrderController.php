@@ -14,6 +14,8 @@ use App\Core\Order\Command\DeleteOrderCommand\DeleteOrderCommand;
 use App\Core\Order\Command\DeleteOrderCommand\DeleteOrderCommandHandlerInterface;
 use App\Core\Order\Command\DispatchOrderCommand\DispatchOrderCommand;
 use App\Core\Order\Command\DispatchOrderCommand\DispatchOrderCommandHandlerInterface;
+use App\Core\Order\Command\RefundOrderCommand\RefundOrderCommand;
+use App\Core\Order\Command\RefundOrderCommand\RefundOrderCommandHandlerInterface;
 use App\Core\Order\Command\RestoreOrderCommand\RestoreOrderCommand;
 use App\Core\Order\Command\RestoreOrderCommand\RestoreOrderCommandHandlerInterface;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQuery;
@@ -168,6 +170,31 @@ class OrderController extends AbstractController
     )
     {
         $command = new DispatchOrderCommand();
+        $command->setId($id);
+
+        $result = $handler->handle($command);
+
+        if($result->isNotFound()){
+            return $responseFactory->notFound($result->getNotFoundMessage());
+        }
+
+        return $responseFactory->json(
+            OrderResponseDto::createFromOrder($result->getOrder())
+        );
+    }
+
+    /**
+     * @Route("/refund/{id}", methods={"POST"}, name="refund")
+     *
+     * @OA\Response(response="200", description="Order Created", @Model(type=OrderResponseDto::class))
+     */
+    public function refund(
+        $id,
+        ApiResponseFactory $responseFactory,
+        RefundOrderCommandHandlerInterface $handler
+    )
+    {
+        $command = new RefundOrderCommand();
         $command->setId($id);
 
         $result = $handler->handle($command);

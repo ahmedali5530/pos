@@ -37,24 +37,6 @@ security:
             provider: user_provider
             jwt: ~
 
-#        main:
-#            pattern: ^/api
-#            lazy: true
-#            provider: user_provider
-#            custom_authenticator: App\Security\AppAuthenticator
-#
-#            logout:
-#                path: api_app_logout
-#                success_handler: App\Security\LogoutSuccessHandler
-#                # where to redirect after logout
-#                # target: app_any_route
-#            remember_me:
-#                secret: '%kernel.secret%'
-#                path: /api
-#                always_remember_me: true
-#                samesite: none
-#                secure: true
-
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:

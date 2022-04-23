@@ -37,7 +37,18 @@ services:
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
+    gedmo.listener.loggable:
+        class: Gedmo\Loggable\LoggableListener
+        tags:
+            - {name: doctrine.event_subscriber, connection: default}
+        calls:
+            - [setAnnotationReader, ["@annotation_reader"]]
+
     Faker\Generator:
         class: Faker\Generator
         factory: ['App\Factory\Faker\FakerFactory', 'create']
         autowire: false
+
+    App\EventSubscriber\LoggerSubscriber:
+        arguments:
+            $loggableListener: '@gedmo.listener.loggable'

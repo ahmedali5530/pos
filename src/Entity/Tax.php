@@ -7,9 +7,11 @@ use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\TaxRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=TaxRepository::class)
+ * @Gedmo\Loggable()
  */
 class Tax
 {
@@ -26,11 +28,13 @@ class Tax
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Versioned()
      */
     private $name;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $rate;
 

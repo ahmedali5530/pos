@@ -7,6 +7,7 @@ namespace App\Core\Dto\Common\Customer;
 use App\Core\Dto\Common\Common\DateTimeDto;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
 use App\Entity\Customer;
+use App\Entity\Payment;
 
 class CustomerDto
 {
@@ -72,6 +73,11 @@ class CustomerDto
      */
     private $cnic;
 
+    /**
+     * @var CustomerPaymentDto[]
+     */
+    private $payments = [];
+
     public static function createFromCustomer(?Customer $customer): ?self
     {
         if($customer === null){
@@ -89,10 +95,18 @@ class CustomerDto
         $dto->lng = $customer->getLng();
         foreach($customer->getOrders() as $order){
             foreach($order->getPayments() as $payment){
-                $dto->sale += $payment->getTotal();
+                if($payment->getType()->getType() === Payment::PAYMENT_TYPE_CREDIT) {
+                    $dto->sale += $payment->getTotal();
+                }
             }
         }
         $dto->cnic = $customer->getCnic();
+        foreach($customer->getPayments() as $payment){
+            $dto->paid += $payment->getAmount();
+            $dto->payments[] = CustomerPaymentDto::createFromCustomerPayment($payment);
+        }
+
+        $dto->outstanding = $dto->sale - $dto->paid;
 
         return $dto;
     }
@@ -288,5 +302,21 @@ class CustomerDto
     public function setCnic(?string $cnic): void
     {
         $this->cnic = $cnic;
+    }
+
+    /**
+     * @return CustomerPaymentDto[]
+     */
+    public function getPayments(): array
+    {
+        return $this->payments;
+    }
+
+    /**
+     * @param CustomerPaymentDto[] $payments
+     */
+    public function setPayments(array $payments): void
+    {
+        $this->payments = $payments;
     }
 }

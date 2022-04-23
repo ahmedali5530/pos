@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\OrderProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=OrderProductRepository::class)
+ * @Gedmo\Loggable()
  */
 class OrderProduct
 {
@@ -23,47 +25,56 @@ class OrderProduct
     /**
      * @ORM\ManyToOne(targetEntity=Product::class)
      * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Versioned()
      */
     private $product;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductVariant::class)
+     * @Gedmo\Versioned()
      */
     private $variant;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $quantity;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Gedmo\Versioned()
      */
     private $price;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $isSuspended;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $isDeleted;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Gedmo\Versioned()
      */
     private $isReturned;
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="items")
      * @ORM\JoinColumn(name="orderId", referencedColumnName="id")
+     * @Gedmo\Versioned()
      */
     private $order;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Gedmo\Versioned()
      */
     private $discount;
 
