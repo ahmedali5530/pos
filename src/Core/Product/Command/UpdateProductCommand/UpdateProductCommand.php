@@ -2,6 +2,9 @@
 
 namespace App\Core\Product\Command\UpdateProductCommand;
 
+use App\Core\Dto\Common\Product\ProductPriceDto;
+use App\Core\Dto\Common\Product\ProductVariantDto;
+
 class UpdateProductCommand
 {
     /**
@@ -55,12 +58,12 @@ class UpdateProductCommand
     private $shortCode;
 
     /**
-     * @var int[]|null
+     * @var ProductPriceDto[]|null
      */
     private $prices;
 
     /**
-     * @var int[]|null
+     * @var ProductVariantDto[]|null
      */
     private $variants;
 
@@ -180,7 +183,7 @@ class UpdateProductCommand
     }
 
     /**
-     * @return int[]|null
+     * @return ProductPriceDto[]|null
      */
     public function getPrices(): ?array
     {
@@ -188,7 +191,7 @@ class UpdateProductCommand
     }
 
     /**
-     * @param int[]|null $prices
+     * @param ProductPriceDto[]|null $prices
      */
     public function setPrices(?array $prices): void
     {
@@ -196,7 +199,7 @@ class UpdateProductCommand
     }
 
     /**
-     * @return int[]|null
+     * @return ProductVariantDto[]|null
      */
     public function getVariants(): ?array
     {
@@ -204,7 +207,7 @@ class UpdateProductCommand
     }
 
     /**
-     * @param int[]|null $variants
+     * @param ProductVariantDto[]|null $variants
      */
     public function setVariants(?array $variants): void
     {

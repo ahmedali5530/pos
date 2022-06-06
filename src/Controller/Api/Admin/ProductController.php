@@ -9,6 +9,7 @@ use App\Core\Dto\Controller\Api\Admin\Product\ProductListRequestDto;
 use App\Core\Dto\Controller\Api\Admin\Product\ProductListResponseDto;
 use App\Core\Dto\Controller\Api\Admin\Product\ProductResponseDto;
 use App\Core\Dto\Controller\Api\Admin\Product\UpdateProductRequestDto;
+use App\Core\Dto\Controller\Api\Admin\Product\UploadProductRequestDto;
 use App\Core\Product\Command\CreateProductCommand\CreateProductCommand;
 use App\Core\Product\Command\CreateProductCommand\CreateProductCommandHandlerInterface;
 use App\Core\Product\Command\DeleteProductCommand\DeleteProductCommand;
@@ -156,6 +157,86 @@ class ProductController extends AbstractController
         return $responseFactory->json(
             ProductResponseDto::createFromProduct($result->getProduct())
         );
+    }
+
+    /**
+     * @Route("/export", name="download_products", methods={"GET"})
+     *
+     * @OA\Response(response="200", description="OK")
+     */
+    public function download(
+        ApiResponseFactory $responseFactory,
+        GetProductsListQueryHandlerInterface $productsListQueryHandler
+    )
+    {
+        $query = new GetProductsListQuery();
+        $list = $productsListQueryHandler->handle($query);
+
+        $fileName = $this->getParameter('kernel.project_dir').'/public/downloads/products.csv';
+        $handle = fopen($fileName, 'w+');
+        @chmod($fileName, 0777);
+        $columns = [
+            'ID', 'Name', 'Barcode', 'Base quantity', 'Available',
+            'Purchase price', 'Sale price', 'Category', 'Available Quantity', 'Unit', 'Short code'
+        ];
+        fputcsv($handle, $columns);
+        foreach($list->getList() as $item){
+            fputcsv($handle, [
+                $item->getId(), $item->getName(), $item->getBarcode(),
+                $item->getBaseQuantity(), $item->getIsAvailable(),
+                $item->getBasePrice(), $item->getCost(), $item->getCategory()->getName(),
+                $item->getQuantity(), $item->getUom(), $item->getShortCode()
+            ]);
+        }
+
+        return $responseFactory->download($fileName);
+    }
+
+    /**
+     * @Route("/import", name="import_products", methods={"POST"})
+     *
+     * @OA\RequestBody(
+     *         description="Upload images in request body",
+     *         @OA\MediaType(
+     *             mediaType="application/octet-stream",
+     *             @OA\Schema(
+     *                 type="string",
+     *                 format="binary"
+     *             )
+     *         )
+     *     )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="bearer",
+     *     description="JWT Token"
+     * )
+     *
+     * @OA\Response(response="200", description="OK")
+     */
+    public function upload(
+        Request $request,
+        ApiRequestDtoValidator $validator,
+        ApiResponseFactory $responseFactory
+    )
+    {
+        $requestDto = UploadProductRequestDto::createFromRequest($request);
+
+        if(null !== $data = $validator->validate($requestDto)){
+            return $responseFactory->validationError($data);
+        }
+
+        dump($request->getContent());
+        
+        $file = $requestDto->getFile();
+        $file->move($this->getParameter('kernel.project_dir').'/public/uploads', 'products.csv');
+        
+        $handle = fopen($this->getParameter('kernel.project_dir').'/public/uploads/products.csv', 'r');
+        while(($row = fgetcsv($handle)) !== false) {
+
+        }
+
+        return $responseFactory->json();
     }
 
     /**

@@ -34,7 +34,7 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
         $prices = [];
         if($command->getPrices() !== null){
             foreach($command->getPrices() as $priceId){
-                $price = $this->getRepository(ProductPrice::class)->find($priceId);
+                $price = $this->getRepository(ProductPrice::class)->find($priceId->getId());
                 if($price === null){
                     return UpdateProductCommandResult::createNotFound('Product Price with ID "'.$priceId.'" not found');
                 }
@@ -46,7 +46,7 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
         $variants = [];
         if($command->getVariants() !== null){
             foreach($command->getVariants() as $variantId){
-                $variant = $this->getRepository(ProductVariant::class)->find($variantId);
+                $variant = $this->getRepository(ProductVariant::class)->find($variantId->getId());
                 if($variant === null){
                     return UpdateProductCommandResult::createNotFound('Product Variant with ID "'.$variantId.'" not found');
                 }
@@ -93,11 +93,11 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
         }
 
         foreach($prices as $price){
-            $item->addPrice($price);
+//            $item->addPrice($price);
         }
 
         foreach($variants as $variant){
-            $item->addVariant($variant);
+//            $item->addVariant($variant);
         }
 
         //validate item before creation

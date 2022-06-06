@@ -31,7 +31,7 @@ class OrderDiscount
     private $order;
 
     /**
-     * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
      */
     private $rate;
@@ -58,7 +58,7 @@ class OrderDiscount
         return $this->rate;
     }
 
-    public function setRate(string $rate): self
+    public function setRate(?string $rate): self
     {
         $this->rate = $rate;
 

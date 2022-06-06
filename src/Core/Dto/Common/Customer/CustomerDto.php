@@ -6,6 +6,8 @@ namespace App\Core\Dto\Common\Customer;
 
 use App\Core\Dto\Common\Common\DateTimeDto;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
+use App\Core\Dto\Common\Order\OrderDto;
+use App\Core\Dto\Common\Order\OrderShortDto;
 use App\Entity\Customer;
 use App\Entity\Payment;
 
@@ -78,6 +80,11 @@ class CustomerDto
      */
     private $payments = [];
 
+    /**
+     * @var OrderShortDto[]
+     */
+    private $orders = [];
+
     public static function createFromCustomer(?Customer $customer): ?self
     {
         if($customer === null){
@@ -107,6 +114,10 @@ class CustomerDto
         }
 
         $dto->outstanding = $dto->sale - $dto->paid;
+
+        foreach($customer->getOrders() as $order){
+            $dto->orders[] = OrderShortDto::createFromOrder($order);
+        }
 
         return $dto;
     }
@@ -318,5 +329,21 @@ class CustomerDto
     public function setPayments(array $payments): void
     {
         $this->payments = $payments;
+    }
+
+    /**
+     * @return OrderShortDto[]
+     */
+    public function getOrders(): array
+    {
+        return $this->orders;
+    }
+
+    /**
+     * @param OrderShortDto[] $orders
+     */
+    public function setOrders(array $orders): void
+    {
+        $this->orders = $orders;
     }
 }

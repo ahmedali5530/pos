@@ -30,6 +30,7 @@ class Discount extends Fixture
         $discount = new \App\Entity\Discount();
         $discount->setName('Open');
         $discount->setScope(\App\Entity\Discount::SCOPE_OPEN);
+        $discount->setRateType(\App\Entity\Discount::RATE_FIXED);
         $manager->persist($discount);
 
         $manager->flush();

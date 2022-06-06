@@ -15,7 +15,7 @@ class DateTimeDto
 
     public static function createFromDateTime($datetime): ?self
     {
-        if($datetime === null){
+        if($datetime === null || (is_string($datetime) && trim($datetime) === '')){
             return null;
         }
 

@@ -2,6 +2,8 @@
 
 namespace App\Core\Dto\Controller\Api\Admin\Product;
 
+use App\Core\Dto\Common\Product\ProductPriceDto;
+use App\Core\Dto\Common\Product\ProductVariantDto;
 use App\Core\Product\Command\CreateProductCommand\CreateProductCommand;
 use App\Core\Product\Command\UpdateProductCommand\UpdateProductCommand;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,12 +63,12 @@ class UpdateProductRequestDto
     private $shortCode;
 
     /**
-     * @var int[]|null
+     * @var ProductVariantDto[]|null
      */
     private $variants;
 
     /**
-     * @var int[]|null
+     * @var ProductPriceDto[]|null
      */
     private $prices;
 
@@ -89,8 +91,14 @@ class UpdateProductRequestDto
         $dto->quantity = $data['quantity'] ?? null;
         $dto->uom = $data['uom'] ?? null;
         $dto->shortCode = $data['shortCode'] ?? null;
-        $dto->variants = $data['variants'] ?? null;
-        $dto->prices = $data['prices'] ?? null;
+        foreach($data['variants'] ?? [] as $variant){
+            $dto->variants[] = ProductVariantDto::createFromArray($variant);
+        }
+
+        foreach($data['prices'] ?? [] as $price){
+            $dto->prices[] = ProductPriceDto::createFromArray($price);
+        }
+
         $dto->cost = $data['cost'] ?? null;
 
         return $dto;
@@ -258,7 +266,7 @@ class UpdateProductRequestDto
     }
 
     /**
-     * @return int[]|null
+     * @return ProductVariantDto[]|null
      */
     public function getVariants(): ?array
     {
@@ -266,7 +274,7 @@ class UpdateProductRequestDto
     }
 
     /**
-     * @param int[]|null $variants
+     * @param ProductVariantDto[]|null $variants
      */
     public function setVariants(?array $variants): void
     {
@@ -274,7 +282,7 @@ class UpdateProductRequestDto
     }
 
     /**
-     * @return int[]|null
+     * @return ProductPriceDto[]|null
      */
     public function getPrices(): ?array
     {
@@ -282,7 +290,7 @@ class UpdateProductRequestDto
     }
 
     /**
-     * @param int[]|null $prices
+     * @param ProductPriceDto[]|null $prices
      */
     public function setPrices(?array $prices): void
     {
