@@ -69,6 +69,11 @@ class CreateOrderRequestDto
     private $discountAmount;
 
     /**
+     * @var string|null
+     */
+    private $discountRateType;
+
+    /**
      * @var TaxDto|null
      * @Assert\Valid()
      */
@@ -85,6 +90,12 @@ class CreateOrderRequestDto
      * @var int|null
      */
     private $refundingFrom;
+
+    /**
+     * @var string|null
+     * @Assert\Type(type="string")
+     */
+    private $notes;
 
     public static function createFromRequest(Request $request)
     {
@@ -109,7 +120,10 @@ class CreateOrderRequestDto
         }
 
         $dto->discountAmount = $data['discountAmount'] ?? null;
+        $dto->discountRateType = $data['discountRateType'] ?? null;
+
         $dto->refundingFrom = $data['refundingFrom'] ?? null;
+        $dto->notes = $data['notes'] ?? null;
 
         return $dto;
     }
@@ -128,6 +142,8 @@ class CreateOrderRequestDto
         $command->setPayments($this->payments);
         $command->setDiscountAmount($this->discountAmount);
         $command->setReturnedFrom($this->refundingFrom);
+        $command->setNotes($this->notes);
+        $command->setDiscountRateType($this->discountRateType);
     }
 
     /**
@@ -320,5 +336,37 @@ class CreateOrderRequestDto
     public function setRefundingFrom(?int $refundingFrom): void
     {
         $this->refundingFrom = $refundingFrom;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param string|null $notes
+     */
+    public function setNotes(?string $notes): void
+    {
+        $this->notes = $notes;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDiscountRateType(): ?string
+    {
+        return $this->discountRateType;
+    }
+
+    /**
+     * @param string|null $discountRateType
+     */
+    public function setDiscountRateType(?string $discountRateType): void
+    {
+        $this->discountRateType = $discountRateType;
     }
 }

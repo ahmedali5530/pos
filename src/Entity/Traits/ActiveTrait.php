@@ -11,7 +11,7 @@ trait ActiveTrait
     /**
      * @ORM\Column(type="boolean", nullable=true, options={"default": true})
      */
-    private $isActive;
+    private $isActive = true;
 
     public function getIsActive()
     {

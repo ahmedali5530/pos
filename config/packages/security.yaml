@@ -19,7 +19,7 @@ security:
             security: false
 
         login:
-            pattern: ^/api/login
+            pattern: ^/api/auth/login_check
             stateless: true
             json_login:
                 check_path: api_login_check
@@ -32,7 +32,7 @@ security:
             refresh_jwt: ~
 
         api:
-            pattern:   ^/api
+            pattern: ^/(api/admin)|(api/client)|(api/auth/info)
             stateless: true
             provider: user_provider
             jwt: ~
@@ -40,9 +40,12 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/token/refresh, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_USER }
+        - { path: ^/api/auth/login_check, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        - { path: ^/api/auth/reset-password, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        - { path: ^/api/auth/forgot-password, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        - { path: ^/api/auth/register, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        - { path: ^/api/token/refresh, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        - { path: ^/api/admin, roles: [ ROLE_ADMIN, ROLE_USER ] }
 
 when@test:
     security:

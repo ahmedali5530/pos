@@ -10,7 +10,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 trait TimestampableTrait
 {
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
@@ -25,17 +25,6 @@ trait TimestampableTrait
      * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
-
-    public function getCreatedAt(): ?DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt($createdAt): self
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
 
 
     public function getDeletedAt(): ?DateTime
@@ -61,5 +50,21 @@ trait TimestampableTrait
     {
         $this->updatedAt = $updatedAt;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param mixed $createdAt
+     */
+    public function setCreatedAt($createdAt): void
+    {
+        $this->createdAt = $createdAt;
     }
 }

@@ -32,7 +32,7 @@ class ProductListResponseDto
         }
 
         $dto->total = $list->getTotal();
-        $dto->count = $list->getCount();
+        $dto->count = count($dto->list);
 
         return $dto;
     }

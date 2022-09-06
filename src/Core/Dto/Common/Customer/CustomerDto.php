@@ -58,17 +58,17 @@ class CustomerDto
     /**
      * @var float|null
      */
-    private $sale;
+    private $sale = 0;
 
     /**
      * @var float|null
      */
-    private $paid;
+    private $paid = 0;
 
     /**
      * @var float|null
      */
-    private $outstanding;
+    private $outstanding = 0;
 
     /**
      * @var string|null

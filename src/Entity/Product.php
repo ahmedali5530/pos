@@ -16,8 +16,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  * @UniqueEntity(fields={"barcode"}, message="Use a different value")
- * @UniqueEntity(fields={"sku"}, message="Use a different value")
- * @UniqueEntity(fields={"shortCode"}, message="Use a different value")
  * @Gedmo\Loggable()
  */
 class Product
@@ -101,18 +99,35 @@ class Product
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
      */
-    private $uom;
+    private $purchaseUnit;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
      */
-    private $shortCode;
+    private $saleUnit;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Media::class)
+     */
+    private $media;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Brand::class)
+     */
+    private $brands;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Supplier::class)
+     */
+    private $suppliers;
 
     public function __construct()
     {
         $this->variants = new ArrayCollection();
         $this->prices = new ArrayCollection();
+        $this->brands = new ArrayCollection();
+        $this->suppliers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -276,30 +291,6 @@ class Product
         return $this;
     }
 
-    public function getUom(): ?string
-    {
-        return $this->uom;
-    }
-
-    public function setUom(?string $uom): self
-    {
-        $this->uom = $uom;
-
-        return $this;
-    }
-
-    public function getShortCode(): ?string
-    {
-        return $this->shortCode;
-    }
-
-    public function setShortCode(?string $shortCode): self
-    {
-        $this->shortCode = $shortCode;
-
-        return $this;
-    }
-
     public function getCost(): ?string
     {
         return $this->cost;
@@ -308,6 +299,90 @@ class Product
     public function setCost(?string $cost): self
     {
         $this->cost = $cost;
+
+        return $this;
+    }
+
+    public function getMedia(): ?Media
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?Media $media): self
+    {
+        $this->media = $media;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Brand[]
+     */
+    public function getBrands(): Collection
+    {
+        return $this->brands;
+    }
+
+    public function addBrand(Brand $brand): self
+    {
+        if (!$this->brands->contains($brand)) {
+            $this->brands[] = $brand;
+        }
+
+        return $this;
+    }
+
+    public function removeBrand(Brand $brand): self
+    {
+        $this->brands->removeElement($brand);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Supplier[]
+     */
+    public function getSuppliers(): Collection
+    {
+        return $this->suppliers;
+    }
+
+    public function addSupplier(Supplier $supplier): self
+    {
+        if (!$this->suppliers->contains($supplier)) {
+            $this->suppliers[] = $supplier;
+        }
+
+        return $this;
+    }
+
+    public function removeSupplier(Supplier $supplier): self
+    {
+        $this->suppliers->removeElement($supplier);
+
+        return $this;
+    }
+
+    public function getPurchaseUnit(): ?string
+    {
+        return $this->purchaseUnit;
+    }
+
+    public function setPurchaseUnit(?string $purchaseUnit): self
+    {
+        $this->purchaseUnit = $purchaseUnit;
+
+        return $this;
+    }
+
+    public function getSaleUnit(): ?string
+    {
+        return $this->saleUnit;
+    }
+
+    public function setSaleUnit(?string $saleUnit): self
+    {
+        $this->saleUnit = $saleUnit;
 
         return $this;
     }

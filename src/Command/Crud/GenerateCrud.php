@@ -281,7 +281,8 @@ CODE
             'date' => '?\DateTimeInterface',
             'decimal' => '?float',
             'boolean' => '?bool',
-            'text' => '?string'
+            'text' => '?string',
+            'datetime_immutable' => '?\DateTimeImmutable'
         ];
 
         return $phpTypes[$type] ?? '?' . $type;

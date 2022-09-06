@@ -71,6 +71,17 @@ class CreateOrderCommand
     private $returnedFrom;
 
     /**
+     * @var string|null
+     */
+    private $notes;
+
+    /**
+     * @var string|null
+     */
+    private $discountRateType;
+
+
+    /**
      * @return int|null
      */
     public function getCustomerId(): ?int
@@ -260,5 +271,37 @@ class CreateOrderCommand
     public function setReturnedFrom(?int $returnedFrom): void
     {
         $this->returnedFrom = $returnedFrom;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param string|null $notes
+     */
+    public function setNotes(?string $notes): void
+    {
+        $this->notes = $notes;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDiscountRateType(): ?string
+    {
+        return $this->discountRateType;
+    }
+
+    /**
+     * @param string|null $discountRateType
+     */
+    public function setDiscountRateType(?string $discountRateType): void
+    {
+        $this->discountRateType = $discountRateType;
     }
 }

@@ -87,6 +87,11 @@ class OrderDto
      */
     private $returnedFrom;
 
+    /**
+     * @var string|null
+     */
+    private $notes;
+
     public static function createFromOrder(?Order $order): ?self
     {
         if($order === null){
@@ -113,11 +118,12 @@ class OrderDto
         $dto->createdAt = $order->getCreatedAt();
         $dto->status = $order->getStatus();
         $dto->returnedFrom = OrderDto::createFromOrder($order->getReturnedFrom());
+        $dto->notes = $order->getDescription();
 
         return $dto;
     }
 
-    public function createFromArray(?array $data): self
+    public function createFromArray(?array $data): ?self
     {
         if($data === null){
             return null;
@@ -368,5 +374,21 @@ class OrderDto
     public function setReturnedFrom(?OrderDto $returnedFrom): void
     {
         $this->returnedFrom = $returnedFrom;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param string|null $notes
+     */
+    public function setNotes(?string $notes): void
+    {
+        $this->notes = $notes;
     }
 }

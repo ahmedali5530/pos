@@ -4,10 +4,13 @@
 namespace App\Core\Dto\Common\User;
 
 
+use App\Core\Dto\Common\Common\UuidDtoTrait;
 use App\Entity\User;
 
 class UserDto
 {
+    use UuidDtoTrait;
+
     /**
      * @var int|null
      */
@@ -46,6 +49,7 @@ class UserDto
         $dto->displayName = $user->getDisplayName();
         $dto->roles = $user->getRoles();
         $dto->email = $user->getEmail();
+        $dto->uuid = $user->getUuid();
 
         return $dto;
     }

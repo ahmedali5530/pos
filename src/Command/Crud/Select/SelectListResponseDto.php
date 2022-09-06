@@ -69,7 +69,7 @@ foreach(\$result->getList() as \$list){
 }
 
 \$dto->total = \$result->getTotal();
-\$dto->count = \$result->getCount();
+\$dto->count = count(\$dto->list);
 
 return \$dto;
 BODY

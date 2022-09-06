@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Category;
 
@@ -31,7 +31,7 @@ class SelectCategoryListResponseDto
         }
 
         $dto->total = $result->getTotal();
-        $dto->count = $result->getCount();
+        $dto->count = count($dto->list);
 
         return $dto;
     }

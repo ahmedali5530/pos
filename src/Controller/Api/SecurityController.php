@@ -49,7 +49,9 @@ class SecurityController extends AbstractController
             return $responseFactory->unauthorized();
         }
 
-        return $responseFactory->json(UserDto::createFromUser($user));
+        return $responseFactory->json([
+            'user' => UserDto::createFromUser($user)
+        ]);
     }
 
     /**

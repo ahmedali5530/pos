@@ -108,6 +108,11 @@ class Order
      */
     private $returnedFrom;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $description;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -327,6 +332,18 @@ class Order
     public function setReturnedFrom(?self $returnedFrom): self
     {
         $this->returnedFrom = $returnedFrom;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

@@ -42,6 +42,8 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
     {
         $item = new Order();
 
+        $item->setDescription($command->getNotes());
+
         $item->setStatus(OrderStatus::HOLD);
         if(!$command->getIsSuspended()) {
             $item->setOrderId($this->getNewOrderId());
@@ -106,6 +108,8 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
             $orderDiscount->setRate($command->getDiscount()->getRate());
             $orderDiscount->setType($discount);
             $orderDiscount->setOrder($item);
+            $orderDiscount->setRateType($command->getDiscountRateType());
+
             $this->persist($orderDiscount);
 
             $item->setDiscount($orderDiscount);

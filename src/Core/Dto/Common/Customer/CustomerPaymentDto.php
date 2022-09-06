@@ -4,7 +4,7 @@
 namespace App\Core\Dto\Common\Customer;
 
 
-use App\Core\Dto\Common\Order\OrderDto;
+use App\Core\Dto\Common\Order\OrderShortDto;
 use App\Entity\CustomerPayment;
 
 class CustomerPaymentDto
@@ -20,7 +20,7 @@ class CustomerPaymentDto
     private $amount;
 
     /**
-     * @var OrderDto|null
+     * @var OrderShortDto|null
      */
     private $order;
 
@@ -67,17 +67,17 @@ class CustomerPaymentDto
     }
 
     /**
-     * @return OrderDto|null
+     * @return OrderShortDto|null
      */
-    public function getOrder(): ?OrderDto
+    public function getOrder(): ?OrderShortDto
     {
         return $this->order;
     }
 
     /**
-     * @param OrderDto|null $order
+     * @param OrderShortDto|null $order
      */
-    public function setOrder(?OrderDto $order): void
+    public function setOrder(?OrderShortDto $order): void
     {
         $this->order = $order;
     }
@@ -116,7 +116,7 @@ class CustomerPaymentDto
 
     public static function createFromCustomerPayment(?CustomerPayment $customerPayment): ?self
     {
-        if($customerPayment === null){
+        if ($customerPayment === null) {
             return null;
         }
 
@@ -124,7 +124,7 @@ class CustomerPaymentDto
 
         $dto->id = $customerPayment->getId();
         $dto->amount = $customerPayment->getAmount();
-        $dto->order = OrderDto::createFromOrder($customerPayment->getOrder());
+        $dto->order = OrderShortDto::createFromOrder($customerPayment->getOrder());
         $dto->description = $customerPayment->getDescription();
         $dto->createdAt = $customerPayment->getCreatedAt();
 
@@ -133,7 +133,7 @@ class CustomerPaymentDto
 
     public static function createFromArray(?array $data): ?self
     {
-        if($data === null){
+        if ($data === null) {
             return null;
         }
 

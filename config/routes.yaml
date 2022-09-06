@@ -13,7 +13,7 @@ app.swagger_ui:
   defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
 
 api_login_check:
-  path: /api/login
+  path: /api/auth/login_check
 
 gesdinet_jwt_refresh_token:
   path: /api/token/refresh

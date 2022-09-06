@@ -11,6 +11,7 @@ use App\Core\Dto\Controller\Api\Admin\Product\ProductResponseDto;
 use App\Core\Dto\Controller\Api\Admin\Product\UpdateProductRequestDto;
 use App\Core\Dto\Controller\Api\Admin\Product\UploadProductRequestDto;
 use App\Core\Product\Command\CreateProductCommand\CreateProductCommand;
+use App\Core\Product\Command\CreateProductCommand\CreateProductCommandHandler;
 use App\Core\Product\Command\CreateProductCommand\CreateProductCommandHandlerInterface;
 use App\Core\Product\Command\DeleteProductCommand\DeleteProductCommand;
 use App\Core\Product\Command\DeleteProductCommand\DeleteProductCommandHandlerInterface;
@@ -184,7 +185,7 @@ class ProductController extends AbstractController
             fputcsv($handle, [
                 $item->getId(), $item->getName(), $item->getBarcode(),
                 $item->getBaseQuantity(), $item->getIsAvailable(),
-                $item->getBasePrice(), $item->getCost(), $item->getCategory()->getName(),
+                $item->getCost(), $item->getBasePrice(), $item->getCategory()->getName(),
                 $item->getQuantity(), $item->getUom(), $item->getShortCode()
             ]);
         }
@@ -217,7 +218,9 @@ class ProductController extends AbstractController
     public function upload(
         Request $request,
         ApiRequestDtoValidator $validator,
-        ApiResponseFactory $responseFactory
+        ApiResponseFactory $responseFactory,
+        CreateProductCommandHandlerInterface $createProductCommandHandler,
+        UpdateProductCommandHandlerInterface $updateProductCommandHandler
     )
     {
         $requestDto = UploadProductRequestDto::createFromRequest($request);
@@ -225,18 +228,75 @@ class ProductController extends AbstractController
         if(null !== $data = $validator->validate($requestDto)){
             return $responseFactory->validationError($data);
         }
-
-        dump($request->getContent());
         
         $file = $requestDto->getFile();
         $file->move($this->getParameter('kernel.project_dir').'/public/uploads', 'products.csv');
         
         $handle = fopen($this->getParameter('kernel.project_dir').'/public/uploads/products.csv', 'r');
+        $index = 0;
+        $errors = [];
         while(($row = fgetcsv($handle)) !== false) {
+            if($index === 0){
+                //skip header
+                $index++;
+                continue;
+            }
 
+            if((int)$row[0] === 0 || trim($row[0]) === ''){
+                //create product
+                $command = new CreateProductCommand();
+                $command->setName($row[1]);
+                $command->setBarcode($row[2]);
+                $command->setBaseQuantity(1);
+                $command->setIsAvailable($row[4]);
+                $command->setBasePrice((float)$row[6]);
+                $command->setQuantity((float)$row[8]);
+                $command->setShortCode($row[10]);
+                $command->setCategory($row[7]);
+                $command->setCost((float)$row[5]);
+
+                $result = $createProductCommandHandler->handle($command);
+
+                if($result->hasValidationError()){
+                    $errors[$index] = $result->getValidationError();
+                }
+
+                if($result->isNotFound()){
+                    $errors[$index] = $result->getValidationError();
+                }
+            }else{
+                //update product
+                $command = new UpdateProductCommand();
+
+                $command->setName($row[1]);
+                $command->setBarcode($row[2]);
+                $command->setBaseQuantity(1);
+                $command->setIsAvailable($row[4]);
+                $command->setBasePrice((float)$row[6]);
+                $command->setQuantity((float)$row[8]);
+                $command->setShortCode($row[10]);
+                $command->setCost((float)$row[5]);
+                $command->setId((int)$row[0]);
+
+                $result = $updateProductCommandHandler->handle($command);
+
+                if($result->hasValidationError()){
+                    $errors[$index] = $result->getValidationError();
+                }
+
+                if($result->isNotFound()){
+                    $errors[$index] = $result->getValidationError();
+                }
+            }
+
+            $index++;
         }
 
-        return $responseFactory->json();
+        if(count($errors) > 0){
+            return $responseFactory->validationError($errors);
+        }
+
+        return $responseFactory->json(true);
     }
 
     /**

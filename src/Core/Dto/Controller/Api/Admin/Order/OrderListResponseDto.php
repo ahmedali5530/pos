@@ -41,10 +41,9 @@ class OrderListResponseDto
         }
 
         $dto->total = $result->getTotal();
-        $dto->count = $result->getCount();
+        $dto->count = count($dto->list);
 
         //calculate payment types
-
         $cash = 0;
         $payments = [];
         /** @var Order $item */
