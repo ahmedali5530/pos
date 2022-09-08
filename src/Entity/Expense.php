@@ -8,6 +8,7 @@ use App\Entity\Traits\UuidTrait;
 use App\Repository\ExpenseRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=ExpenseRepository::class)
@@ -42,6 +43,11 @@ class Expense
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {

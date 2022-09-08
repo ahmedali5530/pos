@@ -228,10 +228,10 @@ class ProductController extends AbstractController
         if(null !== $data = $validator->validate($requestDto)){
             return $responseFactory->validationError($data);
         }
-        
+
         $file = $requestDto->getFile();
         $file->move($this->getParameter('kernel.project_dir').'/public/uploads', 'products.csv');
-        
+
         $handle = fopen($this->getParameter('kernel.project_dir').'/public/uploads/products.csv', 'r');
         $index = 0;
         $errors = [];
@@ -251,7 +251,6 @@ class ProductController extends AbstractController
                 $command->setIsAvailable($row[4]);
                 $command->setBasePrice((float)$row[6]);
                 $command->setQuantity((float)$row[8]);
-                $command->setShortCode($row[10]);
                 $command->setCategory($row[7]);
                 $command->setCost((float)$row[5]);
 
@@ -274,7 +273,6 @@ class ProductController extends AbstractController
                 $command->setIsAvailable($row[4]);
                 $command->setBasePrice((float)$row[6]);
                 $command->setQuantity((float)$row[8]);
-                $command->setShortCode($row[10]);
                 $command->setCost((float)$row[5]);
                 $command->setId((int)$row[0]);
 

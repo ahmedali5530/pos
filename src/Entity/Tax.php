@@ -8,6 +8,7 @@ use App\Entity\Traits\UuidTrait;
 use App\Repository\TaxRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=TaxRepository::class)
@@ -37,6 +38,11 @@ class Tax
      * @Gedmo\Versioned()
      */
     private $rate;
+
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {

@@ -2,6 +2,8 @@
 
 namespace App\Core\Dto\Controller\Api\Admin\Product;
 
+use App\Core\Dto\Common\Product\ProductPriceDto;
+use App\Core\Dto\Common\Product\ProductVariantDto;
 use App\Core\Product\Command\CreateProductCommand\CreateProductCommand;
 use App\Core\Validation\Custom\ConstraintValidEntity;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,29 +53,50 @@ class CreateProductRequestDto
      * @var string|null
      * @Assert\NotBlank(normalizer="trim")
      */
-    private $uom;
+    private $saleUnit;
 
     /**
      * @var string|null
+     * @Assert\NotBlank(normalizer="trim")
      */
-    private $shortCode;
+    private $purchaseUnit;
 
     /**
-     * @var int[]|null
+     * @var ProductVariantDto[]|null
      */
     private $variants;
 
     /**
-     * @var int[]|null
+     * @var ProductPriceDto[]|null
      */
     private $prices;
 
     /**
-     * @var int|null
+     * @var int[]|null
      * @Assert\NotBlank(normalizer="trim")
-     * @ConstraintValidEntity(class="App\Entity\Category", entityName="Category")
+     * @Assert\All(
+     *     @ConstraintValidEntity(class="App\Entity\Category", entityName="Category")
+     * )
      */
-    private $category;
+    private $categories;
+
+    /**
+     * @var int[]|null
+     * @Assert\NotBlank(normalizer="trim")
+     * @Assert\All(
+     *     @ConstraintValidEntity(class="App\Entity\Supplier", entityName="Supplier")
+     * )
+     */
+    private $suppliers;
+
+    /**
+     * @var int[]|null
+     * @Assert\NotBlank(normalizer="trim")
+     * @Assert\All(
+     *     @ConstraintValidEntity(class="App\Entity\Brand", entityName="Brand")
+     * )
+     */
+    private $brands;
 
     /**
      * @var float|null
@@ -93,12 +116,21 @@ class CreateProductRequestDto
         $dto->isAvailable = $data['isAvailable'] ?? null;
         $dto->basePrice = $data['basePrice'] ?? null;
         $dto->quantity = $data['quantity'] ?? null;
-        $dto->uom = $data['uom'] ?? null;
-        $dto->shortCode = $data['shortCode'] ?? null;
-        $dto->variants = $data['variants'] ?? null;
-        $dto->prices = $data['prices'] ?? null;
-        $dto->category = $data['category'] ?? null;
+        $dto->purchaseUnit = $data['purchaseUnit'] ?? null;
+        $dto->saleUnit = $data['saleUnit'] ?? null;
+
+        foreach($data['variants'] ?? [] as $variant){
+            $dto->variants[] = ProductVariantDto::createFromArray($variant);
+        }
+
+        foreach($data['prices'] ?? [] as $price){
+            $dto->prices[] = ProductPriceDto::createFromArray($price);
+        }
+
         $dto->cost = $data['cost'] ?? null;
+        $dto->categories = $data['categories'] ?? null;
+        $dto->brands = $data['brands'] ?? null;
+        $dto->suppliers = $data['suppliers'] ?? null;
 
         return $dto;
     }
@@ -112,12 +144,14 @@ class CreateProductRequestDto
         $command->setIsAvailable($this->isAvailable);
         $command->setBasePrice($this->basePrice);
         $command->setQuantity($this->quantity);
-        $command->setUom($this->uom);
-        $command->setShortCode($this->shortCode);
         $command->setPrices($this->prices);
         $command->setVariants($this->variants);
-        $command->setCategory($this->category);
         $command->setCost($this->cost);
+        $command->setPurchaseUnit($this->purchaseUnit);
+        $command->setSaleUnit($this->saleUnit);
+        $command->setCategories($this->categories);
+        $command->setBrands($this->brands);
+        $command->setSuppliers($this->suppliers);
     }
 
     /**
@@ -233,86 +267,6 @@ class CreateProductRequestDto
     }
 
     /**
-     * @return string|null
-     */
-    public function getUom(): ?string
-    {
-        return $this->uom;
-    }
-
-    /**
-     * @param string|null $uom
-     */
-    public function setUom(?string $uom): void
-    {
-        $this->uom = $uom;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getShortCode(): ?string
-    {
-        return $this->shortCode;
-    }
-
-    /**
-     * @param string|null $shortCode
-     */
-    public function setShortCode(?string $shortCode): void
-    {
-        $this->shortCode = $shortCode;
-    }
-
-    /**
-     * @return int[]|null
-     */
-    public function getVariants(): ?array
-    {
-        return $this->variants;
-    }
-
-    /**
-     * @param int[]|null $variants
-     */
-    public function setVariants(?array $variants): void
-    {
-        $this->variants = $variants;
-    }
-
-    /**
-     * @return int[]|null
-     */
-    public function getPrices(): ?array
-    {
-        return $this->prices;
-    }
-
-    /**
-     * @param int[]|null $prices
-     */
-    public function setPrices(?array $prices): void
-    {
-        $this->prices = $prices;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCategory(): ?int
-    {
-        return $this->category;
-    }
-
-    /**
-     * @param int|null $category
-     */
-    public function setCategory(?int $category): void
-    {
-        $this->category = $category;
-    }
-
-    /**
      * @return float|null
      */
     public function getCost(): ?float
@@ -327,4 +281,117 @@ class CreateProductRequestDto
     {
         $this->cost = $cost;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getSaleUnit(): ?string
+    {
+        return $this->saleUnit;
+    }
+
+    /**
+     * @param string|null $saleUnit
+     */
+    public function setSaleUnit(?string $saleUnit): void
+    {
+        $this->saleUnit = $saleUnit;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPurchaseUnit(): ?string
+    {
+        return $this->purchaseUnit;
+    }
+
+    /**
+     * @param string|null $purchaseUnit
+     */
+    public function setPurchaseUnit(?string $purchaseUnit): void
+    {
+        $this->purchaseUnit = $purchaseUnit;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getCategories(): ?array
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param int[]|null $categories
+     */
+    public function setCategories(?array $categories): void
+    {
+        $this->categories = $categories;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getSuppliers(): ?array
+    {
+        return $this->suppliers;
+    }
+
+    /**
+     * @param int[]|null $suppliers
+     */
+    public function setSuppliers(?array $suppliers): void
+    {
+        $this->suppliers = $suppliers;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getBrands(): ?array
+    {
+        return $this->brands;
+    }
+
+    /**
+     * @param int[]|null $brands
+     */
+    public function setBrands(?array $brands): void
+    {
+        $this->brands = $brands;
+    }
+
+    /**
+     * @return ProductVariantDto[]|null
+     */
+    public function getVariants(): ?array
+    {
+        return $this->variants;
+    }
+
+    /**
+     * @param ProductVariantDto[]|null $variants
+     */
+    public function setVariants(?array $variants): void
+    {
+        $this->variants = $variants;
+    }
+
+    /**
+     * @return ProductPriceDto[]|null
+     */
+    public function getPrices(): ?array
+    {
+        return $this->prices;
+    }
+
+    /**
+     * @param ProductPriceDto[]|null $prices
+     */
+    public function setPrices(?array $prices): void
+    {
+        $this->prices = $prices;
+    }
 }
+

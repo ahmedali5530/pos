@@ -4,11 +4,13 @@
 namespace App\Core\Dto\Common\Product;
 
 
+use App\Core\Dto\Common\Brand\BrandDto;
 use App\Core\Dto\Common\Category\CategoryDto;
 use App\Core\Dto\Common\Common\ActiveDtoTrait;
 use App\Core\Dto\Common\Common\DateTimeDto;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
 use App\Core\Dto\Common\Common\UuidDtoTrait;
+use App\Core\Dto\Common\Supplier\SupplierDto;
 use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\Product;
 
@@ -61,9 +63,9 @@ class ProductDto
     private $basePrice;
 
     /**
-     * @var CategoryDto|null
+     * @var CategoryDto[]
      */
-    private $category;
+    private $categories = [];
 
     /**
      * @var ProductVariantDto[]
@@ -81,7 +83,7 @@ class ProductDto
     private $purchaseUnit;
 
     /**
-     * @var
+     * @var string|null
      */
     private $saleUnit;
 
@@ -90,9 +92,14 @@ class ProductDto
      */
     private $cost;
 
-
+    /**
+     * @var SupplierDto[]
+     */
     private $suppliers = [];
 
+    /**
+     * @var BrandDto[]
+     */
     private $brands = [];
 
 
@@ -115,13 +122,24 @@ class ProductDto
         $dto->purchaseUnit = $product->getPurchaseUnit();
         $dto->saleUnit = $product->getSaleUnit();
 
-        $dto->category = CategoryDto::createFromCategory($product->getCategory());
+        foreach($product->getCategories() as $category){
+            $dto->categories[] = CategoryDto::createFromCategory($category);
+        }
 
         foreach($product->getVariants() as $variant){
             $dto->variants[] = ProductVariantDto::createFromProductVariant($variant);
         }
+
         foreach($product->getPrices() as $productPrice){
             $dto->prices[] = ProductPriceDto::createFromProductPrice($productPrice);
+        }
+
+        foreach($product->getSuppliers() as $supplier){
+            $dto->suppliers[] = SupplierDto::createFromSupplier($supplier);
+        }
+
+        foreach($product->getBrands() as $brand){
+            $dto->brands[] = BrandDto::createFromBrand($brand);
         }
 
         $dto->uuid = $product->getUuid();
@@ -147,11 +165,15 @@ class ProductDto
         $dto->isAvailable = $data['isAvailable'] ?? null;
         $dto->quantity = $data['quantity'] ?? null;
         $dto->basePrice = $data['basePrice'] ?? null;
-        $dto->category = CategoryDto::createFromArray($data['category'] ?? null);
+
+        foreach($data['categories'] ?? [] as $category){
+            $dto->categories[] = CategoryDto::createFromArray($category);
+        }
 
         foreach($data['variants'] ?? [] as $variant){
             $dto->variants[] = ProductVariantDto::createFromArray($variant);
         }
+
         foreach($data['prices'] ?? [] as $productPrice){
             $dto->prices[] = ProductPriceDto::createFromArray($productPrice);
         }
@@ -290,22 +312,6 @@ class ProductDto
     }
 
     /**
-     * @return CategoryDto|null
-     */
-    public function getCategory(): ?CategoryDto
-    {
-        return $this->category;
-    }
-
-    /**
-     * @param CategoryDto|null $category
-     */
-    public function setCategory(?CategoryDto $category): void
-    {
-        $this->category = $category;
-    }
-
-    /**
      * @return ProductVariantDto[]
      */
     public function getVariants(): array
@@ -351,5 +357,85 @@ class ProductDto
     public function setCost(?float $cost): void
     {
         $this->cost = $cost;
+    }
+
+    /**
+     * @return CategoryDto[]
+     */
+    public function getCategories(): array
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param CategoryDto[] $categories
+     */
+    public function setCategories(array $categories): void
+    {
+        $this->categories = $categories;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPurchaseUnit(): ?string
+    {
+        return $this->purchaseUnit;
+    }
+
+    /**
+     * @param string|null $purchaseUnit
+     */
+    public function setPurchaseUnit(?string $purchaseUnit): void
+    {
+        $this->purchaseUnit = $purchaseUnit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSaleUnit()
+    {
+        return $this->saleUnit;
+    }
+
+    /**
+     * @param mixed $saleUnit
+     */
+    public function setSaleUnit($saleUnit): void
+    {
+        $this->saleUnit = $saleUnit;
+    }
+
+    /**
+     * @return SupplierDto[]
+     */
+    public function getSuppliers(): array
+    {
+        return $this->suppliers;
+    }
+
+    /**
+     * @param SupplierDto[] $suppliers
+     */
+    public function setSuppliers(array $suppliers): void
+    {
+        $this->suppliers = $suppliers;
+    }
+
+    /**
+     * @return BrandDto[]
+     */
+    public function getBrands(): array
+    {
+        return $this->brands;
+    }
+
+    /**
+     * @param BrandDto[] $brands
+     */
+    public function setBrands(array $brands): void
+    {
+        $this->brands = $brands;
     }
 }

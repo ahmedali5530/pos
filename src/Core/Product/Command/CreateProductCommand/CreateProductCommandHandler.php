@@ -3,10 +3,12 @@
 namespace App\Core\Product\Command\CreateProductCommand;
 
 use App\Core\Entity\EntityManager\EntityManager;
+use App\Entity\Brand;
 use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\ProductPrice;
 use App\Entity\ProductVariant;
+use App\Entity\Supplier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -55,12 +57,6 @@ class CreateProductCommandHandler extends EntityManager implements CreateProduct
             }
         }
 
-        /** @var Category $category */
-        $category = $this->getRepository(Category::class)->find($command->getCategory());
-        if($category === null){
-            return CreateProductCommandResult::createNotFound('Category with ID "'.$command->getCategory().'" not found');
-        }
-
         $item = new Product();
         $item->setName($command->getName());
         $item->setSku($command->getSku());
@@ -69,10 +65,30 @@ class CreateProductCommandHandler extends EntityManager implements CreateProduct
         $item->setIsAvailable($command->getIsAvailable());
         $item->setBasePrice($command->getBasePrice());
         $item->setQuantity($command->getQuantity());
-        $item->setUom($command->getUom());
-        $item->setShortCode($command->getShortCode());
-        $item->setCategory($category);
         $item->setCost($command->getCost());
+        $item->setSaleUnit($command->getSaleUnit());
+        $item->setPurchaseUnit($command->getPurchaseUnit());
+
+        if($command->getCategories() !== null){
+            foreach($command->getCategories() as $category){
+                $c = $this->getRepository(Category::class)->find($category);
+                $item->addCategory($c);
+            }
+        }
+
+        if($command->getBrands() !== null){
+            foreach($command->getBrands() as $brand){
+                $b = $this->getRepository(Brand::class)->find($brand);
+                $item->addBrand($b);
+            }
+        }
+
+        if($command->getSuppliers() !== null){
+            foreach($command->getSuppliers() as $supplier){
+                $s = $this->getRepository(Supplier::class)->find($supplier);
+                $item->addSupplier($s);
+            }
+        }
 
         foreach($prices as $price){
             $item->addPrice($price);

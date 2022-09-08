@@ -48,16 +48,6 @@ class UpdateProductCommand
     private $quantity;
 
     /**
-     * @var string|null
-     */
-    private $uom;
-
-    /**
-     * @var string|null
-     */
-    private $shortCode;
-
-    /**
      * @var ProductPriceDto[]|null
      */
     private $prices;
@@ -72,114 +62,173 @@ class UpdateProductCommand
      */
     private $cost;
 
-    public function getId()
+    /**
+     * @var int[]|null
+     */
+    private $categories;
+
+    /**
+     * @var int[]|null
+     */
+    private $suppliers;
+
+    /**
+     * @var int[]|null
+     */
+    private $brands;
+
+    /**
+     * @var string|null
+     */
+    private $saleUnit;
+
+    /**
+     * @var string|null
+     */
+    private $purchaseUnit;
+
+    /**
+     * @return string|null
+     */
+    public function getPurchaseUnit(): ?string
+    {
+        return $this->purchaseUnit;
+    }
+
+    /**
+     * @param string|null $purchaseUnit
+     */
+    public function setPurchaseUnit(?string $purchaseUnit): void
+    {
+        $this->purchaseUnit = $purchaseUnit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId($field)
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
     {
-        $this->id = $field;
-        return $this;
+        $this->id = $id;
     }
 
-    public function getName()
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName($field)
+    /**
+     * @param string|null $name
+     */
+    public function setName(?string $name): void
     {
-        $this->name = $field;
-        return $this;
+        $this->name = $name;
     }
 
-    public function getSku()
+    /**
+     * @return string|null
+     */
+    public function getSku(): ?string
     {
         return $this->sku;
     }
 
-    public function setSku($field)
+    /**
+     * @param string|null $sku
+     */
+    public function setSku(?string $sku): void
     {
-        $this->sku = $field;
-        return $this;
+        $this->sku = $sku;
     }
 
-    public function getBarcode()
+    /**
+     * @return string|null
+     */
+    public function getBarcode(): ?string
     {
         return $this->barcode;
     }
 
-    public function setBarcode($field)
+    /**
+     * @param string|null $barcode
+     */
+    public function setBarcode(?string $barcode): void
     {
-        $this->barcode = $field;
-        return $this;
+        $this->barcode = $barcode;
     }
 
-    public function getBaseQuantity()
+    /**
+     * @return float|null
+     */
+    public function getBaseQuantity(): ?float
     {
         return $this->baseQuantity;
     }
 
-    public function setBaseQuantity($field)
+    /**
+     * @param float|null $baseQuantity
+     */
+    public function setBaseQuantity(?float $baseQuantity): void
     {
-        $this->baseQuantity = $field;
-        return $this;
+        $this->baseQuantity = $baseQuantity;
     }
 
-    public function getIsAvailable()
+    /**
+     * @return bool|null
+     */
+    public function getIsAvailable(): ?bool
     {
         return $this->isAvailable;
     }
 
-    public function setIsAvailable($field)
+    /**
+     * @param bool|null $isAvailable
+     */
+    public function setIsAvailable(?bool $isAvailable): void
     {
-        $this->isAvailable = $field;
-        return $this;
+        $this->isAvailable = $isAvailable;
     }
 
-    public function getBasePrice()
+    /**
+     * @return float|null
+     */
+    public function getBasePrice(): ?float
     {
         return $this->basePrice;
     }
 
-    public function setBasePrice($field)
+    /**
+     * @param float|null $basePrice
+     */
+    public function setBasePrice(?float $basePrice): void
     {
-        $this->basePrice = $field;
-        return $this;
+        $this->basePrice = $basePrice;
     }
 
-    public function getQuantity()
+    /**
+     * @return float|null
+     */
+    public function getQuantity(): ?float
     {
         return $this->quantity;
     }
 
-    public function setQuantity($field)
+    /**
+     * @param float|null $quantity
+     */
+    public function setQuantity(?float $quantity): void
     {
-        $this->quantity = $field;
-        return $this;
-    }
-
-    public function getUom()
-    {
-        return $this->uom;
-    }
-
-    public function setUom($field)
-    {
-        $this->uom = $field;
-        return $this;
-    }
-
-    public function getShortCode()
-    {
-        return $this->shortCode;
-    }
-
-    public function setShortCode($field)
-    {
-        $this->shortCode = $field;
-        return $this;
+        $this->quantity = $quantity;
     }
 
     /**
@@ -228,5 +277,69 @@ class UpdateProductCommand
     public function setCost(?float $cost): void
     {
         $this->cost = $cost;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getCategories(): ?array
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param int[]|null $categories
+     */
+    public function setCategories(?array $categories): void
+    {
+        $this->categories = $categories;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getSuppliers(): ?array
+    {
+        return $this->suppliers;
+    }
+
+    /**
+     * @param int[]|null $suppliers
+     */
+    public function setSuppliers(?array $suppliers): void
+    {
+        $this->suppliers = $suppliers;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getBrands(): ?array
+    {
+        return $this->brands;
+    }
+
+    /**
+     * @param int[]|null $brands
+     */
+    public function setBrands(?array $brands): void
+    {
+        $this->brands = $brands;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSaleUnit(): ?string
+    {
+        return $this->saleUnit;
+    }
+
+    /**
+     * @param string|null $saleUnit
+     */
+    public function setSaleUnit(?string $saleUnit): void
+    {
+        $this->saleUnit = $saleUnit;
     }
 }

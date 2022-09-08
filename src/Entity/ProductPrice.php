@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Entity\Traits\TimestampableTrait;
+use App\Entity\Traits\UuidTrait;
 use App\Repository\ProductPriceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=ProductPriceRepository::class)
@@ -13,7 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class ProductPrice
 {
-    use TimestampableTrait;
+    use TimestampableTrait, UuidTrait;
 
     /**
      * @ORM\Id
@@ -106,6 +108,11 @@ class ProductPrice
      * @Gedmo\Versioned()
      */
     private $baseQuantity;
+
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {

@@ -35,6 +35,11 @@ class Brand
      */
     private $media;
 
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

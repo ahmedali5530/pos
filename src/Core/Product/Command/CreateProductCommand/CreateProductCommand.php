@@ -40,16 +40,6 @@ class CreateProductCommand
     private $quantity;
 
     /**
-     * @var string|null
-     */
-    private $uom;
-
-    /**
-     * @var string|null
-     */
-    private $shortCode;
-
-    /**
      * @var int[]|null
      */
     private $prices;
@@ -60,14 +50,34 @@ class CreateProductCommand
     private $variants;
 
     /**
-     * @var int|null
-     */
-    private $category;
-
-    /**
      * @var float|null
      */
     private $cost;
+
+    /**
+     * @var int[]|null
+     */
+    private $categories;
+
+    /**
+     * @var int[]|null
+     */
+    private $suppliers;
+
+    /**
+     * @var int[]|null
+     */
+    private $brands;
+
+    /**
+     * @var string|null
+     */
+    private $saleUnit;
+
+    /**
+     * @var string|null
+     */
+    private $purchaseUnit;
 
     public function getName()
     {
@@ -146,28 +156,6 @@ class CreateProductCommand
         return $this;
     }
 
-    public function getUom()
-    {
-        return $this->uom;
-    }
-
-    public function setUom($field)
-    {
-        $this->uom = $field;
-        return $this;
-    }
-
-    public function getShortCode()
-    {
-        return $this->shortCode;
-    }
-
-    public function setShortCode($field)
-    {
-        $this->shortCode = $field;
-        return $this;
-    }
-
     /**
      * @return int[]|null
      */
@@ -230,6 +218,86 @@ class CreateProductCommand
     public function setCost(?float $cost): void
     {
         $this->cost = $cost;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getCategories(): ?array
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param int[]|null $categories
+     */
+    public function setCategories(?array $categories): void
+    {
+        $this->categories = $categories;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getSuppliers(): ?array
+    {
+        return $this->suppliers;
+    }
+
+    /**
+     * @param int[]|null $suppliers
+     */
+    public function setSuppliers(?array $suppliers): void
+    {
+        $this->suppliers = $suppliers;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getBrands(): ?array
+    {
+        return $this->brands;
+    }
+
+    /**
+     * @param int[]|null $brands
+     */
+    public function setBrands(?array $brands): void
+    {
+        $this->brands = $brands;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSaleUnit(): ?string
+    {
+        return $this->saleUnit;
+    }
+
+    /**
+     * @param string|null $saleUnit
+     */
+    public function setSaleUnit(?string $saleUnit): void
+    {
+        $this->saleUnit = $saleUnit;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPurchaseUnit(): ?string
+    {
+        return $this->purchaseUnit;
+    }
+
+    /**
+     * @param string|null $purchaseUnit
+     */
+    public function setPurchaseUnit(?string $purchaseUnit): void
+    {
+        $this->purchaseUnit = $purchaseUnit;
     }
 
 }

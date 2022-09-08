@@ -7,6 +7,7 @@ use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\SupplierRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=SupplierRepository::class)
@@ -58,6 +59,11 @@ class Supplier
      * @ORM\ManyToOne(targetEntity=Media::class)
      */
     private $media;
+
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {

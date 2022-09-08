@@ -6,6 +6,7 @@ use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
@@ -41,6 +42,11 @@ class Media
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $mimeType;
+
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {

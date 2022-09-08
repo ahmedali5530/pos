@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\UuidTrait;
 use App\Repository\DeviceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=DeviceRepository::class)
  */
 class Device
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -33,9 +37,14 @@ class Device
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"default": 1})
      */
-    private $prints;
+    private $prints = 1;
+
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {

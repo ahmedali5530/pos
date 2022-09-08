@@ -14,11 +14,6 @@ trait UuidTrait
      */
     private $uuid;
 
-    public function __construct()
-    {
-        $this->uuid = Uuid::uuid4();
-    }
-
     public function getUuid(): ?string
     {
         return $this->uuid;

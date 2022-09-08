@@ -9,6 +9,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -74,12 +75,6 @@ class Product
     private $cost;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class)
-     * @Gedmo\Versioned()
-     */
-    private $category;
-
-    /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
      */
@@ -122,12 +117,19 @@ class Product
      */
     private $suppliers;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Category::class)
+     */
+    private $categories;
+
     public function __construct()
     {
         $this->variants = new ArrayCollection();
         $this->prices = new ArrayCollection();
         $this->brands = new ArrayCollection();
         $this->suppliers = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->uuid = Uuid::uuid4();
     }
 
     public function getId(): ?int
@@ -203,18 +205,6 @@ class Product
     public function setBasePrice(?string $basePrice): self
     {
         $this->basePrice = $basePrice;
-
-        return $this;
-    }
-
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): self
-    {
-        $this->category = $category;
 
         return $this;
     }
@@ -383,6 +373,30 @@ class Product
     public function setSaleUnit(?string $saleUnit): self
     {
         $this->saleUnit = $saleUnit;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
 
         return $this;
     }

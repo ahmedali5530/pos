@@ -19,6 +19,7 @@ class UpdateProductRequestDto
 
     /**
      * @var string|null
+     * @Assert\NotBlank(normalizer="trim")
      */
     private $name;
 
@@ -29,6 +30,7 @@ class UpdateProductRequestDto
 
     /**
      * @var string|null
+     * @Assert\NotBlank(normalizer="trim")
      */
     private $barcode;
 
@@ -54,13 +56,15 @@ class UpdateProductRequestDto
 
     /**
      * @var string|null
+     * @Assert\NotBlank(normalizer="trim")
      */
-    private $uom;
+    private $saleUnit;
 
     /**
      * @var string|null
+     * @Assert\NotBlank(normalizer="trim")
      */
-    private $shortCode;
+    private $purchaseUnit;
 
     /**
      * @var ProductVariantDto[]|null
@@ -73,7 +77,35 @@ class UpdateProductRequestDto
     private $prices;
 
     /**
+     * @var int[]|null
+     * @Assert\NotBlank(normalizer="trim")
+     * @Assert\All(
+     *     @ConstraintValidEntity(class="App\Entity\Category", entityName="Category")
+     * )
+     */
+    private $categories;
+
+    /**
+     * @var int[]|null
+     * @Assert\NotBlank(normalizer="trim")
+     * @Assert\All(
+     *     @ConstraintValidEntity(class="App\Entity\Supplier", entityName="Supplier")
+     * )
+     */
+    private $suppliers;
+
+    /**
+     * @var int[]|null
+     * @Assert\NotBlank(normalizer="trim")
+     * @Assert\All(
+     *     @ConstraintValidEntity(class="App\Entity\Brand", entityName="Brand")
+     * )
+     */
+    private $brands;
+
+    /**
      * @var float|null
+     * @Assert\NotBlank(normalizer="trim")
      */
     private $cost;
 
@@ -89,8 +121,9 @@ class UpdateProductRequestDto
         $dto->isAvailable = $data['isAvailable'] ?? null;
         $dto->basePrice = $data['basePrice'] ?? null;
         $dto->quantity = $data['quantity'] ?? null;
-        $dto->uom = $data['uom'] ?? null;
-        $dto->shortCode = $data['shortCode'] ?? null;
+        $dto->purchaseUnit = $data['purchaseUnit'] ?? null;
+        $dto->saleUnit = $data['saleUnit'] ?? null;
+
         foreach($data['variants'] ?? [] as $variant){
             $dto->variants[] = ProductVariantDto::createFromArray($variant);
         }
@@ -100,6 +133,9 @@ class UpdateProductRequestDto
         }
 
         $dto->cost = $data['cost'] ?? null;
+        $dto->categories = $data['categories'] ?? null;
+        $dto->brands = $data['brands'] ?? null;
+        $dto->suppliers = $data['suppliers'] ?? null;
 
         return $dto;
     }
@@ -113,12 +149,30 @@ class UpdateProductRequestDto
         $command->setIsAvailable($this->isAvailable);
         $command->setBasePrice($this->basePrice);
         $command->setQuantity($this->quantity);
-        $command->setUom($this->uom);
-        $command->setShortCode($this->shortCode);
         $command->setPrices($this->prices);
         $command->setVariants($this->variants);
-        $command->setId($this->id);
         $command->setCost($this->cost);
+        $command->setPurchaseUnit($this->purchaseUnit);
+        $command->setSaleUnit($this->saleUnit);
+        $command->setCategories($this->categories);
+        $command->setBrands($this->brands);
+        $command->setSuppliers($this->suppliers);
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
     }
 
     /**
@@ -236,33 +290,33 @@ class UpdateProductRequestDto
     /**
      * @return string|null
      */
-    public function getUom(): ?string
+    public function getSaleUnit(): ?string
     {
-        return $this->uom;
+        return $this->saleUnit;
     }
 
     /**
-     * @param string|null $uom
+     * @param string|null $saleUnit
      */
-    public function setUom(?string $uom): void
+    public function setSaleUnit(?string $saleUnit): void
     {
-        $this->uom = $uom;
+        $this->saleUnit = $saleUnit;
     }
 
     /**
      * @return string|null
      */
-    public function getShortCode(): ?string
+    public function getPurchaseUnit(): ?string
     {
-        return $this->shortCode;
+        return $this->purchaseUnit;
     }
 
     /**
-     * @param string|null $shortCode
+     * @param string|null $purchaseUnit
      */
-    public function setShortCode(?string $shortCode): void
+    public function setPurchaseUnit(?string $purchaseUnit): void
     {
-        $this->shortCode = $shortCode;
+        $this->purchaseUnit = $purchaseUnit;
     }
 
     /**
@@ -298,19 +352,51 @@ class UpdateProductRequestDto
     }
 
     /**
-     * @return int|null
+     * @return int[]|null
      */
-    public function getId(): ?int
+    public function getCategories(): ?array
     {
-        return $this->id;
+        return $this->categories;
     }
 
     /**
-     * @param int|null $id
+     * @param int[]|null $categories
      */
-    public function setId(?int $id): void
+    public function setCategories(?array $categories): void
     {
-        $this->id = $id;
+        $this->categories = $categories;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getSuppliers(): ?array
+    {
+        return $this->suppliers;
+    }
+
+    /**
+     * @param int[]|null $suppliers
+     */
+    public function setSuppliers(?array $suppliers): void
+    {
+        $this->suppliers = $suppliers;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getBrands(): ?array
+    {
+        return $this->brands;
+    }
+
+    /**
+     * @param int[]|null $brands
+     */
+    public function setBrands(?array $brands): void
+    {
+        $this->brands = $brands;
     }
 
     /**

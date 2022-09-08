@@ -8,6 +8,7 @@ use App\Entity\Traits\UuidTrait;
 use App\Repository\DiscountRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=DiscountRepository::class)
@@ -56,6 +57,11 @@ class Discount
      * @Gedmo\Versioned()
      */
     private $scope;
+
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {

@@ -6,6 +6,7 @@ use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\CustomerPaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerPaymentRepository::class)
@@ -42,6 +43,11 @@ class CustomerPayment
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {

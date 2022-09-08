@@ -8,6 +8,7 @@ use App\Entity\Traits\UuidTrait;
 use App\Repository\LocationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=LocationRepository::class)
@@ -37,6 +38,11 @@ class Location
      * @Gedmo\Versioned()
      */
     private $location;
+
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {

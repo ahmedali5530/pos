@@ -4,9 +4,12 @@ namespace App\Core\Product\Command\UpdateProductCommand;
 
 use App\Core\Entity\EntityManager\EntityManager;
 use App\Core\Product\Command\CreateProductCommand\CreateProductCommandResult;
+use App\Entity\Brand;
+use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\ProductPrice;
 use App\Entity\ProductVariant;
+use App\Entity\Supplier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -82,22 +85,35 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
         if ($command->getQuantity() !== null) {
             $item->setQuantity($command->getQuantity());
         }
-        if ($command->getUom() !== null) {
-            $item->setUom($command->getUom());
+        if($command->getSaleUnit() !== null) {
+            $item->setSaleUnit($command->getSaleUnit());
         }
-        if ($command->getShortCode() !== null) {
-            $item->setShortCode($command->getShortCode());
+        if($command->getPurchaseUnit() !== null) {
+            $item->setPurchaseUnit($command->getPurchaseUnit());
         }
         if($command->getCost() !== null){
             $item->setCost($command->getCost());
         }
 
-        foreach($prices as $price){
-//            $item->addPrice($price);
+        if($command->getCategories() !== null){
+            foreach($command->getCategories() as $category){
+                $c = $this->getRepository(Category::class)->find($category);
+                $item->addCategory($c);
+            }
         }
 
-        foreach($variants as $variant){
-//            $item->addVariant($variant);
+        if($command->getBrands() !== null){
+            foreach($command->getBrands() as $brand){
+                $b = $this->getRepository(Brand::class)->find($brand);
+                $item->addBrand($b);
+            }
+        }
+
+        if($command->getSuppliers() !== null){
+            foreach($command->getSuppliers() as $supplier){
+                $s = $this->getRepository(Supplier::class)->find($supplier);
+                $item->addSupplier($s);
+            }
         }
 
         //validate item before creation

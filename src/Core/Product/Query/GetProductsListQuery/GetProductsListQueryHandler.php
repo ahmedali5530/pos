@@ -12,11 +12,11 @@ class GetProductsListQueryHandler extends EntityRepository implements GetProduct
     {
         return Product::class;
     }
-    
+
     public function handle(GetProductsListQuery $query): GetProductsListQueryResult
     {
         $qb = $this->createQueryBuilder('product');
-        $qb->leftJoin('product.category', 'category');
+        $qb->leftJoin('product.categories', 'category');
 
         if($query->getName() !== null){
             $qb->andWhere('product.name LIKE :name');
