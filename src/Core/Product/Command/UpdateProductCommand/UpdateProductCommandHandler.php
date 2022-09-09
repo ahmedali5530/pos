@@ -96,6 +96,11 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
         }
 
         if($command->getCategories() !== null){
+            //remove categories first
+            foreach($item->getCategories() as $category){
+                $item->removeCategory($category);
+            }
+
             foreach($command->getCategories() as $category){
                 $c = $this->getRepository(Category::class)->find($category);
                 $item->addCategory($c);
@@ -103,6 +108,10 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
         }
 
         if($command->getBrands() !== null){
+            foreach($item->getBrands() as $brand){
+                $item->removeBrand($brand);
+            }
+
             foreach($command->getBrands() as $brand){
                 $b = $this->getRepository(Brand::class)->find($brand);
                 $item->addBrand($b);
@@ -110,6 +119,10 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
         }
 
         if($command->getSuppliers() !== null){
+            foreach($item->getSuppliers() as $supplier){
+                $item->removeSupplier($supplier);
+            }
+
             foreach($command->getSuppliers() as $supplier){
                 $s = $this->getRepository(Supplier::class)->find($supplier);
                 $item->addSupplier($s);

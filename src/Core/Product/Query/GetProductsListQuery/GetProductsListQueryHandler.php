@@ -17,6 +17,8 @@ class GetProductsListQueryHandler extends EntityRepository implements GetProduct
     {
         $qb = $this->createQueryBuilder('product');
         $qb->leftJoin('product.categories', 'category');
+        $qb->leftJoin('product.suppliers', 'supplier');
+        $qb->leftJoin('product.brands', 'brand');
 
         if($query->getName() !== null){
             $qb->andWhere('product.name LIKE :name');

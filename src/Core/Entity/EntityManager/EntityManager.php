@@ -24,7 +24,7 @@ abstract class EntityManager extends EntityRepository
         $this->em->persist($object);
     }
 
-    public function persistAll(array $objects)
+    public function persistAll(iterable $objects)
     {
         foreach($objects as $object){
             $this->em->persist($object);
@@ -41,7 +41,7 @@ abstract class EntityManager extends EntityRepository
         $this->em->remove($object);
     }
 
-    public function removeAll(array $objects)
+    public function removeAll(iterable $objects)
     {
         foreach($objects as $object){
             $this->em->remove($object);
@@ -53,7 +53,7 @@ abstract class EntityManager extends EntityRepository
         $this->flush();
     }
 
-    public function saveAll(array $objects){
+    public function saveAll(iterable $objects){
         foreach($objects as $object){
             $this->em->persist($object);
         }

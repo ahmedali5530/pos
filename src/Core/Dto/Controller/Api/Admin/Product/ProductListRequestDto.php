@@ -16,7 +16,13 @@ class ProductListRequestDto
 
     const ORDERS_LIST = [
         'id' => 'product.id',
-        'name' => 'product.name'
+        'name' => 'product.name',
+        'basePrice' => 'product.basePrice',
+        'cost' => 'product.cost',
+        'categories' => 'category.name',
+        'suppliers' => 'supplier.name',
+        'brands' => 'brand.name',
+        'barcode' => 'product.barcode'
     ];
 
     /**

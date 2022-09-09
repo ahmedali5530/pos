@@ -4,7 +4,7 @@ namespace App\Core\Dto\Controller\Api\Admin\Product;
 
 use App\Core\Dto\Common\Product\ProductPriceDto;
 use App\Core\Dto\Common\Product\ProductVariantDto;
-use App\Core\Product\Command\CreateProductCommand\CreateProductCommand;
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Core\Product\Command\UpdateProductCommand\UpdateProductCommand;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -136,6 +136,7 @@ class UpdateProductRequestDto
         $dto->categories = $data['categories'] ?? null;
         $dto->brands = $data['brands'] ?? null;
         $dto->suppliers = $data['suppliers'] ?? null;
+        $dto->id = $data['id'] ?? null;
 
         return $dto;
     }
@@ -157,6 +158,7 @@ class UpdateProductRequestDto
         $command->setCategories($this->categories);
         $command->setBrands($this->brands);
         $command->setSuppliers($this->suppliers);
+        $command->setId($this->id);
     }
 
     /**
