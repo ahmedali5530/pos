@@ -116,7 +116,7 @@ class OrderShortDto
         return $dto;
     }
 
-    public function createFromArray(?array $data): self
+    public function createFromArray(?array $data): ?self
     {
         if($data === null){
             return null;

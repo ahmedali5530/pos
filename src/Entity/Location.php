@@ -29,13 +29,11 @@ class Location
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Gedmo\Versioned()
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Gedmo\Versioned()
      */
     private $location;
 

@@ -34,7 +34,15 @@ class SelectBrandQueryHandler extends EntityRepository implements SelectBrandQue
             $qb->andWhere('Brand.isActive = :isActive');
             $qb->setParameter('isActive', $query->getIsActive());
         }
+        if($query->getQ() !== null){
+            $qb->andWhere('Brand.name LIKE :q');
+            $qb->setParameter('q', '%'.$query->getQ().'%');
+        }
 
+
+        if($query->getOrderBy() !== null){
+            $qb->orderBy($query->getOrderBy(), $query->getOrderMode());
+        }
 
         if($query->getLimit() !== null){
             $qb->setMaxResults($query->getLimit());

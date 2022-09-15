@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Core\Category\Query\SelectCategoryQuery;
 
@@ -53,6 +53,15 @@ class SelectCategoryQueryHandler extends EntityRepository implements SelectCateg
         if($query->getUuid() !== null){
             $qb->andWhere('Category.uuid = :uuid');
             $qb->setParameter('uuid', $query->getUuid());
+        }
+        if($query->getQ() !== null){
+            $qb->andWhere('Category.name LIKE :q');
+            $qb->setParameter('q', '%'.$query->getQ().'%');
+        }
+
+
+        if($query->getOrderBy() !== null){
+            $qb->orderBy($query->getOrderBy(), $query->getOrderMode());
         }
 
 

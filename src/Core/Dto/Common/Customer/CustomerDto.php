@@ -103,7 +103,7 @@ class CustomerDto
         foreach($customer->getOrders() as $order){
             foreach($order->getPayments() as $payment){
                 if($payment->getType()->getType() === Payment::PAYMENT_TYPE_CREDIT) {
-                    $dto->sale += $payment->getTotal();
+                    $dto->sale += $payment->getReceived();
                 }
             }
         }

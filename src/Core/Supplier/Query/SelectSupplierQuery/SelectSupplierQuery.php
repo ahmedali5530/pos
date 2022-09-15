@@ -1,9 +1,17 @@
-<?php 
+<?php
 
 namespace App\Core\Supplier\Query\SelectSupplierQuery;
 
+use App\Core\Dto\Common\Common\LimitTrait;
+use App\Core\Dto\Common\Common\OrderTrait;
+use App\Core\Dto\Common\Common\QTrait;
+
 class SelectSupplierQuery
 {
+    use LimitTrait;
+    use OrderTrait;
+    use QTrait;
+
     /**
      * @var null|int
      */
@@ -63,16 +71,6 @@ class SelectSupplierQuery
      * @var null|string
      */
     private $uuid = null;
-
-    /**
-     * @var null|int
-     */
-    private $limit = null;
-
-    /**
-     * @var null|int
-     */
-    private $offset = null;
 
     public function setId(?int $id)
     {
@@ -204,27 +202,5 @@ class SelectSupplierQuery
     public function getUuid()
     {
         return $this->uuid;
-    }
-
-    public function setLimit(?int $limit)
-    {
-        $this->limit = $limit;
-        return $this;
-    }
-
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    public function setOffset(?int $offset)
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-
-    public function getOffset()
-    {
-        return $this->offset;
     }
 }

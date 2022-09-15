@@ -1,12 +1,24 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Category;
 
 use App\Core\Category\Query\SelectCategoryQuery\SelectCategoryQuery;
+use App\Core\Dto\Common\Common\LimitTrait;
+use App\Core\Dto\Common\Common\OrderTrait;
+use App\Core\Dto\Common\Common\QTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class SelectCategoryRequestDto
 {
+    use LimitTrait;
+    use OrderTrait;
+    use QTrait;
+
+    const ORDERS_LIST = [
+        'id' => 'Category.id',
+        'name' => 'Category.name',
+    ];
+
     /**
      * @var null|int
      */
@@ -114,6 +126,12 @@ class SelectCategoryRequestDto
         $dto->createdAt = $request->query->get('createdAt');
         $dto->uuid = $request->query->get('uuid');
 
+        $dto->q = $request->query->get('q');
+        $dto->limit = $request->query->get('limit');
+        $dto->offset = $request->query->get('offset');
+        $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
+        $dto->orderMode = $request->query->get('orderMode', 'ASC');
+
 
         return $dto;
     }
@@ -126,5 +144,10 @@ class SelectCategoryRequestDto
         $query->setIsActive($this->isActive);
         $query->setCreatedAt($this->createdAt);
         $query->setUuid($this->uuid);
+        $query->setLimit($this->getLimit());
+        $query->setOffset($this->getOffset());
+        $query->setOrderBy($this->getOrderBy());
+        $query->setOrderMode($this->getOrderMode());
+        $query->setQ($this->getQ());
     }
 }

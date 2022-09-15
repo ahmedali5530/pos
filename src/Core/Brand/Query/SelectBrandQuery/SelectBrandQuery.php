@@ -2,8 +2,14 @@
 
 namespace App\Core\Brand\Query\SelectBrandQuery;
 
+use App\Core\Dto\Common\Common\LimitTrait;
+use App\Core\Dto\Common\Common\OrderTrait;
+use App\Core\Dto\Common\Common\QTrait;
+
 class SelectBrandQuery
 {
+    use LimitTrait, OrderTrait, QTrait;
+
     /**
      * @var null|int
      */
@@ -39,15 +45,6 @@ class SelectBrandQuery
      */
     private $uuid = null;
 
-    /**
-     * @var null|int
-     */
-    private $limit = null;
-
-    /**
-     * @var null|int
-     */
-    private $offset = null;
 
     public function setId(?int $id)
     {
@@ -124,27 +121,5 @@ class SelectBrandQuery
     public function getUuid()
     {
         return $this->uuid;
-    }
-
-    public function setLimit(?int $limit)
-    {
-        $this->limit = $limit;
-        return $this;
-    }
-
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    public function setOffset(?int $offset)
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-
-    public function getOffset()
-    {
-        return $this->offset;
     }
 }

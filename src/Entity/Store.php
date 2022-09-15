@@ -29,14 +29,12 @@ class Store
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Gedmo\Versioned()
+     * @ORM\Column(type="string", length=100)
      */
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Location::class)
-     * @Gedmo\Versioned()
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $location;
 
@@ -62,12 +60,12 @@ class Store
         return $this;
     }
 
-    public function getLocation(): ?Location
+    public function getLocation(): ?string
     {
         return $this->location;
     }
 
-    public function setLocation(?Location $location): self
+    public function setLocation(?string $location): self
     {
         $this->location = $location;
 

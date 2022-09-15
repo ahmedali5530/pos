@@ -52,7 +52,7 @@ class CreateOrderRequestDto
 
     /**
      * @var CartProductDto[]
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Please some items in the cart first!")
      * @Assert\Valid()
      */
     private $items = [];
@@ -81,7 +81,7 @@ class CreateOrderRequestDto
 
     /**
      * @var OrderPaymentDto[]
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Please add some payments by clicking on + button")
      * @Assert\Valid()
      */
     private $payments = [];

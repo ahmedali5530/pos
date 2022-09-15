@@ -54,7 +54,15 @@ class SelectSupplierQueryHandler extends EntityRepository implements SelectSuppl
             $qb->andWhere('Supplier.isActive = :isActive');
             $qb->setParameter('isActive', $query->getIsActive());
         }
+        if($query->getQ() !== null){
+            $qb->andWhere('Supplier.name LIKE :q OR Supplier.phone LIKE :q OR Supplier.email LIKE :q');
+            $qb->setParameter('q', '%'.$query->getQ().'%');
+        }
 
+
+        if($query->getOrderBy() !== null){
+            $qb->orderBy($query->getOrderBy(), $query->getOrderMode());
+        }
 
         if($query->getLimit() !== null){
             $qb->setMaxResults($query->getLimit());

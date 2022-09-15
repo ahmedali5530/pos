@@ -20,7 +20,7 @@ class StoreDto
     private $name;
 
     /**
-     * @var LocationDto|null
+     * @var string|null
      */
     private $location;
 
@@ -32,7 +32,7 @@ class StoreDto
         $dto = new self();
         $dto->id = $store->getId();
         $dto->name = $store->getName();
-        $dto->location = LocationDto::createFromLocation($store->getLocation());
+        $dto->location = $store->getLocation();
 
         return $dto;
     }
@@ -70,17 +70,17 @@ class StoreDto
     }
 
     /**
-     * @return LocationDto|null
+     * @return string|null
      */
-    public function getLocation(): ?LocationDto
+    public function getLocation(): ?string
     {
         return $this->location;
     }
 
     /**
-     * @param LocationDto|null $location
+     * @param string|null $location
      */
-    public function setLocation(?LocationDto $location): void
+    public function setLocation(?string $location): void
     {
         $this->location = $location;
     }

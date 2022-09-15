@@ -2,11 +2,25 @@
 
 namespace App\Core\Dto\Controller\Api\Admin\Supplier;
 
+use App\Core\Dto\Common\Common\LimitTrait;
+use App\Core\Dto\Common\Common\OrderTrait;
+use App\Core\Dto\Common\Common\QTrait;
 use App\Core\Supplier\Query\SelectSupplierQuery\SelectSupplierQuery;
 use Symfony\Component\HttpFoundation\Request;
 
 class SelectSupplierRequestDto
 {
+    use LimitTrait;
+    use OrderTrait;
+    use QTrait;
+
+    const ORDERS_LIST = [
+        'id' => 'Supplier.id',
+        'name' => 'Supplier.name',
+        'phone' => 'Supplier.phone',
+        'email' => 'Supplier.email',
+    ];
+
     /**
      * @var null|int
      */
@@ -179,6 +193,12 @@ class SelectSupplierRequestDto
         $dto->fax = $request->query->get('fax');
         $dto->address = $request->query->get('address');
 
+        $dto->q = $request->query->get('q');
+        $dto->limit = $request->query->get('limit');
+        $dto->offset = $request->query->get('offset');
+        $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
+        $dto->orderMode = $request->query->get('orderMode', 'ASC');
+
 
 
         return $dto;
@@ -193,5 +213,10 @@ class SelectSupplierRequestDto
         $query->setWhatsApp($this->whatsApp);
         $query->setFax($this->fax);
         $query->setAddress($this->address);
+        $query->setLimit($this->getLimit());
+        $query->setOffset($this->getOffset());
+        $query->setOrderBy($this->getOrderBy());
+        $query->setOrderMode($this->getOrderMode());
+        $query->setQ($this->getQ());
     }
 }
