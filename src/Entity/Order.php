@@ -114,6 +114,11 @@ class Order
      */
     private $description;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Store::class)
+     */
+    private $store;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -346,6 +351,18 @@ class Order
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getStore(): ?Store
+    {
+        return $this->store;
+    }
+
+    public function setStore(?Store $store): self
+    {
+        $this->store = $store;
 
         return $this;
     }

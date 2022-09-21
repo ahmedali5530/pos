@@ -21,6 +21,7 @@ class SelectSupplierQueryHandler extends EntityRepository implements SelectSuppl
     public function handle(SelectSupplierQuery $query) : SelectSupplierQueryResult
     {
         $qb = $this->createQueryBuilder('Supplier');
+        $qb->leftJoin('Supplier.stores', 'store');
 
         if($query->getId() !== null){
             $qb->andWhere('Supplier.id = :id');
@@ -55,8 +56,12 @@ class SelectSupplierQueryHandler extends EntityRepository implements SelectSuppl
             $qb->setParameter('isActive', $query->getIsActive());
         }
         if($query->getQ() !== null){
-            $qb->andWhere('Supplier.name LIKE :q OR Supplier.phone LIKE :q OR Supplier.email LIKE :q');
+            $qb->andWhere('Supplier.name LIKE :q OR Supplier.phone LIKE :q OR Supplier.email LIKE :q OR store.name LIKE :q');
             $qb->setParameter('q', '%'.$query->getQ().'%');
+        }
+        if($query->getStore() !== null){
+            $qb->andWhere('store.id = :store');
+            $qb->setParameter('store', $query->getStore());
         }
 
 

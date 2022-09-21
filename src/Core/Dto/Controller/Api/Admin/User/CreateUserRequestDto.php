@@ -2,6 +2,7 @@
 
 namespace App\Core\Dto\Controller\Api\Admin\User;
 
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Request;
 use App\Core\User\Command\CreateUserCommand\CreateUserCommand;
@@ -37,6 +38,15 @@ class CreateUserRequestDto
      * @Assert\NotBlank(normalizer="trim")
      */
     private $email = null;
+
+    /**
+     * @var string[]|null
+     * @Assert\All(
+     *     @Assert\Type(type="string"),
+     *     @ConstraintValidEntity(class="App\Entity\Store", entityName="Group")
+     * )
+     */
+    private $stores;
 
     public function setUsername(?string $username)
     {
@@ -93,6 +103,22 @@ class CreateUserRequestDto
         return $this->email;
     }
 
+    /**
+     * @return string[]|null
+     */
+    public function getStores(): ?array
+    {
+        return $this->stores;
+    }
+
+    /**
+     * @param string[]|null $stores
+     */
+    public function setStores(?array $stores): void
+    {
+        $this->stores = $stores;
+    }
+
     public static function createFromRequest(Request $request) : self
     {
         $dto = new self();
@@ -103,6 +129,7 @@ class CreateUserRequestDto
         $dto->displayName = $data['displayName'] ?? null;
         $dto->roles = $data['roles'] ?? null;
         $dto->email = $data['email'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
 
         return $dto;
@@ -115,5 +142,6 @@ class CreateUserRequestDto
         $command->setDisplayName($this->displayName);
         $command->setRoles($this->roles);
         $command->setEmail($this->email);
+        $command->setStores($this->stores);
     }
 }

@@ -5,10 +5,11 @@ namespace App\Core\Category\Query\SelectCategoryQuery;
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 
 class SelectCategoryQuery
 {
-    use LimitTrait, OrderTrait, QTrait;
+    use LimitTrait, OrderTrait, QTrait, StoreDtoTrait;
 
     /**
      * @var null|int

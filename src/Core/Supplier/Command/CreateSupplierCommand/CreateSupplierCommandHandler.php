@@ -2,6 +2,7 @@
 
 namespace App\Core\Supplier\Command\CreateSupplierCommand;
 
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -27,6 +28,13 @@ class CreateSupplierCommandHandler extends EntityManager implements CreateSuppli
         $item->setWhatsApp($command->getWhatsApp());
         $item->setFax($command->getFax());
         $item->setAddress($command->getAddress());
+
+        if($command->getStores() !== null){
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+                $item->addStore($s);
+            }
+        }
 
 
         //validate item before creation

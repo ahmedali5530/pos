@@ -6,6 +6,7 @@ namespace App\Core\Dto\Controller\Api\Admin\Product;
 
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use App\Core\Product\Query\GetProductsListQuery\GetProductsListQuery;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -13,6 +14,7 @@ class ProductListRequestDto
 {
     use LimitTrait;
     use OrderTrait;
+    use StoreDtoTrait;
 
     const ORDERS_LIST = [
         'id' => 'product.id',
@@ -69,6 +71,8 @@ class ProductListRequestDto
         $dto->orderMode = $request->query->get('orderMode', 'ASC');
         $dto->q = $request->query->get('q');
 
+        $dto->store = $request->query->get('store');
+
         return $dto;
     }
 
@@ -84,6 +88,7 @@ class ProductListRequestDto
         $query->setOrderBy($this->getOrderBy());
         $query->setOrderMode($this->getOrderMode());
         $query->setQ($this->q);
+        $query->setStore($this->getStore());
     }
 
     /**

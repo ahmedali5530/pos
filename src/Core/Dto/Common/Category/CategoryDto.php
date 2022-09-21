@@ -6,6 +6,7 @@ namespace App\Core\Dto\Common\Category;
 
 use App\Core\Dto\Common\Common\ActiveDtoTrait;
 use App\Core\Dto\Common\Common\DateTimeDto;
+use App\Core\Dto\Common\Common\StoresDtoTrait;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
 use App\Core\Dto\Common\Common\UuidDtoTrait;
 use App\Entity\Category;
@@ -15,6 +16,7 @@ class CategoryDto
     use ActiveDtoTrait;
     use UuidDtoTrait;
     use TimestampsDtoTrait;
+    use StoresDtoTrait;
 
     /**
      * @var int|null
@@ -59,6 +61,8 @@ class CategoryDto
         $dto->uuid = $category->getUuid();
         $dto->isActive = $category->getIsActive();
         $dto->createdAt = DateTimeDto::createFromDateTime($category->getCreatedAt());
+
+        $dto->setStores($category->getStores());
 
         return $dto;
     }

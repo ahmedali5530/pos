@@ -1,11 +1,14 @@
-<?php 
+<?php
 
 namespace App\Core\Expense\Query\SelectExpenseQuery;
 
 use App\Core\Dto\Common\Common\DateTimeDto;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 
 class SelectExpenseQuery
 {
+    use StoreDtoTrait;
+
     /**
      * @var null|int
      */

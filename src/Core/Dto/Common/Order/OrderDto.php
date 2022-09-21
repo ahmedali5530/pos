@@ -5,6 +5,7 @@ namespace App\Core\Dto\Common\Order;
 
 
 use App\Core\Dto\Common\Customer\CustomerDto;
+use App\Core\Dto\Common\Store\StoreDto;
 use App\Core\Dto\Common\User\UserDto;
 use App\Entity\Order;
 use App\Entity\OrderDiscount;
@@ -92,6 +93,11 @@ class OrderDto
      */
     private $notes;
 
+    /**
+     * @var StoreDto|null
+     */
+    private $store;
+
     public static function createFromOrder(?Order $order): ?self
     {
         if($order === null){
@@ -119,6 +125,8 @@ class OrderDto
         $dto->status = $order->getStatus();
         $dto->returnedFrom = OrderDto::createFromOrder($order->getReturnedFrom());
         $dto->notes = $order->getDescription();
+
+        $dto->store = StoreDto::createFromStore($order->getStore());
 
         return $dto;
     }
@@ -390,5 +398,21 @@ class OrderDto
     public function setNotes(?string $notes): void
     {
         $this->notes = $notes;
+    }
+
+    /**
+     * @return StoreDto|null
+     */
+    public function getStore(): ?StoreDto
+    {
+        return $this->store;
+    }
+
+    /**
+     * @param StoreDto|null $store
+     */
+    public function setStore(?StoreDto $store): void
+    {
+        $this->store = $store;
     }
 }

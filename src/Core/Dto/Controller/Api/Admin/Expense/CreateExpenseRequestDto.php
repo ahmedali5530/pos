@@ -2,6 +2,7 @@
 
 namespace App\Core\Dto\Controller\Api\Admin\Expense;
 
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use Carbon\Carbon;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,6 +10,8 @@ use App\Core\Expense\Command\CreateExpenseCommand\CreateExpenseCommand;
 
 class CreateExpenseRequestDto
 {
+    use StoreDtoTrait;
+
     /**
      * @var null|float
      * @Assert\NotBlank(normalizer="trim")
@@ -74,6 +77,7 @@ class CreateExpenseRequestDto
         $dto->amount = $data['amount'] ?? null;
         $dto->description = $data['description'] ?? null;
         $dto->dateTime = $data['dateTime'] ?? null;
+        $dto->store = $data['store'] ?? null;
 
 
         return $dto;
@@ -89,5 +93,6 @@ class CreateExpenseRequestDto
         }else{
             $command->setCreatedAt(Carbon::now()->toDateTimeImmutable());
         }
+        $command->setStore($this->store);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Core\User\Command\CreateUserCommand;
 
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Ramsey\Uuid\Uuid;
@@ -41,6 +42,14 @@ class CreateUserCommandHandler extends EntityManager implements CreateUserComman
         $item->setVerificationToken(base64_encode(Uuid::uuid4().random_bytes(64).Uuid::uuid4()));
         $item->setRoles($command->getRoles());
         $item->setEmail($command->getEmail());
+
+        if($command->getStores() !== null){
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+
+                $item->addStore($s);
+            }
+        }
 
 
         //validate item before creation

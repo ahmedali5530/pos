@@ -2,47 +2,93 @@
 
 namespace App\Core\Discont\Command\CreateDiscountCommand;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
+
 class CreateDiscountCommand
 {
-            private $id;
-        private $name;
-        private $rate;
-        private $rateType;
-        public function getId()
-        {
-            return $this->id;
-        }
-        
-        public function setId($field)
-        {
-            $this->id = $field;
-            return $this;
-        }        public function getName()
-        {
-            return $this->name;
-        }
-        
-        public function setName($field)
-        {
-            $this->name = $field;
-            return $this;
-        }        public function getRate()
-        {
-            return $this->rate;
-        }
-        
-        public function setRate($field)
-        {
-            $this->rate = $field;
-            return $this;
-        }        public function getRateType()
-        {
-            return $this->rateType;
-        }
-        
-        public function setRateType($field)
-        {
-            $this->rateType = $field;
-            return $this;
-        }
+    use StoresRequestDtoTrait;
+
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $rate;
+
+    /**
+     * @var string
+     */
+    private $rateType;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRate(): string
+    {
+        return $this->rate;
+    }
+
+    /**
+     * @param string $rate
+     */
+    public function setRate(string $rate): void
+    {
+        $this->rate = $rate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRateType(): string
+    {
+        return $this->rateType;
+    }
+
+    /**
+     * @param string $rateType
+     */
+    public function setRateType(string $rateType): void
+    {
+        $this->rateType = $rateType;
+    }
 }

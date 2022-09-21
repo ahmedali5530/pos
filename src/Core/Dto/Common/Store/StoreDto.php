@@ -37,6 +37,17 @@ class StoreDto
         return $dto;
     }
 
+    public static function createFromArray(array $data): self
+    {
+        $dto = new self();
+
+        $dto->id = $data['id'] ?? null;
+        $dto->name = $data['name'] ?? null;
+        $dto->location = $data['location'] ?? null;
+
+        return $dto;
+    }
+
     /**
      * @return int|null
      */

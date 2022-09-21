@@ -5,10 +5,11 @@ namespace App\Core\Brand\Query\SelectBrandQuery;
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 
 class SelectBrandQuery
 {
-    use LimitTrait, OrderTrait, QTrait;
+    use LimitTrait, OrderTrait, QTrait, StoreDtoTrait;
 
     /**
      * @var null|int

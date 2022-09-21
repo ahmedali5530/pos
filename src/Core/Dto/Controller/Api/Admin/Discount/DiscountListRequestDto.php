@@ -1,26 +1,29 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Discount;
 
 use App\Core\Discount\Query\GetDiscountListQuery\GetDiscountListQuery;
+use App\Core\Dto\Common\Common\LimitTrait;
+use App\Core\Dto\Common\Common\OrderTrait;
+use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class DiscountListRequestDto
 {
+    use OrderTrait, StoreDtoTrait, QTrait, LimitTrait;
+
+    const ORDERS_LIST = [
+        'name' => 'Discount.name',
+        'rate' => 'Discount.rate',
+        'rateType' => 'Discount.rateType',
+        'scope' => 'Discount.scope'
+    ];
+
     /**
      * @var string|null
      */
     private $name;
-
-    /**
-     * @var int|null
-     */
-    private $limit;
-
-    /**
-     * @var int|null
-     */
-    private $offset;
 
     /**
      * @return string|null
@@ -38,38 +41,6 @@ class DiscountListRequestDto
         $this->name = $name;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getLimit() : ?int
-    {
-        return $this->limit;
-    }
-
-    /**
-     * @param int|null $limit
-     */
-    public function setLimit(?int $limit) : void
-    {
-        $this->limit = $limit;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getOffset() : ?int
-    {
-        return $this->offset;
-    }
-
-    /**
-     * @param int|null $offset
-     */
-    public function setOffset(?int $offset) : void
-    {
-        $this->offset = $offset;
-    }
-
     public static function createFromRequest(Request $request)
     {
         $dto = new self();
@@ -77,6 +48,10 @@ class DiscountListRequestDto
         $dto->name = $request->query->get('name');
         $dto->limit = $request->query->get('limit');
         $dto->offset = $request->query->get('offset');
+        $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
+        $dto->orderMode = $request->query->get('orderMode', 'ASC');
+        $dto->q = $request->query->get('q');
+        $dto->store = $request->query->get('store');
 
         return $dto;
     }
@@ -86,5 +61,9 @@ class DiscountListRequestDto
         $query->setName($this->name);
         $query->setLimit($this->limit);
         $query->setOffset($this->offset);
+        $query->setOrderMode($this->orderMode);
+        $query->setOrderBy($this->getOrderBy());
+        $query->setQ($this->q);
+        $query->setStore($this->getStore());
     }
 }

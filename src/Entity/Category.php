@@ -55,10 +55,16 @@ class Category
      */
     private $children;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Store::class)
+     */
+    private $stores;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
         $this->uuid = Uuid::uuid4();
+        $this->stores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -128,6 +134,30 @@ class Category
                 $child->setParent(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Store[]
+     */
+    public function getStores(): Collection
+    {
+        return $this->stores;
+    }
+
+    public function addStore(Store $store): self
+    {
+        if (!$this->stores->contains($store)) {
+            $this->stores[] = $store;
+        }
+
+        return $this;
+    }
+
+    public function removeStore(Store $store): self
+    {
+        $this->stores->removeElement($store);
 
         return $this;
     }

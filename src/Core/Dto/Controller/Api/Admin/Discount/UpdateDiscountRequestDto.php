@@ -7,11 +7,19 @@ namespace App\Core\Dto\Controller\Api\Admin\Discount;
 use App\Core\Discont\Command\CreateDiscountCommand\CreateDiscountCommand;
 use App\Core\Discount\Command\UpdateDiscountCommand\UpdateDiscountCommand;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateDiscountRequestDto
 {
     /**
+     * @var int|null
+     * @Assert\NotBlank(normalizer="trim")
+     */
+    private $id;
+
+    /**
      * @var string|null
+     * @Assert\NotBlank(normalizer="trim")
      */
     private $name;
 
@@ -22,8 +30,15 @@ class UpdateDiscountRequestDto
 
     /**
      * @var string|null
+     * @Assert\NotBlank(normalizer="trim")
      */
     private $rateType;
+
+    /**
+     * @var string|null
+     * @Assert\NotBlank(normalizer="trim")
+     */
+    private $scope;
 
     public static function createFromRequest(
         Request $request
@@ -35,6 +50,8 @@ class UpdateDiscountRequestDto
         $dto->name = $data['name'] ?? null;
         $dto->rate = $data['rate'] ?? null;
         $dto->rateType = $data['rateType'] ?? null;
+        $dto->id = $data['id'] ?? null;
+        $dto->scope = $data['scope'] ?? null;
 
         return $dto;
     }
@@ -44,6 +61,8 @@ class UpdateDiscountRequestDto
         $command->setName($this->name);
         $command->setRate($this->rate);
         $command->setRateType($this->rateType);
+        $command->setId($this->id);
+        $command->setScope($this->scope);
     }
 
     /**
@@ -92,5 +111,37 @@ class UpdateDiscountRequestDto
     public function setRateType(?string $rateType): void
     {
         $this->rateType = $rateType;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getScope(): ?string
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param string|null $scope
+     */
+    public function setScope(?string $scope): void
+    {
+        $this->scope = $scope;
     }
 }

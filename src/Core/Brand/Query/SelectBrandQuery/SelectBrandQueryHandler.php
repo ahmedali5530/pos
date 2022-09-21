@@ -21,6 +21,7 @@ class SelectBrandQueryHandler extends EntityRepository implements SelectBrandQue
     public function handle(SelectBrandQuery $query) : SelectBrandQueryResult
     {
         $qb = $this->createQueryBuilder('Brand');
+        $qb->leftJoin('Brand.stores', 'store');
 
         if($query->getId() !== null){
             $qb->andWhere('Brand.id = :id');
@@ -35,8 +36,12 @@ class SelectBrandQueryHandler extends EntityRepository implements SelectBrandQue
             $qb->setParameter('isActive', $query->getIsActive());
         }
         if($query->getQ() !== null){
-            $qb->andWhere('Brand.name LIKE :q');
+            $qb->andWhere('Brand.name LIKE :q OR store.name LIKE :q');
             $qb->setParameter('q', '%'.$query->getQ().'%');
+        }
+        if($query->getStore() !== null){
+            $qb->andWhere('store.id = :store');
+            $qb->setParameter('store', $query->getStore());
         }
 
 

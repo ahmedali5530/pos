@@ -12,12 +12,14 @@ class GetOrdersListQueryHandler extends EntityRepository implements GetOrdersLis
     {
         return Order::class;
     }
-    
+
     public function handle(GetOrdersListQuery $query): GetOrdersListQueryResult
     {
         $qb = $this->createQueryBuilder('entity');
 
         $qb->leftJoin('entity.customer', 'customer');
+        $qb->leftJoin('entity.tax', 'tax');
+        $qb->leftJoin('entity.discount', 'discount');
         if($query->getCustomerId() !== null){
             $qb->andWhere('customer.id = :customerId');
             $qb->setParameter('customerId', $query->getCustomerId());
@@ -66,11 +68,16 @@ class GetOrdersListQueryHandler extends EntityRepository implements GetOrdersLis
             $qb->andWhere('customer.name LIKE :q OR entity.orderId LIKE :q OR entity.status LIKE :q');
             $qb->setParameter('q', '%'.$query->getQ().'%');
         }
-        
+
+        if($query->getStore() !== null){
+            $qb->join('entity.store', 'store');
+            $qb->andWhere('store.id = :store')->setParameter('store', $query->getStore());
+        }
+
         if($query->getLimit() !== null){
             $qb->setMaxResults($query->getLimit());
         }
-        
+
         if($query->getOffset() !== null){
             $qb->setFirstResult($query->getOffset());
         }
@@ -80,7 +87,7 @@ class GetOrdersListQueryHandler extends EntityRepository implements GetOrdersLis
         }
 
 
-        
+
         $list = new Paginator($qb->getQuery());
 
         $result = new GetOrdersListQueryResult();

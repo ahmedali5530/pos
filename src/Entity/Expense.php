@@ -44,6 +44,11 @@ class Expense
      */
     private $user;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Store::class)
+     */
+    private $store;
+
     public function __construct()
     {
         $this->uuid = Uuid::uuid4();
@@ -86,6 +91,18 @@ class Expense
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getStore(): ?Store
+    {
+        return $this->store;
+    }
+
+    public function setStore(?Store $store): self
+    {
+        $this->store = $store;
 
         return $this;
     }

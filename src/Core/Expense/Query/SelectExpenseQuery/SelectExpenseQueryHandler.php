@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Core\Expense\Query\SelectExpenseQuery;
 
@@ -38,31 +38,17 @@ class SelectExpenseQueryHandler extends EntityRepository implements SelectExpens
             $qb->andWhere('Expense.isActive = :isActive');
             $qb->setParameter('isActive', $query->getIsActive());
         }
-        if($query->getCreatedAt() !== null){
-            $qb->andWhere('Expense.createdAt = :createdAt');
-            $qb->setParameter('createdAt', $query->getCreatedAt());
-        }
-        if($query->getDeletedAt() !== null){
-            $qb->andWhere('Expense.deletedAt = :deletedAt');
-            $qb->setParameter('deletedAt', $query->getDeletedAt());
-        }
-        if($query->getUpdatedAt() !== null){
-            $qb->andWhere('Expense.updatedAt = :updatedAt');
-            $qb->setParameter('updatedAt', $query->getUpdatedAt());
-        }
-        if($query->getUuid() !== null){
-            $qb->andWhere('Expense.uuid = :uuid');
-            $qb->setParameter('uuid', $query->getUuid());
-        }
-
         if($query->getDateTimeFrom() !== null){
             $qb->andWhere('Expense.createdAt >= :dateTimeFrom');
             $qb->setParameter('dateTimeFrom', $query->getDateTimeFrom()->getDatetime());
         }
-
         if($query->getDateTimeTo() !== null){
             $qb->andWhere('Expense.createdAt <= :dateTimeTo');
             $qb->setParameter('dateTimeTo', $query->getDateTimeTo()->getDatetime());
+        }
+        if($query->getStore() !== null){
+            $qb->join('Expense.store', 'store');
+            $qb->andWhere('store.id = :store')->setParameter('store', $query->getStore());
         }
 
 

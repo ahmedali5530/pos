@@ -177,16 +177,16 @@ class ProductController extends AbstractController
         $handle = fopen($fileName, 'w+');
         @chmod($fileName, 0777);
         $columns = [
-            'ID', 'Name', 'Barcode', 'Base quantity', 'Available',
-            'Purchase price', 'Sale price', 'Category', 'Available Quantity', 'Unit', 'Short code'
+            'ID', 'Name', 'Barcode', 'Is Available?',
+            'Purchase price', 'Sale price', 'Available Quantity', 'Purchase Unit', 'Sale Unit'
         ];
         fputcsv($handle, $columns);
+        /** @var Product $item */
         foreach($list->getList() as $item){
             fputcsv($handle, [
-                $item->getId(), $item->getName(), $item->getBarcode(),
-                $item->getBaseQuantity(), $item->getIsAvailable(),
-                $item->getCost(), $item->getBasePrice(), $item->getCategory()->getName(),
-                $item->getQuantity(), $item->getUom(), $item->getShortCode()
+                $item->getId(), $item->getName(), $item->getBarcode(), $item->getIsAvailable(),
+                $item->getCost(), $item->getBasePrice(),
+                $item->getQuantity(), $item->getPurchaseUnit(), $item->getSaleUnit()
             ]);
         }
 
@@ -247,12 +247,12 @@ class ProductController extends AbstractController
                 $command = new CreateProductCommand();
                 $command->setName($row[1]);
                 $command->setBarcode($row[2]);
-                $command->setBaseQuantity(1);
-                $command->setIsAvailable($row[4]);
-                $command->setBasePrice((float)$row[6]);
-                $command->setQuantity((float)$row[8]);
-                $command->setCategory($row[7]);
+                $command->setIsAvailable($row[3]);
+                $command->setBasePrice((float)$row[4]);
                 $command->setCost((float)$row[5]);
+                $command->setQuantity((float)$row[6]);
+                $command->setPurchaseUnit($row[7]);
+                $command->setSaleUnit($row[8]);
 
                 $result = $createProductCommandHandler->handle($command);
 
@@ -267,14 +267,16 @@ class ProductController extends AbstractController
                 //update product
                 $command = new UpdateProductCommand();
 
+                $command->setId((int)$row[0]);
                 $command->setName($row[1]);
                 $command->setBarcode($row[2]);
-                $command->setBaseQuantity(1);
-                $command->setIsAvailable($row[4]);
-                $command->setBasePrice((float)$row[6]);
-                $command->setQuantity((float)$row[8]);
+                $command->setIsAvailable($row[3]);
+                $command->setBasePrice((float)$row[4]);
                 $command->setCost((float)$row[5]);
-                $command->setId((int)$row[0]);
+                $command->setQuantity((float)$row[6]);
+                $command->setPurchaseUnit($row[7]);
+                $command->setSaleUnit($row[8]);
+
 
                 $result = $updateProductCommandHandler->handle($command);
 

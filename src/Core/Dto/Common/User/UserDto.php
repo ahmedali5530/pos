@@ -4,12 +4,14 @@
 namespace App\Core\Dto\Common\User;
 
 
+use App\Core\Dto\Common\Common\StoresDtoTrait;
 use App\Core\Dto\Common\Common\UuidDtoTrait;
 use App\Entity\User;
 
 class UserDto
 {
     use UuidDtoTrait;
+    use StoresDtoTrait;
 
     /**
      * @var int|null
@@ -36,7 +38,6 @@ class UserDto
      */
     private $email;
 
-
     public static function createFromUser(?User $user): ?self
     {
         if($user === null){
@@ -50,6 +51,8 @@ class UserDto
         $dto->roles = $user->getRoles();
         $dto->email = $user->getEmail();
         $dto->uuid = $user->getUuid();
+
+        $dto->setStores($user->getStores());
 
         return $dto;
     }

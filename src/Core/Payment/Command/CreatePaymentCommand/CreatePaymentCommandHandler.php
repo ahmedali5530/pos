@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 namespace App\Core\Payment\Command\CreatePaymentCommand;
 
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -24,6 +25,13 @@ class CreatePaymentCommandHandler extends EntityManager implements CreatePayment
         $item->setName($command->getName());
         $item->setType($command->getType());
         $item->setCanHaveChangeDue($command->getCanHaveChangeDue());
+
+        if($command->getStores() !== null){
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+                $item->addStore($s);
+            }
+        }
 
 
         //validate item before creation

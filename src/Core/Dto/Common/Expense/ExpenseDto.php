@@ -4,11 +4,14 @@
 namespace App\Core\Dto\Common\Expense;
 
 
+use App\Core\Dto\Common\Common\StoresDtoTrait;
+use App\Core\Dto\Common\Store\StoreDto;
 use App\Core\Dto\Common\User\UserDto;
 use App\Entity\Expense;
 
 class ExpenseDto
 {
+
     /**
      * @var float
      */
@@ -28,6 +31,11 @@ class ExpenseDto
      * @var \DateTimeInterface
      */
     private $createdAt;
+
+    /**
+     * @var StoreDto|null
+     */
+    private $store;
 
     /**
      * @return float
@@ -93,6 +101,22 @@ class ExpenseDto
         $this->createdAt = $createdAt;
     }
 
+    /**
+     * @return StoreDto|null
+     */
+    public function getStore(): ?StoreDto
+    {
+        return $this->store;
+    }
+
+    /**
+     * @param StoreDto|null $store
+     */
+    public function setStore(?StoreDto $store): void
+    {
+        $this->store = $store;
+    }
+
     public static function createFromExpense(Expense $expense): self
     {
         $dto = new self();
@@ -100,6 +124,8 @@ class ExpenseDto
         $dto->amount = $expense->getAmount();
         $dto->user = UserDto::createFromUser($expense->getUser());
         $dto->createdAt = $expense->getCreatedAt();
+
+        $dto->setStore(StoreDto::createFromStore($expense->getStore()));
 
         return $dto;
     }

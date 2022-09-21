@@ -122,6 +122,11 @@ class Product
      */
     private $categories;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Store::class)
+     */
+    private $stores;
+
     public function __construct()
     {
         $this->variants = new ArrayCollection();
@@ -130,6 +135,7 @@ class Product
         $this->suppliers = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->uuid = Uuid::uuid4();
+        $this->stores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -397,6 +403,30 @@ class Product
     public function removeCategory(Category $category): self
     {
         $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Store[]
+     */
+    public function getStores(): Collection
+    {
+        return $this->stores;
+    }
+
+    public function addStore(Store $store): self
+    {
+        if (!$this->stores->contains($store)) {
+            $this->stores[] = $store;
+        }
+
+        return $this;
+    }
+
+    public function removeStore(Store $store): self
+    {
+        $this->stores->removeElement($store);
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace App\Core\Discont\Command\CreateDiscountCommand;
 
 use App\Core\Entity\EntityManager\EntityManager;
 use App\Entity\Discount;
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -31,6 +32,13 @@ class CreateDiscountCommandHandler extends EntityManager implements CreateDiscou
         $item->setName($command->getName());
         $item->setRate($command->getRate());
         $item->setRateType($command->getRateType());
+
+        if($command->getStores() !== null){
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+                $item->addStore($s);
+            }
+        }
 
 
         //validate item before creation

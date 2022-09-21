@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Core\Payment\Query\SelectPaymentQuery;
 
@@ -21,6 +21,7 @@ class SelectPaymentQueryHandler extends EntityRepository implements SelectPaymen
     public function handle(SelectPaymentQuery $query) : SelectPaymentQueryResult
     {
         $qb = $this->createQueryBuilder('Payment');
+        $qb->leftJoin('Payment.stores', 'store');
 
         if($query->getId() !== null){
             $qb->andWhere('Payment.id = :id');
@@ -42,21 +43,18 @@ class SelectPaymentQueryHandler extends EntityRepository implements SelectPaymen
             $qb->andWhere('Payment.isActive = :isActive');
             $qb->setParameter('isActive', $query->getIsActive());
         }
-        if($query->getCreatedAt() !== null){
-            $qb->andWhere('Payment.createdAt = :createdAt');
-            $qb->setParameter('createdAt', $query->getCreatedAt());
+        if($query->getQ() !== null){
+            $qb->andWhere('Payment.name LIKE :q OR Payment.type LIKE :q OR store.name LIKE :q');
+            $qb->setParameter('q', '%'.$query->getQ().'%');
         }
-        if($query->getDeletedAt() !== null){
-            $qb->andWhere('Payment.deletedAt = :deletedAt');
-            $qb->setParameter('deletedAt', $query->getDeletedAt());
+        if($query->getStore() !== null){
+            $qb->andWhere('store.id = :store');
+            $qb->setParameter('store', $query->getStore());
         }
-        if($query->getUpdatedAt() !== null){
-            $qb->andWhere('Payment.updatedAt = :updatedAt');
-            $qb->setParameter('updatedAt', $query->getUpdatedAt());
-        }
-        if($query->getUuid() !== null){
-            $qb->andWhere('Payment.uuid = :uuid');
-            $qb->setParameter('uuid', $query->getUuid());
+
+
+        if($query->getOrderBy() !== null){
+            $qb->orderBy($query->getOrderBy(), $query->getOrderMode());
         }
 
 

@@ -5,11 +5,14 @@ namespace App\Core\Dto\Controller\Api\Admin\Discount;
 
 
 use App\Core\Discont\Command\CreateDiscountCommand\CreateDiscountCommand;
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateDiscountRequestDto
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var string|null
      * @Assert\NotBlank()
@@ -36,6 +39,7 @@ class CreateDiscountRequestDto
         $dto->name = $data['name'] ?? null;
         $dto->rate = $data['rate'] ?? null;
         $dto->rateType = $data['rateType'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
         return $dto;
     }
@@ -45,6 +49,7 @@ class CreateDiscountRequestDto
         $command->setName($this->name);
         $command->setRate($this->rate);
         $command->setRateType($this->rateType);
+        $command->setStores($this->stores);
     }
 
     /**

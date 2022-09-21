@@ -1,13 +1,16 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Category;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Request;
 use App\Core\Category\Command\CreateCategoryCommand\CreateCategoryCommand;
 
 class CreateCategoryRequestDto
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|string
      * @Assert\NotBlank(normalizer="trim")
@@ -49,6 +52,7 @@ class CreateCategoryRequestDto
 
         $dto->name = $data['name'] ?? null;
         $dto->type = $data['type'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
 
         return $dto;
@@ -58,5 +62,6 @@ class CreateCategoryRequestDto
     {
         $command->setName($this->name);
         $command->setType($this->type);
+        $command->setStores($this->stores);
     }
 }

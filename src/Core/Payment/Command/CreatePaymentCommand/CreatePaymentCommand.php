@@ -1,9 +1,13 @@
-<?php 
+<?php
 
 namespace App\Core\Payment\Command\CreatePaymentCommand;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
+
 class CreatePaymentCommand
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|string
      */

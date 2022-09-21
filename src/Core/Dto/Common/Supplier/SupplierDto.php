@@ -5,12 +5,14 @@ namespace App\Core\Dto\Common\Supplier;
 use App\Core\Dto\Common\Common\IdDtoTrait;
 use App\Core\Dto\Common\Common\MediaDto;
 use App\Core\Dto\Common\Common\NameDtoTrait;
+use App\Core\Dto\Common\Common\StoresDtoTrait;
 use App\Entity\Supplier;
 
 class SupplierDto
 {
     use IdDtoTrait;
     use NameDtoTrait;
+    use StoresDtoTrait;
 
     /**
      * @var string|null
@@ -154,6 +156,8 @@ class SupplierDto
         $dto->fax = $supplier->getFax();
         $dto->address = $supplier->getAddress();
         $dto->media = MediaDto::createFromMedia($supplier->getMedia());
+
+        $dto->setStores($supplier->getStores());
 
         return $dto;
     }

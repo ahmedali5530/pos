@@ -2,6 +2,7 @@
 
 namespace App\Core\Order\Command\CreateOrderCommand;
 
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use App\Core\Dto\Common\Discount\DiscountDto;
 use App\Core\Dto\Common\Order\OrderPaymentDto;
 use App\Core\Dto\Common\Product\CartProductDto;
@@ -10,6 +11,8 @@ use App\Core\Dto\Common\Tax\TaxDto;
 
 class CreateOrderCommand
 {
+    use StoreDtoTrait;
+
     /**
      * @var int|null
      */

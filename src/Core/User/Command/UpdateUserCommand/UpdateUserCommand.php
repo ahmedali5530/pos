@@ -34,6 +34,11 @@ class UpdateUserCommand
      */
     private $email = null;
 
+    /**
+     * @var null|string[]
+     */
+    private $stores = null;
+
     public function setId(?int $id)
     {
         $this->id = $id;
@@ -98,5 +103,21 @@ class UpdateUserCommand
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getStores(): ?array
+    {
+        return $this->stores;
+    }
+
+    /**
+     * @param string[]|null $stores
+     */
+    public function setStores(?array $stores): void
+    {
+        $this->stores = $stores;
     }
 }

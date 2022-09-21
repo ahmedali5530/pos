@@ -1,9 +1,13 @@
-<?php 
+<?php
 
 namespace App\Core\Supplier\Command\CreateSupplierCommand;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
+
 class CreateSupplierCommand
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|string
      */

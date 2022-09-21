@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Core\User\Command\CreateUserCommand;
 
@@ -43,6 +43,11 @@ class CreateUserCommand
      * @var null|string
      */
     private $email = null;
+
+    /**
+     * @var string[]|null
+     */
+    private $stores = null;
 
     public function setUsername(?string $username)
     {
@@ -130,5 +135,21 @@ class CreateUserCommand
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getStores(): ?array
+    {
+        return $this->stores;
+    }
+
+    /**
+     * @param string[]|null $stores
+     */
+    public function setStores(?array $stores): void
+    {
+        $this->stores = $stores;
     }
 }

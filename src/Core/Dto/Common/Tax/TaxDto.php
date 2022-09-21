@@ -4,11 +4,14 @@
 namespace App\Core\Dto\Common\Tax;
 
 
+use App\Core\Dto\Common\Common\StoresDtoTrait;
 use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\Tax;
 
 class TaxDto
 {
+    use StoresDtoTrait;
+
     /**
      * @var int|null
      * @ConstraintValidEntity(entityName="Tax", class="App\Entity\Tax")
@@ -35,6 +38,8 @@ class TaxDto
         $dto->id = $tax->getId();
         $dto->name = $tax->getName();
         $dto->rate = $tax->getRate();
+
+        $dto->setStores($tax->getStores());
 
         return $dto;
     }

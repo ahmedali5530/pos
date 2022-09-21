@@ -1,13 +1,16 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Expense;
 
 use App\Core\Dto\Common\Common\DateTimeDto;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use App\Core\Expense\Query\SelectExpenseQuery\SelectExpenseQuery;
 use Symfony\Component\HttpFoundation\Request;
 
 class SelectExpenseRequestDto
 {
+    use StoreDtoTrait;
+
     /**
      * @var null|int
      */
@@ -158,7 +161,7 @@ class SelectExpenseRequestDto
         $dto->uuid = $request->query->get('uuid');
         $dto->dateTimeFrom = DateTimeDto::createFromDateTime($request->query->get('dateTimeFrom'));
         $dto->dateTimeTo = DateTimeDto::createFromDateTime($request->query->get('dateTimeTo'));
-
+        $dto->store = $request->query->get('store');
 
         return $dto;
     }
@@ -173,5 +176,6 @@ class SelectExpenseRequestDto
         $query->setUuid($this->uuid);
         $query->setDateTimeFrom($this->dateTimeFrom);
         $query->setDateTimeTo($this->dateTimeTo);
+        $query->setStore($this->store);
     }
 }

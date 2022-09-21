@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 namespace App\Core\Tax\Command\CreateTaxCommand;
 
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -23,6 +24,13 @@ class CreateTaxCommandHandler extends EntityManager implements CreateTaxCommandH
 
         $item->setName($command->getName());
         $item->setRate($command->getRate());
+
+        if($command->getStores() !== null){
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+                $item->addStore($s);
+            }
+        }
 
 
         //validate item before creation

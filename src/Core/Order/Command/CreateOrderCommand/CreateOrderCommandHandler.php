@@ -15,6 +15,7 @@ use App\Entity\OrderTax;
 use App\Entity\Payment;
 use App\Entity\Product;
 use App\Entity\ProductVariant;
+use App\Entity\Store;
 use App\Entity\Tax;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -68,6 +69,8 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
         $item->setUser(
           $this->getRepository(User::class)->find($command->getUserId())
         );
+
+        $item->setStore($this->getRepository(Store::class)->find($command->getStore()));
 
         foreach($command->getItems() as $itemDto){
             $orderProduct = new OrderProduct();

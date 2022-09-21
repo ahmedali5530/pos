@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Core\Tax\Query\SelectTaxQuery;
 
@@ -21,6 +21,7 @@ class SelectTaxQueryHandler extends EntityRepository implements SelectTaxQueryHa
     public function handle(SelectTaxQuery $query) : SelectTaxQueryResult
     {
         $qb = $this->createQueryBuilder('Tax');
+        $qb->leftJoin('Tax.stores', 'store');
 
         if($query->getId() !== null){
             $qb->andWhere('Tax.id = :id');
@@ -38,21 +39,18 @@ class SelectTaxQueryHandler extends EntityRepository implements SelectTaxQueryHa
             $qb->andWhere('Tax.isActive = :isActive');
             $qb->setParameter('isActive', $query->getIsActive());
         }
-        if($query->getCreatedAt() !== null){
-            $qb->andWhere('Tax.createdAt = :createdAt');
-            $qb->setParameter('createdAt', $query->getCreatedAt());
+        if($query->getQ() !== null){
+            $qb->andWhere('Tax.name LIKE :q OR Tax.rate LIKE :q OR store.name LIKE :q');
+            $qb->setParameter('q', '%'.$query->getQ().'%');
         }
-        if($query->getDeletedAt() !== null){
-            $qb->andWhere('Tax.deletedAt = :deletedAt');
-            $qb->setParameter('deletedAt', $query->getDeletedAt());
+        if($query->getStore() !== null){
+            $qb->andWhere('store.id = :store');
+            $qb->setParameter('store', $query->getStore());
         }
-        if($query->getUpdatedAt() !== null){
-            $qb->andWhere('Tax.updatedAt = :updatedAt');
-            $qb->setParameter('updatedAt', $query->getUpdatedAt());
-        }
-        if($query->getUuid() !== null){
-            $qb->andWhere('Tax.uuid = :uuid');
-            $qb->setParameter('uuid', $query->getUuid());
+
+
+        if($query->getOrderBy() !== null){
+            $qb->orderBy($query->getOrderBy(), $query->getOrderMode());
         }
 
 

@@ -8,6 +8,7 @@ use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\ProductPrice;
 use App\Entity\ProductVariant;
+use App\Entity\Store;
 use App\Entity\Supplier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -87,6 +88,13 @@ class CreateProductCommandHandler extends EntityManager implements CreateProduct
             foreach($command->getSuppliers() as $supplier){
                 $s = $this->getRepository(Supplier::class)->find($supplier);
                 $item->addSupplier($s);
+            }
+        }
+
+        if($command->getStores() !== null){
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+                $item->addStore($s);
             }
         }
 

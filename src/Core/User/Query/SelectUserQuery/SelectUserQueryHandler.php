@@ -48,7 +48,7 @@ class SelectUserQueryHandler extends EntityRepository implements SelectUserQuery
         }
         if($query->getQ() !== null){
             $qb->andWhere(
-                'User.displayName LIKE :q OR User.username = :q OR User.email LIKE :q'
+                'User.displayName LIKE :q OR User.username = :q OR User.email LIKE :q OR store.name LIKE :q'
             );
             $qb->setParameter('q', '%'.$query->getQ().'%');
         }

@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 namespace App\Core\Expense\Command\CreateExpenseCommand;
 
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -23,8 +24,9 @@ class CreateExpenseCommandHandler extends EntityManager implements CreateExpense
 
         $item->setAmount($command->getAmount());
         $item->setDescription($command->getDescription());
-        $item->setCreatedAt(new \DateTime());
+        $item->setCreatedAt($command->getCreatedAt());
         $item->setUser($command->getUser());
+        $item->setStore($this->getRepository(Store::class)->find($command->getStore()));
 
 
         //validate item before creation

@@ -5,12 +5,14 @@ namespace App\Core\Supplier\Query\SelectSupplierQuery;
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 
 class SelectSupplierQuery
 {
     use LimitTrait;
     use OrderTrait;
     use QTrait;
+    use StoreDtoTrait;
 
     /**
      * @var null|int

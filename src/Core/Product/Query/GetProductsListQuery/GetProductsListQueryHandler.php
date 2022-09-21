@@ -19,6 +19,7 @@ class GetProductsListQueryHandler extends EntityRepository implements GetProduct
         $qb->leftJoin('product.categories', 'category');
         $qb->leftJoin('product.suppliers', 'supplier');
         $qb->leftJoin('product.brands', 'brand');
+        $qb->leftJoin('product.stores', 'store');
 
         if($query->getName() !== null){
             $qb->andWhere('product.name LIKE :name');
@@ -45,8 +46,13 @@ class GetProductsListQueryHandler extends EntityRepository implements GetProduct
             $qb->setParameter('priceTo', $priceTo);
         }
 
+        if($query->getStore() !== null){
+            $qb->andWhere('store.id = :store');
+            $qb->setParameter('store', $query->getStore());
+        }
+
         if($query->getQ() !== null){
-            $qb->andWhere('product.name LIKE :q OR product.barcode LIKE :q OR product.basePrice LIKE :q OR product.cost LIKE :q OR supplier.name LIKE :q OR category.name LIKE :q OR brand.name LIKE :q');
+            $qb->andWhere('product.name LIKE :q OR product.barcode LIKE :q OR product.basePrice LIKE :q OR product.cost LIKE :q OR supplier.name LIKE :q OR category.name LIKE :q OR brand.name LIKE :q OR store.name LIKE :q');
             $qb->setParameter('q', '%'.$query->getQ().'%');
         }
 

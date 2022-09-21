@@ -5,6 +5,7 @@ namespace App\Core\Dto\Controller\Api\Admin\Supplier;
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use App\Core\Supplier\Query\SelectSupplierQuery\SelectSupplierQuery;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -13,6 +14,7 @@ class SelectSupplierRequestDto
     use LimitTrait;
     use OrderTrait;
     use QTrait;
+    use StoreDtoTrait;
 
     const ORDERS_LIST = [
         'id' => 'Supplier.id',
@@ -60,16 +62,6 @@ class SelectSupplierRequestDto
      * @var null|bool
      */
     private $isActive = null;
-
-    /**
-     * @var null|\DateTimeImmutable
-     */
-    private $createdAt = null;
-
-    /**
-     * @var null|string
-     */
-    private $uuid = null;
 
     public function setId(?int $id)
     {
@@ -159,28 +151,6 @@ class SelectSupplierRequestDto
         return $this->isActive;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $createdAt)
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    public function setUuid(?string $uuid)
-    {
-        $this->uuid = $uuid;
-        return $this;
-    }
-
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
     public static function createFromRequest(Request $request) : self
     {
         $dto = new self();
@@ -198,6 +168,7 @@ class SelectSupplierRequestDto
         $dto->offset = $request->query->get('offset');
         $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
         $dto->orderMode = $request->query->get('orderMode', 'ASC');
+        $dto->store = $request->query->get('store');
 
 
 
@@ -218,5 +189,6 @@ class SelectSupplierRequestDto
         $query->setOrderBy($this->getOrderBy());
         $query->setOrderMode($this->getOrderMode());
         $query->setQ($this->getQ());
+        $query->setStore($this->store);
     }
 }

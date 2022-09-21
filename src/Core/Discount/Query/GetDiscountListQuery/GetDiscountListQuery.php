@@ -2,22 +2,19 @@
 
 namespace App\Core\Discount\Query\GetDiscountListQuery;
 
+use App\Core\Dto\Common\Common\LimitTrait;
+use App\Core\Dto\Common\Common\OrderTrait;
+use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
+
 class GetDiscountListQuery
 {
+    use LimitTrait, QTrait, OrderTrait, StoreDtoTrait;
+
     /**
      * @var string|null
      */
     private $name;
-
-    /**
-     * @var int|null
-     */
-    private $limit;
-
-    /**
-     * @var int|null
-     */
-    private $offset;
 
     /**
      * @return string|null
@@ -30,25 +27,5 @@ class GetDiscountListQuery
     public function setName(?string $name): void
     {
         $this->name = $name;
-    }
-
-    public function getLimit(): ?int
-    {
-        return $this->limit;
-    }
-
-    public function setLimit(?int $limit): void
-    {
-        $this->limit = $limit;
-    }
-
-    public function getOffset(): ?int
-    {
-        return $this->offset;
-    }
-
-    public function setOffset(?int $offset): void
-    {
-        $this->offset = $offset;
     }
 }

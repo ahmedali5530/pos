@@ -4,11 +4,14 @@
 namespace App\Core\Dto\Common\Payment;
 
 
+use App\Core\Dto\Common\Common\StoresDtoTrait;
 use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\Payment;
 
 class PaymentDto
 {
+    use StoresDtoTrait;
+
     /**
      * @var int
      * @ConstraintValidEntity(entityName="Order payment", class="App\Entity\Payment")
@@ -41,6 +44,7 @@ class PaymentDto
         $dto->name = $payment->getName();
         $dto->type = $payment->getType();
         $dto->canHaveChangeDue = $payment->getCanHaveChangeDue();
+        $dto->setStores($payment->getStores());
 
         return $dto;
     }

@@ -15,27 +15,27 @@ class ConstraintValidEntityValidator extends ConstraintValidator
      * @var EntityManagerInterface
      */
     private $entityManager;
-    
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
-    
-    
+
+
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof ConstraintValidEntity) {
             throw new UnexpectedTypeException($constraint, ConstraintValidEntity::class);
         }
-        
+
         if (null === $value || '' === $value || is_array($value)) {
             return;
         }
-        
+
         $entity = $this->entityManager->getRepository($constraint->class)->findBy([
-            'id' => $value
+            $constraint->field => $value
         ]);
-        
+
         if (count($entity) === 0) {
             $this->context->buildViolation($constraint->message)
                 ->setParameter('{{class}}', $constraint->class)

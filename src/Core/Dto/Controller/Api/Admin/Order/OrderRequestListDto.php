@@ -1,10 +1,11 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Order;
 
 use App\Core\Dto\Common\Common\DateTimeDto;
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQuery;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -12,11 +13,15 @@ class OrderRequestListDto
 {
     use LimitTrait;
     use OrderTrait;
+    use StoreDtoTrait;
 
     const ORDERS_LIST = [
         'orderId' => 'entity.orderId',
         'id' => 'entity.id',
-        'createdAt' => 'entity.createdAt'
+        'createdAt' => 'entity.createdAt',
+        'customer' => 'customer.name',
+        'tax' => 'tax.amount',
+        'discount' => 'discount.amount'
     ];
 
     /**
@@ -347,6 +352,7 @@ class OrderRequestListDto
         $dto->dateTimeFrom = DateTimeDto::createFromDateTime($request->query->get('dateTimeFrom'));
         $dto->dateTimeTo = DateTimeDto::createFromDateTime($request->query->get('dateTimeTo'));
         $dto->q = $request->query->get('q');
+        $dto->store = $request->query->get('store');
 
         return $dto;
     }
@@ -373,6 +379,7 @@ class OrderRequestListDto
         $query->setDateTimeFrom($this->dateTimeFrom);
         $query->setDateTimeTo($this->dateTimeTo);
         $query->setQ($this->q);
+        $query->setStore($this->getStore());
     }
 
     /**

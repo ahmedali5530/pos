@@ -1,9 +1,13 @@
-<?php 
+<?php
 
 namespace App\Core\Category\Command\CreateCategoryCommand;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
+
 class CreateCategoryCommand
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|string
      */

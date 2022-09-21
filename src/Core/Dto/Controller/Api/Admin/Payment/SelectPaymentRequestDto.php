@@ -1,12 +1,24 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Payment;
 
+use App\Core\Dto\Common\Common\LimitTrait;
+use App\Core\Dto\Common\Common\OrderTrait;
+use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use App\Core\Payment\Query\SelectPaymentQuery\SelectPaymentQuery;
 use Symfony\Component\HttpFoundation\Request;
 
 class SelectPaymentRequestDto
 {
+    use StoreDtoTrait, QTrait, OrderTrait, LimitTrait;
+
+    const ORDERS_LIST = [
+        'id' => 'Payment.id',
+        'name' => 'Payment.name',
+        'type' => 'Payment.type'
+    ];
+
     /**
      * @var null|int
      */
@@ -31,16 +43,6 @@ class SelectPaymentRequestDto
      * @var null|bool
      */
     private $isActive = null;
-
-    /**
-     * @var null|\DateTimeInterface
-     */
-    private $createdAt = null;
-
-    /**
-     * @var null|string
-     */
-    private $uuid = null;
 
     public function setId(?int $id)
     {
@@ -97,28 +99,6 @@ class SelectPaymentRequestDto
         return $this->isActive;
     }
 
-    public function setCreatedAt(?\DateTimeInterface $createdAt)
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    public function setUuid(?string $uuid)
-    {
-        $this->uuid = $uuid;
-        return $this;
-    }
-
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
     public static function createFromRequest(Request $request) : self
     {
         $dto = new self();
@@ -128,8 +108,13 @@ class SelectPaymentRequestDto
         $dto->type = $request->query->get('type');
         $dto->canHaveChangeDue = $request->query->get('canHaveChangeDue');
         $dto->isActive = $request->query->get('isActive');
-        $dto->createdAt = $request->query->get('createdAt');
-        $dto->uuid = $request->query->get('uuid');
+
+        $dto->limit = $request->query->get('limit');
+        $dto->offset = $request->query->get('offset');
+        $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
+        $dto->orderMode = $request->query->get('orderMode', 'ASC');
+        $dto->q = $request->query->get('q');
+        $dto->store = $request->query->get('store');
 
 
         return $dto;
@@ -142,7 +127,12 @@ class SelectPaymentRequestDto
         $query->setType($this->type);
         $query->setCanHaveChangeDue($this->canHaveChangeDue);
         $query->setIsActive($this->isActive);
-        $query->setCreatedAt($this->createdAt);
-        $query->setUuid($this->uuid);
+
+        $query->setLimit($this->limit);
+        $query->setOffset($this->offset);
+        $query->setOrderMode($this->orderMode);
+        $query->setOrderBy($this->getOrderBy());
+        $query->setQ($this->q);
+        $query->setStore($this->getStore());
     }
 }

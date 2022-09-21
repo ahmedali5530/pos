@@ -2,6 +2,7 @@
 
 namespace App\Core\User\Command\UpdateUserCommand;
 
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Ramsey\Uuid\Uuid;
@@ -56,6 +57,19 @@ class UpdateUserCommandHandler extends EntityManager implements UpdateUserComman
         }
         if($command->getEmail() !== null){
             $item->setEmail($command->getEmail());
+        }
+
+        if($command->getStores() !== null){
+            //remove all stores first
+            foreach($item->getStores() as $store){
+                $item->removeStore($store);
+            }
+
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+
+                $item->addStore($s);
+            }
         }
 
 

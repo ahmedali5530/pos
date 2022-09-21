@@ -6,6 +6,7 @@ use App\Core\Category\Query\SelectCategoryQuery\SelectCategoryQuery;
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class SelectCategoryRequestDto
@@ -13,6 +14,7 @@ class SelectCategoryRequestDto
     use LimitTrait;
     use OrderTrait;
     use QTrait;
+    use StoreDtoTrait;
 
     const ORDERS_LIST = [
         'id' => 'Category.id',
@@ -132,6 +134,8 @@ class SelectCategoryRequestDto
         $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
         $dto->orderMode = $request->query->get('orderMode', 'ASC');
 
+        $dto->store = $request->query->get('store');
+
 
         return $dto;
     }
@@ -149,5 +153,6 @@ class SelectCategoryRequestDto
         $query->setOrderBy($this->getOrderBy());
         $query->setOrderMode($this->getOrderMode());
         $query->setQ($this->getQ());
+        $query->setStore($this->store);
     }
 }

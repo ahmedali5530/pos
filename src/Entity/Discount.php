@@ -6,6 +6,8 @@ use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\DiscountRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
@@ -58,9 +60,15 @@ class Discount
      */
     private $scope;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Store::class)
+     */
+    private $stores;
+
     public function __construct()
     {
         $this->uuid = Uuid::uuid4();
+        $this->stores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,6 +120,30 @@ class Discount
     public function setScope(?string $scope): self
     {
         $this->scope = $scope;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Store[]
+     */
+    public function getStores(): Collection
+    {
+        return $this->stores;
+    }
+
+    public function addStore(Store $store): self
+    {
+        if (!$this->stores->contains($store)) {
+            $this->stores[] = $store;
+        }
+
+        return $this;
+    }
+
+    public function removeStore(Store $store): self
+    {
+        $this->stores->removeElement($store);
 
         return $this;
     }

@@ -1,9 +1,17 @@
-<?php 
+<?php
 
 namespace App\Core\Tax\Query\SelectTaxQuery;
 
+use App\Core\Dto\Common\Common\LimitTrait;
+use App\Core\Dto\Common\Common\OrderTrait;
+use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteable;
+
 class SelectTaxQuery
 {
+    use OrderTrait, QTrait, StoreDtoTrait, LimitTrait;
+
     /**
      * @var null|int
      */
@@ -24,35 +32,6 @@ class SelectTaxQuery
      */
     private $isActive = null;
 
-    /**
-     * @var null|\DateTimeInterface
-     */
-    private $createdAt = null;
-
-    /**
-     * @var null|\DateTimeInterface
-     */
-    private $deletedAt = null;
-
-    /**
-     * @var null|\DateTimeInterface
-     */
-    private $updatedAt = null;
-
-    /**
-     * @var null|string
-     */
-    private $uuid = null;
-
-    /**
-     * @var null|int
-     */
-    private $limit = null;
-
-    /**
-     * @var null|int
-     */
-    private $offset = null;
 
     public function setId(?int $id)
     {
@@ -96,71 +75,5 @@ class SelectTaxQuery
     public function getIsActive()
     {
         return $this->isActive;
-    }
-
-    public function setCreatedAt(?\DateTimeInterface $createdAt)
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    public function setDeletedAt(?\DateTimeInterface $deletedAt)
-    {
-        $this->deletedAt = $deletedAt;
-        return $this;
-    }
-
-    public function getDeletedAt()
-    {
-        return $this->deletedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-        return $this;
-    }
-
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUuid(?string $uuid)
-    {
-        $this->uuid = $uuid;
-        return $this;
-    }
-
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-    public function setLimit(?int $limit)
-    {
-        $this->limit = $limit;
-        return $this;
-    }
-
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    public function setOffset(?int $offset)
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-
-    public function getOffset()
-    {
-        return $this->offset;
     }
 }

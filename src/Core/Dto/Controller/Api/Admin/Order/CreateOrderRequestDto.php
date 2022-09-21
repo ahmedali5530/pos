@@ -2,6 +2,7 @@
 
 namespace App\Core\Dto\Controller\Api\Admin\Order;
 
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use App\Core\Dto\Common\Discount\DiscountDto;
 use App\Core\Dto\Common\Order\OrderDiscountDto;
 use App\Core\Dto\Common\Order\OrderPaymentDto;
@@ -17,6 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateOrderRequestDto
 {
+    use StoreDtoTrait;
+
     /**
      * @var int|null
      * @ConstraintValidEntity(entityName="Customer", class="App\Entity\Customer")
@@ -81,10 +84,29 @@ class CreateOrderRequestDto
 
     /**
      * @var OrderPaymentDto[]
-     * @Assert\NotBlank(message="Please add some payments by clicking on + button")
      * @Assert\Valid()
      */
     private $payments = [];
+
+    /**
+     * @return bool
+     * @Assert\IsTrue(message="Please add some payments by clicking on + button")
+     */
+    public function hasPayments()
+    {
+        if($this->finalTotal === 0 && count($this->payments) === 0){
+            return true;
+        }else if($this->finalTotal !== 0 && count($this->payments) === 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    /**
+     * @var float|null
+     */
+    private $finalTotal;
 
     /**
      * @var int|null
@@ -125,6 +147,10 @@ class CreateOrderRequestDto
         $dto->refundingFrom = $data['refundingFrom'] ?? null;
         $dto->notes = $data['notes'] ?? null;
 
+        $dto->store = $data['store'] ?? null;
+
+        $dto->finalTotal = $data['total'] ?? 0;
+
         return $dto;
     }
 
@@ -144,6 +170,7 @@ class CreateOrderRequestDto
         $command->setReturnedFrom($this->refundingFrom);
         $command->setNotes($this->notes);
         $command->setDiscountRateType($this->discountRateType);
+        $command->setStore($this->getStore());
     }
 
     /**

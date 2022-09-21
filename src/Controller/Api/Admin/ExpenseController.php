@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Controller\Api\Admin;
 
@@ -61,6 +61,12 @@ class ExpenseController extends AbstractController
      *   name="offset",
      *   in="query",
      *   description="start the results from offset"
+     * )
+     *
+     * @OA\Parameter(
+     *   name="store",
+     *   in="query",
+     *   description="query in store"
      * )
      *
      * @OA\Response(

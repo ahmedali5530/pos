@@ -2,8 +2,12 @@
 
 namespace App\Core\Product\Command\CreateProductCommand;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
+
 class CreateProductCommand
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var string|null
      */

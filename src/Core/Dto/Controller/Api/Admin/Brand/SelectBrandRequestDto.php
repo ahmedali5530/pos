@@ -6,6 +6,7 @@ use App\Core\Brand\Query\SelectBrandQuery\SelectBrandQuery;
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class SelectBrandRequestDto
@@ -13,6 +14,7 @@ class SelectBrandRequestDto
     use LimitTrait;
     use OrderTrait;
     use QTrait;
+    use StoreDtoTrait;
 
     const ORDERS_LIST = [
         'id' => 'Brand.id',
@@ -82,6 +84,8 @@ class SelectBrandRequestDto
         $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
         $dto->orderMode = $request->query->get('orderMode', 'ASC');
 
+        $dto->store = $request->query->get('store');
+
 
         return $dto;
     }
@@ -96,5 +100,6 @@ class SelectBrandRequestDto
         $query->setOrderBy($this->getOrderBy());
         $query->setOrderMode($this->getOrderMode());
         $query->setQ($this->getQ());
+        $query->setStore($this->getStore());
     }
 }

@@ -70,6 +70,8 @@ class OrderController extends AbstractController
      *
      * @OA\Parameter(name="q", in="query", description="Search in orderid and customer")
      *
+     * @OA\Parameter(name="store", in="query", description="Search in store")
+     *
      * @OA\Response(
      *     response="200", description="OK", @Model(type=OrderListResponseDto::class)
      * )

@@ -1,9 +1,13 @@
-<?php 
+<?php
 
 namespace App\Core\Brand\Command\CreateBrandCommand;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
+
 class CreateBrandCommand
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|string
      */

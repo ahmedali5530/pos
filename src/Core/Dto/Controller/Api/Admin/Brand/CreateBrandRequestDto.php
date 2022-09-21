@@ -2,12 +2,15 @@
 
 namespace App\Core\Dto\Controller\Api\Admin\Brand;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Request;
 use App\Core\Brand\Command\CreateBrandCommand\CreateBrandCommand;
 
 class CreateBrandRequestDto
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|string
      * @Assert\NotBlank(normalizer="trim")
@@ -31,6 +34,7 @@ class CreateBrandRequestDto
         $data = json_decode($request->getContent(), true);
 
         $dto->name = $data['name'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
 
         return $dto;
@@ -39,5 +43,6 @@ class CreateBrandRequestDto
     public function populateCommand(CreateBrandCommand $command)
     {
         $command->setName($this->name);
+        $command->setStores($this->stores);
     }
 }

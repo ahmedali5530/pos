@@ -2,6 +2,7 @@
 
 namespace App\Core\Brand\Command\CreateBrandCommand;
 
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -22,6 +23,13 @@ class CreateBrandCommandHandler extends EntityManager implements CreateBrandComm
         $item = new Brand();
 
         $item->setName($command->getName());
+
+        if($command->getStores() !== null){
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+                $item->addStore($s);
+            }
+        }
 
 
         //validate item before creation

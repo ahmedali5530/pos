@@ -2,6 +2,8 @@
 
 namespace App\Core\Dto\Controller\Api\Admin\Product;
 
+use App\Core\Dto\Common\Common\StoresDtoTrait;
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
 use App\Core\Dto\Common\Product\ProductPriceDto;
 use App\Core\Dto\Common\Product\ProductVariantDto;
 use App\Core\Product\Command\CreateProductCommand\CreateProductCommand;
@@ -11,6 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateProductRequestDto
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var string|null
      * @Assert\NotBlank(normalizer="trim")
@@ -131,6 +135,7 @@ class CreateProductRequestDto
         $dto->categories = $data['categories'] ?? null;
         $dto->brands = $data['brands'] ?? null;
         $dto->suppliers = $data['suppliers'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
         return $dto;
     }
@@ -152,6 +157,7 @@ class CreateProductRequestDto
         $command->setCategories($this->categories);
         $command->setBrands($this->brands);
         $command->setSuppliers($this->suppliers);
+        $command->setStores($this->getStores());
     }
 
     /**

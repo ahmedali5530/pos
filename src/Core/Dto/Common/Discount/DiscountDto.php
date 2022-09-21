@@ -4,10 +4,13 @@
 namespace App\Core\Dto\Common\Discount;
 
 
+use App\Core\Dto\Common\Common\StoresDtoTrait;
 use App\Entity\Discount;
 
 class DiscountDto
 {
+    use StoresDtoTrait;
+
     /**
      * @var int|null
      */
@@ -46,6 +49,8 @@ class DiscountDto
         $dto->rateType = $discount->getRateType();
         $dto->scope = $discount->getScope();
 
+        $dto->setStores($discount->getStores());
+
         return $dto;
     }
 
@@ -60,6 +65,8 @@ class DiscountDto
         $dto->name = $data['name'] ?? null;
         $dto->rate = $data['rate'] ?? null;
         $dto->rateType = $data['rateType'] ?? null;
+
+        $dto->setStores($data['stores'] ?? []);
 
         return $dto;
     }

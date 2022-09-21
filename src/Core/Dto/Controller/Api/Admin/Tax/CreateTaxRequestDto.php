@@ -1,13 +1,16 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Tax;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Request;
 use App\Core\Tax\Command\CreateTaxCommand\CreateTaxCommand;
 
 class CreateTaxRequestDto
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|string
      * @Assert\NotBlank(normalizer="trim")
@@ -49,6 +52,7 @@ class CreateTaxRequestDto
 
         $dto->name = $data['name'] ?? null;
         $dto->rate = $data['rate'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
 
         return $dto;
@@ -58,5 +62,6 @@ class CreateTaxRequestDto
     {
         $command->setName($this->name);
         $command->setRate($this->rate);
+        $command->setStores($this->stores);
     }
 }

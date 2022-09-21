@@ -21,6 +21,7 @@ class SelectCategoryQueryHandler extends EntityRepository implements SelectCateg
     public function handle(SelectCategoryQuery $query) : SelectCategoryQueryResult
     {
         $qb = $this->createQueryBuilder('Category');
+        $qb->leftJoin('Category.stores', 'store');
 
         if($query->getId() !== null){
             $qb->andWhere('Category.id = :id');
@@ -38,27 +39,14 @@ class SelectCategoryQueryHandler extends EntityRepository implements SelectCateg
             $qb->andWhere('Category.isActive = :isActive');
             $qb->setParameter('isActive', $query->getIsActive());
         }
-        if($query->getCreatedAt() !== null){
-            $qb->andWhere('Category.createdAt = :createdAt');
-            $qb->setParameter('createdAt', $query->getCreatedAt());
-        }
-        if($query->getDeletedAt() !== null){
-            $qb->andWhere('Category.deletedAt = :deletedAt');
-            $qb->setParameter('deletedAt', $query->getDeletedAt());
-        }
-        if($query->getUpdatedAt() !== null){
-            $qb->andWhere('Category.updatedAt = :updatedAt');
-            $qb->setParameter('updatedAt', $query->getUpdatedAt());
-        }
-        if($query->getUuid() !== null){
-            $qb->andWhere('Category.uuid = :uuid');
-            $qb->setParameter('uuid', $query->getUuid());
-        }
         if($query->getQ() !== null){
-            $qb->andWhere('Category.name LIKE :q');
+            $qb->andWhere('Category.name LIKE :q OR store.name LIKE :q');
             $qb->setParameter('q', '%'.$query->getQ().'%');
         }
-
+        if($query->getStore() !== null){
+            $qb->andWhere('store.id = :store');
+            $qb->setParameter('store', $query->getStore());
+        }
 
         if($query->getOrderBy() !== null){
             $qb->orderBy($query->getOrderBy(), $query->getOrderMode());

@@ -3,7 +3,9 @@
 namespace App\Core\Dto\Controller\Api\Admin\User;
 
 use App\Core\User\Command\UpdateUserCommand\UpdateUserCommand;
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateUserRequestDto
 {
@@ -36,6 +38,16 @@ class UpdateUserRequestDto
      * @var null|string
      */
     private $email = null;
+
+    /**
+     * @var null|string[]
+     * @Assert\All(
+     *     @Assert\Type(type={"string", "int"}),
+     *     @ConstraintValidEntity(entityName="Group", class="App\Entity\Store")
+     * )
+     */
+    private $stores = null;
+
 
     public function setId(?int $id)
     {
@@ -103,6 +115,22 @@ class UpdateUserRequestDto
         return $this->email;
     }
 
+    /**
+     * @return string[]|null
+     */
+    public function getStores(): ?array
+    {
+        return $this->stores;
+    }
+
+    /**
+     * @param string[]|null $stores
+     */
+    public function setStores(?array $stores): void
+    {
+        $this->stores = $stores;
+    }
+
     public static function createFromRequest(Request $request) : self
     {
         $dto = new self();
@@ -114,6 +142,7 @@ class UpdateUserRequestDto
         $dto->displayName = $data['displayName'] ?? null;
         $dto->roles = $data['roles'] ?? null;
         $dto->email = $data['email'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
 
         return $dto;
@@ -127,5 +156,6 @@ class UpdateUserRequestDto
         $command->setDisplayName($this->displayName);
         $command->setRoles($this->roles);
         $command->setEmail($this->email);
+        $command->setStores($this->stores);
     }
 }

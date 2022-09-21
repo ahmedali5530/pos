@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 namespace App\Core\Category\Command\CreateCategoryCommand;
 
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -23,6 +24,13 @@ class CreateCategoryCommandHandler extends EntityManager implements CreateCatego
 
         $item->setName($command->getName());
         $item->setType($command->getType());
+
+        if($command->getStores() !== null){
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+                $item->addStore($s);
+            }
+        }
 
 
         //validate item before creation

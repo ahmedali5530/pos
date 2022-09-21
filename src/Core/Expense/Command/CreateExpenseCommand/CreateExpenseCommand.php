@@ -2,10 +2,13 @@
 
 namespace App\Core\Expense\Command\CreateExpenseCommand;
 
+use App\Core\Dto\Common\Common\StoreDtoTrait;
 use App\Entity\User;
 
 class CreateExpenseCommand
 {
+    use StoreDtoTrait;
+
     /**
      * @var null|float
      */

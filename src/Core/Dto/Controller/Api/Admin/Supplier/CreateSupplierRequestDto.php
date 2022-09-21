@@ -2,12 +2,15 @@
 
 namespace App\Core\Dto\Controller\Api\Admin\Supplier;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Request;
 use App\Core\Supplier\Command\CreateSupplierCommand\CreateSupplierCommand;
 
 class CreateSupplierRequestDto
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|string
      * @Assert\NotBlank(normalizer="trim")
@@ -117,6 +120,7 @@ class CreateSupplierRequestDto
         $dto->whatsApp = $data['whatsApp'] ?? null;
         $dto->fax = $data['fax'] ?? null;
         $dto->address = $data['address'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
 
         return $dto;
@@ -130,5 +134,6 @@ class CreateSupplierRequestDto
         $command->setWhatsApp($this->whatsApp);
         $command->setFax($this->fax);
         $command->setAddress($this->address);
+        $command->setStores($this->stores);
     }
 }
