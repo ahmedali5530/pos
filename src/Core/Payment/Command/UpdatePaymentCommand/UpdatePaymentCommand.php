@@ -1,9 +1,13 @@
-<?php 
+<?php
 
 namespace App\Core\Payment\Command\UpdatePaymentCommand;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
+
 class UpdatePaymentCommand
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|int
      */

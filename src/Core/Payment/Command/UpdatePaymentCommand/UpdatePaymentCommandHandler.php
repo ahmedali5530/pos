@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 namespace App\Core\Payment\Command\UpdatePaymentCommand;
 
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -34,6 +35,17 @@ class UpdatePaymentCommandHandler extends EntityManager implements UpdatePayment
         }
         if($command->getCanHaveChangeDue() !== null){
             $item->setCanHaveChangeDue($command->getCanHaveChangeDue());
+        }
+
+        if($command->getStores() !== null){
+            foreach($item->getStores() as $store){
+                $item->removeStore($store);
+            }
+
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+                $item->addStore($s);
+            }
         }
 
 

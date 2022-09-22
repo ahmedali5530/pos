@@ -2,8 +2,12 @@
 
 namespace App\Core\Discount\Command\UpdateDiscountCommand;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
+
 class UpdateDiscountCommand
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var int
      */

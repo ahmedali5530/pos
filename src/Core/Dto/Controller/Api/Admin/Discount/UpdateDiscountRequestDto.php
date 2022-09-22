@@ -6,11 +6,14 @@ namespace App\Core\Dto\Controller\Api\Admin\Discount;
 
 use App\Core\Discont\Command\CreateDiscountCommand\CreateDiscountCommand;
 use App\Core\Discount\Command\UpdateDiscountCommand\UpdateDiscountCommand;
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateDiscountRequestDto
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var int|null
      * @Assert\NotBlank(normalizer="trim")
@@ -52,6 +55,7 @@ class UpdateDiscountRequestDto
         $dto->rateType = $data['rateType'] ?? null;
         $dto->id = $data['id'] ?? null;
         $dto->scope = $data['scope'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
         return $dto;
     }
@@ -63,6 +67,7 @@ class UpdateDiscountRequestDto
         $command->setRateType($this->rateType);
         $command->setId($this->id);
         $command->setScope($this->scope);
+        $command->setStores($this->stores);
     }
 
     /**

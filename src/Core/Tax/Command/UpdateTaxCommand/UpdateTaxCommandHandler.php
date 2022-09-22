@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 namespace App\Core\Tax\Command\UpdateTaxCommand;
 
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -31,6 +32,17 @@ class UpdateTaxCommandHandler extends EntityManager implements UpdateTaxCommandH
         }
         if($command->getRate() !== null){
             $item->setRate($command->getRate());
+        }
+
+        if($command->getStores() !== null){
+            foreach($item->getStores() as $store){
+                $item->removeStore($store);
+            }
+
+            foreach($command->getStores() as $store){
+                $s = $this->getRepository(Store::class)->find($store);
+                $item->addStore($s);
+            }
         }
 
 

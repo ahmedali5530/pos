@@ -1,9 +1,13 @@
-<?php 
+<?php
 
 namespace App\Core\Tax\Command\UpdateTaxCommand;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
+
 class UpdateTaxCommand
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|int
      */

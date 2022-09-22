@@ -1,12 +1,15 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Tax;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
 use App\Core\Tax\Command\UpdateTaxCommand\UpdateTaxCommand;
 use Symfony\Component\HttpFoundation\Request;
 
 class UpdateTaxRequestDto
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|int
      */
@@ -63,6 +66,7 @@ class UpdateTaxRequestDto
         $dto->id = $data['id'] ?? null;
         $dto->name = $data['name'] ?? null;
         $dto->rate = $data['rate'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
 
         return $dto;
@@ -73,5 +77,6 @@ class UpdateTaxRequestDto
         $command->setId($this->id);
         $command->setName($this->name);
         $command->setRate($this->rate);
+        $command->setStores($this->stores);
     }
 }

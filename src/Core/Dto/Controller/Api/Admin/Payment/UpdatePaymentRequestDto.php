@@ -1,12 +1,15 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Payment;
 
+use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
 use App\Core\Payment\Command\UpdatePaymentCommand\UpdatePaymentCommand;
 use Symfony\Component\HttpFoundation\Request;
 
 class UpdatePaymentRequestDto
 {
+    use StoresRequestDtoTrait;
+
     /**
      * @var null|int
      */
@@ -80,6 +83,7 @@ class UpdatePaymentRequestDto
         $dto->name = $data['name'] ?? null;
         $dto->type = $data['type'] ?? null;
         $dto->canHaveChangeDue = $data['canHaveChangeDue'] ?? null;
+        $dto->stores = $data['stores'] ?? null;
 
 
         return $dto;
@@ -91,5 +95,6 @@ class UpdatePaymentRequestDto
         $command->setName($this->name);
         $command->setType($this->type);
         $command->setCanHaveChangeDue($this->canHaveChangeDue);
+        $command->setStores($this->stores);
     }
 }
