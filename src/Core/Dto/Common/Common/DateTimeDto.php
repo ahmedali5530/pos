@@ -52,6 +52,19 @@ class DateTimeDto
         }
     }
 
+    public static function parseWithCarbon($datetime): ?Carbon
+    {
+        if($datetime === null){
+            return null;
+        }
+
+        try{
+            return Carbon::parse($datetime, /*'utc'*/);
+        }catch (Exception $exception){
+            return null;
+        }
+    }
+
     /**
      * @return DateTimeInterface|null
      */

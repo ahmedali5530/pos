@@ -75,6 +75,11 @@ class ClosingDto
     private $denominations;
 
     /**
+     * @var float|null
+     */
+    private $expenses;
+
+    /**
      * @return DateTimeDto
      */
     public function getDateFrom(): DateTimeDto
@@ -266,6 +271,22 @@ class ClosingDto
         $this->denominations = $denominations;
     }
 
+    /**
+     * @return float|null
+     */
+    public function getExpenses(): ?float
+    {
+        return $this->expenses;
+    }
+
+    /**
+     * @param float|null $expenses
+     */
+    public function setExpenses(?float $expenses): void
+    {
+        $this->expenses = $expenses;
+    }
+
     public static function createFromClosing(?Closing $closing): ?self
     {
         if($closing === null){
@@ -285,8 +306,11 @@ class ClosingDto
         $dto->cashWithdrawn = $closing->getCashWithdrawn();
         $dto->openedBy = UserDto::createFromUser($closing->getOpenedBy());
         $dto->data = $closing->getData();
-        $dto->store = UserDto::createFromUser($closing->getStore());
+        $dto->store = StoreDto::createFromStore($closing->getStore());
         $dto->denominations = $closing->getDenominations();
+        $dto->uuid = $closing->getUuid();
+        $dto->createdAt = DateTimeDto::createFromDateTime($closing->getCreatedAt());
+        $dto->expenses = $closing->getExpenses();
 
         return $dto;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Core\Closing\Command\UpdateClosingCommand;
 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Core\Entity\EntityManager\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -52,6 +53,13 @@ class UpdateClosingCommandHandler extends EntityManager implements UpdateClosing
         }
         if($command->getDenominations() !== null){
             $item->setDenominations($command->getDenominations());
+        }
+        if($command->getExpenses() !== null){
+            $item->setExpenses($command->getExpenses());
+        }
+        if($command->getClosedBy() !== null){
+            $closedBy = $this->getRepository(User::class)->find($command->getClosedBy());
+            $item->setClosedBy($closedBy);
         }
 
 

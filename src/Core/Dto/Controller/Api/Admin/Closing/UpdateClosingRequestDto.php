@@ -3,12 +3,16 @@
 namespace App\Core\Dto\Controller\Api\Admin\Closing;
 
 use App\Core\Closing\Command\UpdateClosingCommand\UpdateClosingCommand;
+use App\Core\Dto\Common\Common\DateTimeDto;
+use App\Core\Validation\Custom\ConstraintValidEntity;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateClosingRequestDto
 {
     /**
      * @var null|int
+     * @Assert\NotBlank(normalizer="trim")
      */
     private $id = null;
 
@@ -48,7 +52,7 @@ class UpdateClosingRequestDto
     private $cashWithdrawn = null;
 
     /**
-     * @var null|string
+     * @var null|string[]
      */
     private $data = null;
 
@@ -56,6 +60,17 @@ class UpdateClosingRequestDto
      * @var null|string
      */
     private $denominations = null;
+
+    /**
+     * @var null|float
+     */
+    private $expenses = null;
+
+    /**
+     * @var null|int
+     * @ConstraintValidEntity(class="App\Entity\User", entityName="User")
+     */
+    private $closedBy = null;
 
     public function setId(?int $id)
     {
@@ -145,7 +160,7 @@ class UpdateClosingRequestDto
         return $this->cashWithdrawn;
     }
 
-    public function setData(?string $data)
+    public function setData(?array $data)
     {
         $this->data = $data;
         return $this;
@@ -167,21 +182,64 @@ class UpdateClosingRequestDto
         return $this->denominations;
     }
 
+    /**
+     * @return float|null
+     */
+    public function getExpenses(): ?float
+    {
+        return $this->expenses;
+    }
+
+    /**
+     * @param float|null $expenses
+     */
+    public function setExpenses(?float $expenses): void
+    {
+        $this->expenses = $expenses;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getClosedBy(): ?int
+    {
+        return $this->closedBy;
+    }
+
+    /**
+     * @param int|null $closedBy
+     */
+    public function setClosedBy(?int $closedBy): void
+    {
+        $this->closedBy = $closedBy;
+    }
+
     public static function createFromRequest(Request $request) : self
     {
         $dto = new self();
         $data = json_decode($request->getContent(), true);
 
         $dto->id = $data['id'] ?? null;
-        $dto->dateFrom = $data['dateFrom'] ?? null;
-        $dto->dateTo = $data['dateTo'] ?? null;
-        $dto->closedAt = $data['closedAt'] ?? null;
+        if(isset($data['dateFrom']['datetime'])) {
+            $dto->dateFrom = DateTimeDto::parseWithCarbon($data['dateFrom']['datetime'])->toDateTimeImmutable();
+        }
+
+        if(isset($data['dateTo']['datetime'])){
+            $dto->dateTo = DateTimeDto::parseWithCarbon($data['dateTo']['datetime'])->toDateTimeImmutable();
+        }
+
+        if(isset($data['closedAt']['datetime'])){
+            $dto->closedAt = DateTimeDto::parseWithCarbon($data['closedAt']['datetime'])->toDateTimeImmutable();
+        }
+
         $dto->openingBalance = $data['openingBalance'] ?? null;
         $dto->closingBalance = $data['closingBalance'] ?? null;
         $dto->cashAdded = $data['cashAdded'] ?? null;
         $dto->cashWithdrawn = $data['cashWithdrawn'] ?? null;
         $dto->data = $data['data'] ?? null;
         $dto->denominations = $data['denominations'] ?? null;
+        $dto->expenses = $data['expenses'] ?? null;
+        $dto->closedBy = $data['closedBy'] ?? null;
 
 
         return $dto;
@@ -199,5 +257,7 @@ class UpdateClosingRequestDto
         $command->setCashWithdrawn($this->cashWithdrawn);
         $command->setData($this->data);
         $command->setDenominations($this->denominations);
+        $command->setExpenses($this->expenses);
+        $command->setClosedBy($this->closedBy);
     }
 }

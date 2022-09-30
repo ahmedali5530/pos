@@ -48,4 +48,9 @@ class ValidationResult
         return count($this->violations) > 0;
     }
 
+    public function removeViolation(ConstraintViolation $violation): void
+    {
+        $this->violations->removeElement($violation);
+    }
+
 }

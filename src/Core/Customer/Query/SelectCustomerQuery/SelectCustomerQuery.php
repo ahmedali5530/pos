@@ -1,9 +1,13 @@
-<?php 
+<?php
 
 namespace App\Core\Customer\Query\SelectCustomerQuery;
 
+use App\Core\Dto\Common\Common\LimitTrait;
+
 class SelectCustomerQuery
 {
+    use LimitTrait;
+
     /**
      * @var null|int
      */
@@ -63,16 +67,6 @@ class SelectCustomerQuery
      * @var null|string
      */
     private $uuid = null;
-
-    /**
-     * @var null|int
-     */
-    private $limit = null;
-
-    /**
-     * @var null|int
-     */
-    private $offset = null;
 
     /**
      * @var null|string
@@ -209,28 +203,6 @@ class SelectCustomerQuery
     public function getUuid()
     {
         return $this->uuid;
-    }
-
-    public function setLimit(?int $limit)
-    {
-        $this->limit = $limit;
-        return $this;
-    }
-
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    public function setOffset(?int $offset)
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-
-    public function getOffset()
-    {
-        return $this->offset;
     }
 
     /**

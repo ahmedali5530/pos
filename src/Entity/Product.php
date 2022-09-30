@@ -127,6 +127,11 @@ class Product
      */
     private $stores;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Media::class)
+     */
+    private $department;
+
     public function __construct()
     {
         $this->variants = new ArrayCollection();
@@ -427,6 +432,18 @@ class Product
     public function removeStore(Store $store): self
     {
         $this->stores->removeElement($store);
+
+        return $this;
+    }
+
+    public function getDepartment(): ?Media
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?Media $department): self
+    {
+        $this->department = $department;
 
         return $this;
     }

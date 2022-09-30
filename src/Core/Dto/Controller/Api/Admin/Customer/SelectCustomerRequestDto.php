@@ -1,12 +1,15 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Customer;
 
 use App\Core\Customer\Query\SelectCustomerQuery\SelectCustomerQuery;
+use App\Core\Dto\Common\Common\LimitTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class SelectCustomerRequestDto
 {
+    use LimitTrait;
+
     /**
      * @var null|int
      */
@@ -203,6 +206,8 @@ class SelectCustomerRequestDto
         $dto->createdAt = $request->query->get('createdAt');
         $dto->uuid = $request->query->get('uuid');
         $dto->q = $request->query->get('q');
+        $dto->limit = $request->query->get('limit');
+        $dto->offset = $request->query->get('offset');
 
 
         return $dto;
@@ -221,5 +226,7 @@ class SelectCustomerRequestDto
         $query->setCreatedAt($this->createdAt);
         $query->setUuid($this->uuid);
         $query->setQ($this->q);
+        $query->setLimit($this->limit);
+        $query->setOffset($this->offset);
     }
 }

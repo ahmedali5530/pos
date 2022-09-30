@@ -83,6 +83,11 @@ class Closing
      */
     private $denominations = [];
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $expenses;
+
     public function __construct()
     {
         $this->uuid = Uuid::uuid4();
@@ -98,7 +103,7 @@ class Closing
         return $this->dateFrom;
     }
 
-    public function setDateFrom(\DateTimeImmutable $dateFrom): self
+    public function setDateFrom(?\DateTimeImmutable $dateFrom): self
     {
         $this->dateFrom = $dateFrom;
 
@@ -122,7 +127,7 @@ class Closing
         return $this->closedAt;
     }
 
-    public function setClosedAt(\DateTimeImmutable $closedAt): self
+    public function setClosedAt(?\DateTimeImmutable $closedAt): self
     {
         $this->closedAt = $closedAt;
 
@@ -233,6 +238,18 @@ class Closing
     public function setDenominations(?array $denominations): self
     {
         $this->denominations = $denominations;
+
+        return $this;
+    }
+
+    public function getExpenses(): ?float
+    {
+        return $this->expenses;
+    }
+
+    public function setExpenses(?float $expenses): self
+    {
+        $this->expenses = $expenses;
 
         return $this;
     }

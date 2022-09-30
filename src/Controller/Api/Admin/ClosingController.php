@@ -18,6 +18,10 @@ use App\Core\Closing\Query\SelectClosingQuery\SelectClosingQueryHandlerInterface
 use App\Core\Validation\ApiRequestDtoValidator;
 use App\Entity\Closing;
 use App\Factory\Controller\ApiResponseFactory;
+use App\Repository\ClosingRepository;
+use App\Repository\StoreRepository;
+use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -113,6 +117,56 @@ class ClosingController extends AbstractController
         return $responseFactory->json(
             SelectClosingResponseDto::createFromClosing($result->getClosing())
         );
+    }
+
+    /**
+     * @Route("/opened", methods={"GET"}, name="opened")
+     *
+     * @OA\Parameter(
+     *   name="store",
+     *   in="query",
+     *   description="current store"
+     * )
+     *
+     * @OA\Response(
+     *   response="200", description="OK", @Model(type=SelectClosingResponseDto::class)
+     * )
+     *
+     * @OA\Response(
+     *   response="404", description="Not found"
+     * )
+     */
+    public function getOpened(
+        ApiResponseFactory $responseFactory,
+        ClosingRepository $closingRepository,
+        Request $request,
+        StoreRepository $storeRepository,
+        EntityManagerInterface $entityManager
+    )
+    {
+        $store = $storeRepository->find($request->query->get('store'));
+
+        $qb = $closingRepository->createQueryBuilder('closing');
+        $qb->andWhere('closing.closedAt IS NULL');
+        $qb->join('closing.store', 'store');
+        $qb->andWhere('store = :store')->setParameter('store', $store);
+        $qb->orderBy('closing.id', 'DESC');
+        $qb->setMaxResults(1);
+
+        $closing = $qb->getQuery()->getOneOrNullResult();
+
+        if($closing === null){
+            //create new closing and return
+            $closing = new Closing();
+            $closing->setStore($store);
+            $closing->setDateFrom(Carbon::now()->toDateTimeImmutable());
+            $closing->setOpenedBy($this->getUser());
+
+            $entityManager->persist($closing);
+            $entityManager->flush();
+        }
+
+        return $responseFactory->json(SelectClosingResponseDto::createFromClosing($closing));
     }
 
     /**

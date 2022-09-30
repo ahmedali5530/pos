@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Core\Closing\Command\UpdateClosingCommand;
 
@@ -45,14 +45,24 @@ class UpdateClosingCommand
     private $cashWithdrawn = null;
 
     /**
-     * @var null|json
+     * @var null|array
      */
     private $data = null;
 
     /**
-     * @var null|json
+     * @var null|array
      */
     private $denominations = null;
+
+    /**
+     * @var null|float
+     */
+    private $expenses = null;
+
+    /**
+     * @var int|null
+     */
+    private $closedBy;
 
     public function setId(?int $id)
     {
@@ -142,7 +152,7 @@ class UpdateClosingCommand
         return $this->cashWithdrawn;
     }
 
-    public function setData(?\json $data)
+    public function setData(?array $data)
     {
         $this->data = $data;
         return $this;
@@ -153,7 +163,7 @@ class UpdateClosingCommand
         return $this->data;
     }
 
-    public function setDenominations(?\json $denominations)
+    public function setDenominations(?array $denominations)
     {
         $this->denominations = $denominations;
         return $this;
@@ -162,5 +172,37 @@ class UpdateClosingCommand
     public function getDenominations()
     {
         return $this->denominations;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getExpenses(): ?float
+    {
+        return $this->expenses;
+    }
+
+    /**
+     * @param float|null $expenses
+     */
+    public function setExpenses(?float $expenses): void
+    {
+        $this->expenses = $expenses;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getClosedBy(): ?int
+    {
+        return $this->closedBy;
+    }
+
+    /**
+     * @param int|null $closedBy
+     */
+    public function setClosedBy(?int $closedBy): void
+    {
+        $this->closedBy = $closedBy;
     }
 }
