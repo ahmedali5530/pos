@@ -128,9 +128,14 @@ class Product
     private $stores;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Media::class)
+     * @ORM\ManyToOne(targetEntity=Department::class)
      */
     private $department;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Terminal::class, inversedBy="products")
+     */
+    private $terminals;
 
     public function __construct()
     {
@@ -141,6 +146,7 @@ class Product
         $this->categories = new ArrayCollection();
         $this->uuid = Uuid::uuid4();
         $this->stores = new ArrayCollection();
+        $this->terminals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -436,14 +442,38 @@ class Product
         return $this;
     }
 
-    public function getDepartment(): ?Media
+    public function getDepartment(): ?Department
     {
         return $this->department;
     }
 
-    public function setDepartment(?Media $department): self
+    public function setDepartment(?Department $department): self
     {
         $this->department = $department;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Terminal[]
+     */
+    public function getTerminals(): Collection
+    {
+        return $this->terminals;
+    }
+
+    public function addTerminal(Terminal $terminal): self
+    {
+        if (!$this->terminals->contains($terminal)) {
+            $this->terminals[] = $terminal;
+        }
+
+        return $this;
+    }
+
+    public function removeTerminal(Terminal $terminal): self
+    {
+        $this->terminals->removeElement($terminal);
 
         return $this;
     }

@@ -22,13 +22,16 @@ class SelectDto
 
     private EntityManagerInterface $entityManager;
 
-    const EXCLUDE = ['deletedAt', 'updatedAt'];
+    const EXCLUDE = ['deletedAt', 'updatedAt', 'uuid', 'createdAt'];
 
     private $path;
 
     const USES = [
         'App\Core\%1$s\Query\Select%1$sQuery\Select%1$sQuery',
-        'Symfony\Component\HttpFoundation\Request'
+        'Symfony\Component\HttpFoundation\Request',
+        'App\Core\Dto\Common\Common\LimitTrait',
+        'App\Core\Dto\Common\Common\OrderTrait',
+        'App\Core\Dto\Common\Common\QTrait',
     ];
 
     public function __construct(
@@ -58,6 +61,15 @@ class SelectDto
         $entityProperties = $this->entityManager->getClassMetadata($this->entityClass)->fieldMappings;
         $createMethodBody = '';
         $populateMethodBody = '';
+
+        $this->generator->addTraits([
+            'LimitTrait', 'OrderTrait', 'QTrait'
+        ]);
+
+        $this->generator->addConstant('ORDERS_LIST', [
+            'id' => $this->entityName.'.'.'id'
+        ]);
+
         foreach ($entityProperties as $mapping) {
             if (in_array($mapping['fieldName'], self::EXCLUDE)) {
                 continue;
@@ -95,6 +107,24 @@ BODY;
 BODY;
 
         }
+
+        //add sortings to create method
+        $createMethodBody .= <<<BODY
+\$dto->limit = \$request->query->get('limit');
+\$dto->offset = \$request->query->get('offset');
+\$dto->orderBy = self::ORDERS_LIST[\$request->query->get('orderBy')] ?? null;
+\$dto->orderMode = \$request->query->get('orderMode', 'ASC');
+\$dto->q = \$request->query->get('q');
+BODY;
+
+        //add sortings to populate method
+        $populateMethodBody .= <<<BODY
+\$query->setLimit(\$this->getLimit());
+\$query->setOffset(\$this->getOffset());
+\$query->setOrderBy(\$this->getOrderBy());
+\$query->setOrderMode(\$this->getOrderMode());
+\$query->setQ(\$this->q);
+BODY;
 
         $parameter = new ParameterGenerator('request', 'Request');
         $createMethod = new MethodGenerator('createFromRequest', [

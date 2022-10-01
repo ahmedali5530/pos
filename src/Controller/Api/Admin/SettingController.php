@@ -60,14 +60,26 @@ class SettingController extends AbstractController
     /**
      * @Route("/get", methods={"GET"}, name="get_item")
      *
+     * @OA\Parameter(
+     *   name="type",
+     *   in="query",
+     *   description="Search in type"
+     * )
+     *
      * @OA\Response(
-     *     @Model(type=SettingDto::class), response="200", description="OK"
+     *     @Model(type=SettingListResponseDto::class), response="200", description="OK"
      * )
      */
     public function getSetting(
-
+        Request $request, ApiResponseFactory $responseFactory, EntityManagerInterface $entityManager
     )
     {
+        $settings = $entityManager->getRepository(Setting::class)->findBy([
+            'type' => $request->query->get('type')
+        ]);
 
+        $list = SettingListResponseDto::createFromList($settings);
+
+        return $responseFactory->json($list);
     }
 }

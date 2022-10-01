@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Core\Dto\Controller\Api\Admin\Department;
+namespace App\Core\Dto\Controller\Api\Admin\Terminal;
 
-use App\Core\Department\Query\SelectDepartmentQuery\SelectDepartmentQuery;
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Dto\Common\Common\QTrait;
+use App\Core\Terminal\Query\SelectTerminalQuery\SelectTerminalQuery;
 use Symfony\Component\HttpFoundation\Request;
 
-class SelectDepartmentRequestDto
+class SelectTerminalRequestDto
 {
     use OrderTrait, LimitTrait, QTrait;
 
     const ORDERS_LIST = [
-        'id' => 'Department.id',
-        'name' => 'Department.name'
+        'id' => 'Terminal.id',
+        'code' => 'Terminal.code'
     ];
+
 
     /**
      * @var null|int
@@ -25,7 +26,7 @@ class SelectDepartmentRequestDto
     /**
      * @var null|string
      */
-    private $name = null;
+    private $code = null;
 
     /**
      * @var null|string
@@ -58,15 +59,15 @@ class SelectDepartmentRequestDto
         return $this->id;
     }
 
-    public function setName(?string $name)
+    public function setCode(?string $code)
     {
-        $this->name = $name;
+        $this->code = $code;
         return $this;
     }
 
-    public function getName()
+    public function getCode()
     {
-        return $this->name;
+        return $this->code;
     }
 
     public function setDescription(?string $description)
@@ -118,7 +119,7 @@ class SelectDepartmentRequestDto
         $dto = new self();
 
         $dto->id = $request->query->get('id');
-        $dto->name = $request->query->get('name');
+        $dto->code = $request->query->get('code');
         $dto->description = $request->query->get('description');
         $dto->isActive = $request->query->get('isActive');
 
@@ -132,10 +133,10 @@ class SelectDepartmentRequestDto
         return $dto;
     }
 
-    public function populateQuery(SelectDepartmentQuery $query)
+    public function populateQuery(SelectTerminalQuery $query)
     {
         $query->setId($this->id);
-        $query->setName($this->name);
+        $query->setCode($this->code);
         $query->setDescription($this->description);
         $query->setIsActive($this->isActive);
 

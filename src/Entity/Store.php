@@ -6,6 +6,8 @@ use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\StoreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
@@ -38,9 +40,15 @@ class Store
      */
     private $location;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Terminal::class, mappedBy="store", cascade={"persist", "remove"})
+     */
+    private $terminals;
+
     public function __construct()
     {
         $this->uuid = Uuid::uuid4();
+        $this->terminals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -68,6 +76,36 @@ class Store
     public function setLocation(?string $location): self
     {
         $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Terminal[]
+     */
+    public function getTerminals(): Collection
+    {
+        return $this->terminals;
+    }
+
+    public function addTerminal(Terminal $terminal): self
+    {
+        if (!$this->terminals->contains($terminal)) {
+            $this->terminals[] = $terminal;
+            $terminal->setStore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTerminal(Terminal $terminal): self
+    {
+        if ($this->terminals->removeElement($terminal)) {
+            // set the owning side to null (unless already changed)
+            if ($terminal->getStore() === $this) {
+                $terminal->setStore(null);
+            }
+        }
 
         return $this;
     }

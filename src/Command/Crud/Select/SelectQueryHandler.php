@@ -20,7 +20,7 @@ class SelectQueryHandler
 
     private EntityManagerInterface $entityManager;
 
-    const EXCLUDE = [];
+    const EXCLUDE = ['deletedAt', 'updatedAt', 'uuid', 'createdAt'];
 
     const METHOD_BODIES = [
         '__construct' => <<<CODE
@@ -102,6 +102,7 @@ CODE
 
         //update handle function body
         $fields = '';
+        $likeCondition = [];
         foreach ($entityProperties as $mapping) {
             if (in_array($mapping['fieldName'], self::EXCLUDE)) {
                 continue;
@@ -110,9 +111,11 @@ CODE
             $fieldName = ucwords($mapping['fieldName']);
             $operator = '=';
             $queryParameter = '$query->get'.$fieldName.'()';
-            if($this->getPhpType($mapping['type']) === 'string'){
+            if($this->getPhpType($mapping['type']) === '?string'){
                 $operator = 'LIKE';
                 $queryParameter = "'%'.$fieldName.'%'";
+
+                $likeCondition[] = $fieldName.' LIKE :q';
             }
 
 
@@ -121,14 +124,20 @@ if(\$query->get{$fieldName}() !== null){
     \$qb->andWhere('{$this->entityName}.{$mapping['fieldName']} $operator :{$mapping['fieldName']}');
     \$qb->setParameter('{$mapping['fieldName']}', $queryParameter);
 }
-
 FIELD;
         }
+
+        $likeCondition = implode('OR', $likeCondition);
 
         $this->generator->getMethod('handle')->setBody(<<<BODY
 \$qb = \$this->createQueryBuilder('{$this->entityName}');
 
 $fields
+
+if(\$query->getQ() !== null){
+    \$qb->andWhere('$likeCondition');
+    \$qb->setParameter('q', '%'.\$query->getQ().'%');
+}
 
 if(\$query->getLimit() !== null){
     \$qb->setMaxResults(\$query->getLimit());
@@ -136,6 +145,10 @@ if(\$query->getLimit() !== null){
 
 if(\$query->getOffset() !== null){
     \$qb->setFirstResult(\$query->getOffset());
+}
+
+if(\$query->getOrderBy() !== null){
+    \$qb->orderBy(\$query->getOrderBy(), \$query->getOrderMode());
 }
 
 \$list = new Paginator(\$qb->getQuery());

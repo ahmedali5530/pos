@@ -5,14 +5,16 @@ namespace App\Entity;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
-use App\Repository\DepartmentRepository;
+use App\Repository\TerminalRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
 /**
- * @ORM\Entity(repositoryClass=DepartmentRepository::class)
+ * @ORM\Entity(repositoryClass=TerminalRepository::class)
  */
-class Department
+class Terminal
 {
     use ActiveTrait;
     use TimestampableTrait;
@@ -28,7 +30,7 @@ class Department
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $code;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -40,9 +42,15 @@ class Department
      */
     private $store;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="terminals")
+     */
+    private $products;
+
     public function __construct()
     {
         $this->uuid = Uuid::uuid4();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,14 +58,14 @@ class Department
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getCode(): ?string
     {
-        return $this->name;
+        return $this->code;
     }
 
-    public function setName(string $name): self
+    public function setCode(string $code): self
     {
-        $this->name = $name;
+        $this->code = $code;
 
         return $this;
     }
@@ -82,6 +90,33 @@ class Department
     public function setStore(?Store $store): self
     {
         $this->store = $store;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->addTerminal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            $product->removeTerminal($this);
+        }
 
         return $this;
     }

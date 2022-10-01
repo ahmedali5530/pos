@@ -119,6 +119,11 @@ class Order
      */
     private $store;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Terminal::class)
+     */
+    private $terminal;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -363,6 +368,18 @@ class Order
     public function setStore(?Store $store): self
     {
         $this->store = $store;
+
+        return $this;
+    }
+
+    public function getTerminal(): ?Terminal
+    {
+        return $this->terminal;
+    }
+
+    public function setTerminal(?Terminal $terminal): self
+    {
+        $this->terminal = $terminal;
 
         return $this;
     }

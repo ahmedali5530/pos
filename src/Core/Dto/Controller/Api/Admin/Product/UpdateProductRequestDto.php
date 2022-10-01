@@ -109,6 +109,14 @@ class UpdateProductRequestDto
      */
     private $cost;
 
+    /**
+     * @var int|null
+     * @Assert\NotBlank(normalizer="trim")
+     * @Assert\Type(type="int")
+     * @ConstraintValidEntity(class="App\Entity\Department", entityName="Department")
+     */
+    private $department;
+
     public static function createFromRequest(Request $request)
     {
         $dto = new self();
@@ -137,6 +145,7 @@ class UpdateProductRequestDto
         $dto->brands = $data['brands'] ?? null;
         $dto->suppliers = $data['suppliers'] ?? null;
         $dto->id = $data['id'] ?? null;
+        $dto->department = $data['department'] ?? null;
 
         return $dto;
     }
@@ -159,6 +168,7 @@ class UpdateProductRequestDto
         $command->setBrands($this->brands);
         $command->setSuppliers($this->suppliers);
         $command->setId($this->id);
+        $command->setDepartment($this->department);
     }
 
     /**
@@ -415,5 +425,21 @@ class UpdateProductRequestDto
     public function setCost(?float $cost): void
     {
         $this->cost = $cost;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDepartment(): ?int
+    {
+        return $this->department;
+    }
+
+    /**
+     * @param int|null $department
+     */
+    public function setDepartment(?int $department): void
+    {
+        $this->department = $department;
     }
 }

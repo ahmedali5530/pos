@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Core\Department\Query\SelectDepartmentQuery;
+namespace App\Core\Terminal\Query\SelectTerminalQuery;
 
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Dto\Common\Common\QTrait;
 
-class SelectDepartmentQuery
+class SelectTerminalQuery
 {
-    use OrderTrait, LimitTrait, QTrait;
+    use OrderTrait, QTrait, LimitTrait;
 
     /**
      * @var null|int
@@ -18,7 +18,7 @@ class SelectDepartmentQuery
     /**
      * @var null|string
      */
-    private $name = null;
+    private $code = null;
 
     /**
      * @var null|string
@@ -41,15 +41,15 @@ class SelectDepartmentQuery
         return $this->id;
     }
 
-    public function setName(?string $name)
+    public function setCode(?string $code)
     {
-        $this->name = $name;
+        $this->code = $code;
         return $this;
     }
 
-    public function getName()
+    public function getCode()
     {
-        return $this->name;
+        return $this->code;
     }
 
     public function setDescription(?string $description)

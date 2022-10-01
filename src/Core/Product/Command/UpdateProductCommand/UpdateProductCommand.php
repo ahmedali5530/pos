@@ -88,6 +88,11 @@ class UpdateProductCommand
     private $purchaseUnit;
 
     /**
+     * @var int|null
+     */
+    private $department;
+
+    /**
      * @return string|null
      */
     public function getPurchaseUnit(): ?string
@@ -342,4 +347,21 @@ class UpdateProductCommand
     {
         $this->saleUnit = $saleUnit;
     }
+
+    /**
+     * @return int|null
+     */
+    public function getDepartment(): ?int
+    {
+        return $this->department;
+    }
+
+    /**
+     * @param int|null $department
+     */
+    public function setDepartment(?int $department): void
+    {
+        $this->department = $department;
+    }
+
 }

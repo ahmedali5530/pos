@@ -5,6 +5,7 @@ namespace App\Core\Product\Command\CreateProductCommand;
 use App\Core\Entity\EntityManager\EntityManager;
 use App\Entity\Brand;
 use App\Entity\Category;
+use App\Entity\Department;
 use App\Entity\Product;
 use App\Entity\ProductPrice;
 use App\Entity\ProductVariant;
@@ -105,6 +106,8 @@ class CreateProductCommandHandler extends EntityManager implements CreateProduct
         foreach($variants as $variant){
             $item->addVariant($variant);
         }
+
+        $item->setDepartment($this->getRepository(Department::class)->find($command->getDepartment()));
 
         //validate item before creation
         $violations = $this->validator->validate($item);

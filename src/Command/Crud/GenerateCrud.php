@@ -282,7 +282,8 @@ CODE
             'decimal' => '?float',
             'boolean' => '?bool',
             'text' => '?string',
-            'datetime_immutable' => '?\DateTimeImmutable'
+            'datetime_immutable' => '?\DateTimeImmutable',
+            'json' => '?string'
         ];
 
         return $phpTypes[$type] ?? '?' . $type;

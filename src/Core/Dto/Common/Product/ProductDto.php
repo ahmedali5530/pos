@@ -11,6 +11,7 @@ use App\Core\Dto\Common\Common\DateTimeDto;
 use App\Core\Dto\Common\Common\StoresDtoTrait;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
 use App\Core\Dto\Common\Common\UuidDtoTrait;
+use App\Core\Dto\Common\Department\DepartmentDto;
 use App\Core\Dto\Common\Supplier\SupplierDto;
 use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\Product;
@@ -104,6 +105,11 @@ class ProductDto
      */
     private $brands = [];
 
+    /**
+     * @var DepartmentDto|null
+     */
+    private $department;
+
 
     public static function createFromProduct(?Product $product): ?self
     {
@@ -149,6 +155,8 @@ class ProductDto
         $dto->cost = $product->getCost();
 
         $dto->setStores($product->getStores());
+
+        $dto->department = DepartmentDto::createFromDepartment($product->getDepartment());
 
         return $dto;
     }
@@ -441,5 +449,21 @@ class ProductDto
     public function setBrands(array $brands): void
     {
         $this->brands = $brands;
+    }
+
+    /**
+     * @return DepartmentDto|null
+     */
+    public function getDepartment(): ?DepartmentDto
+    {
+        return $this->department;
+    }
+
+    /**
+     * @param DepartmentDto|null $department
+     */
+    public function setDepartment(?DepartmentDto $department): void
+    {
+        $this->department = $department;
     }
 }

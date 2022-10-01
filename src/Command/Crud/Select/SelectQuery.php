@@ -22,7 +22,13 @@ class SelectQuery
 
     private EntityManagerInterface $entityManager;
 
-    const EXCLUDE = [];
+    const EXCLUDE = ['uuid', 'createdAt', 'updatedAt', 'deletedAt'];
+
+    const USES = [
+        'App\Core\Dto\Common\Common\LimitTrait',
+        'App\Core\Dto\Common\Common\OrderTrait',
+        'App\Core\Dto\Common\Common\QTrait',
+    ];
 
     private $path;
 
@@ -47,9 +53,19 @@ class SelectQuery
         $this->generator->setName(sprintf('Select%sQuery', $this->entityName));
         $this->generator->setNamespaceName(sprintf('App\Core\%1$s\Query\Select%1$sQuery', $this->entityName));
 
+        foreach(self::USES as $use){
+            $this->generator->addUse(sprintf($use, $this->entityName));
+        }
+
         $entityProperties = $this->entityManager->getClassMetadata($this->entityClass)->fieldMappings;
-        $entityProperties[] = ['fieldName' => 'limit', 'type' => 'int'];
-        $entityProperties[] = ['fieldName' => 'offset', 'type' => 'int'];
+
+        $this->generator->addTraits([
+            'LimitTrait', 'OrderTrait', 'QTrait'
+        ]);
+
+        $this->generator->addConstant('ORDERS_LIST', [
+            'id' => $this->entityName.'.'.'id'
+        ]);
 
         foreach ($entityProperties as $mapping) {
             if (in_array($mapping['fieldName'], self::EXCLUDE)) {

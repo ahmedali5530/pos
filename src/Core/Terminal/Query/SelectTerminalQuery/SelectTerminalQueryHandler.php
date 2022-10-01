@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Core\Department\Query\SelectDepartmentQuery;
+namespace App\Core\Terminal\Query\SelectTerminalQuery;
 
-use App\Entity\Department;
+use App\Entity\Terminal;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use App\Core\Entity\Repository\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class SelectDepartmentQueryHandler extends EntityRepository implements SelectDepartmentQueryHandlerInterface
+class SelectTerminalQueryHandler extends EntityRepository implements SelectTerminalQueryHandlerInterface
 {
     public $validator = null;
 
@@ -18,35 +18,34 @@ class SelectDepartmentQueryHandler extends EntityRepository implements SelectDep
         $this->validator = $validator;
     }
 
-    public function handle(SelectDepartmentQuery $query) : SelectDepartmentQueryResult
+    public function handle(SelectTerminalQuery $query) : SelectTerminalQueryResult
     {
-        $qb = $this->createQueryBuilder('Department');
+        $qb = $this->createQueryBuilder('Terminal');
 
         if($query->getId() !== null){
-            $qb->andWhere('Department.id = :id');
+            $qb->andWhere('Terminal.id = :id');
             $qb->setParameter('id', $query->getId());
         }
-        if($query->getName() !== null){
-            $qb->andWhere('Department.name = :name');
-            $qb->setParameter('name', $query->getName());
+        if($query->getCode() !== null){
+            $qb->andWhere('Terminal.code = :code');
+            $qb->setParameter('code', $query->getCode());
         }
         if($query->getDescription() !== null){
-            $qb->andWhere('Department.description LIKE :description');
-            $qb->setParameter('description', '%'.$query->getDescription().'%');
+            $qb->andWhere('Terminal.description = :description');
+            $qb->setParameter('description', $query->getDescription());
         }
         if($query->getIsActive() !== null){
-            $qb->andWhere('Department.isActive = :isActive');
+            $qb->andWhere('Terminal.isActive = :isActive');
             $qb->setParameter('isActive', $query->getIsActive());
         }
         if($query->getQ() !== null){
-            $qb->andWhere('Department.name LIKE :q');
+            $qb->andWhere('Terminal.code LIKE :q');
             $qb->setParameter('q', '%'.$query->getQ().'%');
         }
 
         if($query->getOrderBy() !== null){
             $qb->orderBy($query->getOrderBy(), $query->getOrderMode());
         }
-
 
         if($query->getLimit() !== null){
             $qb->setMaxResults($query->getLimit());
@@ -58,7 +57,7 @@ class SelectDepartmentQueryHandler extends EntityRepository implements SelectDep
 
         $list = new Paginator($qb->getQuery());
 
-        $result = new SelectDepartmentQueryResult();
+        $result = new SelectTerminalQueryResult();
         $result->setList($list);
         $result->setCount(count($list));
         $result->setTotal($list->count());
@@ -68,6 +67,6 @@ class SelectDepartmentQueryHandler extends EntityRepository implements SelectDep
 
     protected function getEntityClass() : string
     {
-        return Department::class;
+        return Terminal::class;
     }
 }

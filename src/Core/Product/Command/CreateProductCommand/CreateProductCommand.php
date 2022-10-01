@@ -83,6 +83,11 @@ class CreateProductCommand
      */
     private $purchaseUnit;
 
+    /**
+     * @var int|null
+     */
+    private $department;
+
     public function getName()
     {
         return $this->name;
@@ -302,6 +307,22 @@ class CreateProductCommand
     public function setPurchaseUnit(?string $purchaseUnit): void
     {
         $this->purchaseUnit = $purchaseUnit;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDepartment(): ?int
+    {
+        return $this->department;
+    }
+
+    /**
+     * @param int|null $department
+     */
+    public function setDepartment(?int $department): void
+    {
+        $this->department = $department;
     }
 
 }

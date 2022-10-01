@@ -70,7 +70,9 @@ class SecurityController extends AbstractController
     /**
      * @Route("/auth/logout", name="app_logout", methods={"GET"})
      */
-    public function logout() {}
+    public function logout() {
+        return $this->json(null);
+    }
 
     /**
      * @Route("/auth/forgot-password", name="forgot_password", methods={"POST"})

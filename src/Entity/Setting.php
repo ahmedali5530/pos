@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Setting
 {
+    const TYPE_RECEIPT = 'sale_receipt';
+
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
