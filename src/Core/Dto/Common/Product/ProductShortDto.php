@@ -12,18 +12,17 @@ use App\Core\Dto\Common\Common\StoresDtoTrait;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
 use App\Core\Dto\Common\Common\UuidDtoTrait;
 use App\Core\Dto\Common\Department\DepartmentDto;
-use App\Core\Dto\Common\Store\StoreShortDto;
 use App\Core\Dto\Common\Supplier\SupplierDto;
-use App\Core\Dto\Common\Terminal\TerminalShortDto;
 use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\Product;
 
-class ProductDto
+class ProductShortDto
 {
     use ActiveDtoTrait;
     use TimestampsDtoTrait;
     use UuidDtoTrait;
     use StoresDtoTrait;
+
 
     /**
      * @var int|null
@@ -111,16 +110,6 @@ class ProductDto
      */
     private $department;
 
-    /**
-     * @var TerminalShortDto[]
-     */
-    private $terminals = [];
-
-    /**
-     * @var StoreShortDto[]
-     */
-    private $stores = [];
-
 
     public static function createFromProduct(?Product $product): ?self
     {
@@ -141,77 +130,9 @@ class ProductDto
         $dto->purchaseUnit = $product->getPurchaseUnit();
         $dto->saleUnit = $product->getSaleUnit();
 
-        foreach($product->getCategories() as $category){
-            $dto->categories[] = CategoryDto::createFromCategory($category);
-        }
-
-        foreach($product->getVariants() as $variant){
-            $dto->variants[] = ProductVariantDto::createFromProductVariant($variant);
-        }
-
-        foreach($product->getPrices() as $productPrice){
-            $dto->prices[] = ProductPriceDto::createFromProductPrice($productPrice);
-        }
-
-        foreach($product->getSuppliers() as $supplier){
-            $dto->suppliers[] = SupplierDto::createFromSupplier($supplier);
-        }
-
-        foreach($product->getBrands() as $brand){
-            $dto->brands[] = BrandDto::createFromBrand($brand);
-        }
-
-        foreach($product->getTerminals() as $terminal){
-            $dto->terminals[] = TerminalShortDto::createFromTerminal($terminal);
-        }
-
-        foreach($product->getStores() as $store){
-            $dto->stores[] = StoreShortDto::createFromStore($store);
-        }
-
         $dto->uuid = $product->getUuid();
         $dto->createdAt = DateTimeDto::createFromDateTime($product->getCreatedAt());
         $dto->cost = $product->getCost();
-
-
-
-        $dto->department = DepartmentDto::createFromDepartment($product->getDepartment());
-
-
-
-        return $dto;
-    }
-
-    public static function createFromArray(?array $data): ?self
-    {
-        if($data === null){
-            return null;
-        }
-
-        $dto = new self();
-        $dto->id = $data['id'] ?? null;
-        $dto->name = $data['name'] ?? null;
-        $dto->sku = $data['sku'] ?? null;
-        $dto->barcode = $data['barcode'] ?? null;
-        $dto->baseQuantity = $data['baseQuantity'] ?? null;
-        $dto->isActive = $data['isActive'] ?? null;
-        $dto->isAvailable = $data['isAvailable'] ?? null;
-        $dto->quantity = $data['quantity'] ?? null;
-        $dto->basePrice = $data['basePrice'] ?? null;
-
-        foreach($data['categories'] ?? [] as $category){
-            $dto->categories[] = CategoryDto::createFromArray($category);
-        }
-
-        foreach($data['variants'] ?? [] as $variant){
-            $dto->variants[] = ProductVariantDto::createFromArray($variant);
-        }
-
-        foreach($data['prices'] ?? [] as $productPrice){
-            $dto->prices[] = ProductPriceDto::createFromArray($productPrice);
-        }
-
-        $dto->cost = $data['cost'] ?? null;
 
         return $dto;
     }
@@ -486,21 +407,5 @@ class ProductDto
     public function setDepartment(?DepartmentDto $department): void
     {
         $this->department = $department;
-    }
-
-    /**
-     * @return TerminalShortDto[]
-     */
-    public function getTerminals(): array
-    {
-        return $this->terminals;
-    }
-
-    /**
-     * @param TerminalShortDto[] $terminals
-     */
-    public function setTerminals(array $terminals): void
-    {
-        $this->terminals = $terminals;
     }
 }

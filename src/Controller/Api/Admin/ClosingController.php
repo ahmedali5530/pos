@@ -20,6 +20,7 @@ use App\Entity\Closing;
 use App\Factory\Controller\ApiResponseFactory;
 use App\Repository\ClosingRepository;
 use App\Repository\StoreRepository;
+use App\Repository\TerminalRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -128,6 +129,12 @@ class ClosingController extends AbstractController
      *   description="current store"
      * )
      *
+     * @OA\Parameter(
+     *   name="terminal",
+     *   in="query",
+     *   description="current terminal"
+     * )
+     *
      * @OA\Response(
      *   response="200", description="OK", @Model(type=SelectClosingResponseDto::class)
      * )
@@ -141,15 +148,19 @@ class ClosingController extends AbstractController
         ClosingRepository $closingRepository,
         Request $request,
         StoreRepository $storeRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        TerminalRepository $terminalRepository
     )
     {
         $store = $storeRepository->find($request->query->get('store'));
+        $terminal = $terminalRepository->find($request->query->get('terminal'));
 
         $qb = $closingRepository->createQueryBuilder('closing');
         $qb->andWhere('closing.closedAt IS NULL');
         $qb->join('closing.store', 'store');
+        $qb->join('closing.terminal', 'terminal');
         $qb->andWhere('store = :store')->setParameter('store', $store);
+        $qb->andWhere('terminal = :terminal')->setParameter('terminal', $terminal);
         $qb->orderBy('closing.id', 'DESC');
         $qb->setMaxResults(1);
 
@@ -159,6 +170,7 @@ class ClosingController extends AbstractController
             //create new closing and return
             $closing = new Closing();
             $closing->setStore($store);
+            $closing->setTerminal($terminal);
             $closing->setDateFrom(Carbon::now()->toDateTimeImmutable());
             $closing->setOpenedBy($this->getUser());
 

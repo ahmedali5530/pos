@@ -4,6 +4,7 @@ namespace App\Core\Dto\Controller\Api\Admin\Terminal;
 
 use App\Core\Dto\Common\Terminal\TerminalDto;
 use App\Core\Terminal\Query\SelectTerminalQuery\SelectTerminalQueryResult;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 class SelectTerminalListResponseDto
 {

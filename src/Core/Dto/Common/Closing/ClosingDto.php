@@ -7,6 +7,7 @@ use App\Core\Dto\Common\Common\IdDtoTrait;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
 use App\Core\Dto\Common\Common\UuidDtoTrait;
 use App\Core\Dto\Common\Store\StoreDto;
+use App\Core\Dto\Common\Terminal\TerminalShortDto;
 use App\Core\Dto\Common\User\UserDto;
 use App\Entity\Closing;
 
@@ -78,6 +79,11 @@ class ClosingDto
      * @var float|null
      */
     private $expenses;
+
+    /**
+     * @var TerminalShortDto|null
+     */
+    private $terminal;
 
     /**
      * @return DateTimeDto
@@ -287,6 +293,22 @@ class ClosingDto
         $this->expenses = $expenses;
     }
 
+    /**
+     * @return TerminalShortDto|null
+     */
+    public function getTerminal(): ?TerminalShortDto
+    {
+        return $this->terminal;
+    }
+
+    /**
+     * @param TerminalShortDto|null $terminal
+     */
+    public function setTerminal(?TerminalShortDto $terminal): void
+    {
+        $this->terminal = $terminal;
+    }
+
     public static function createFromClosing(?Closing $closing): ?self
     {
         if($closing === null){
@@ -311,6 +333,7 @@ class ClosingDto
         $dto->uuid = $closing->getUuid();
         $dto->createdAt = DateTimeDto::createFromDateTime($closing->getCreatedAt());
         $dto->expenses = $closing->getExpenses();
+        $dto->terminal = TerminalShortDto::createFromTerminal($closing->getTerminal());
 
         return $dto;
     }

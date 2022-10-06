@@ -6,6 +6,7 @@ namespace App\Core\Dto\Common\Order;
 
 use App\Core\Dto\Common\Customer\CustomerDto;
 use App\Core\Dto\Common\Store\StoreDto;
+use App\Core\Dto\Common\Terminal\TerminalShortDto;
 use App\Core\Dto\Common\User\UserDto;
 use App\Entity\Order;
 use App\Entity\OrderDiscount;
@@ -98,6 +99,11 @@ class OrderDto
      */
     private $store;
 
+    /**
+     * @var TerminalShortDto|null
+     */
+    private $terminal;
+
     public static function createFromOrder(?Order $order): ?self
     {
         if($order === null){
@@ -127,6 +133,7 @@ class OrderDto
         $dto->notes = $order->getDescription();
 
         $dto->store = StoreDto::createFromStore($order->getStore());
+        $dto->terminal = TerminalShortDto::createFromTerminal($order->getTerminal());
 
         return $dto;
     }
@@ -414,5 +421,21 @@ class OrderDto
     public function setStore(?StoreDto $store): void
     {
         $this->store = $store;
+    }
+
+    /**
+     * @return TerminalShortDto|null
+     */
+    public function getTerminal(): ?TerminalShortDto
+    {
+        return $this->terminal;
+    }
+
+    /**
+     * @param TerminalShortDto|null $terminal
+     */
+    public function setTerminal(?TerminalShortDto $terminal): void
+    {
+        $this->terminal = $terminal;
     }
 }

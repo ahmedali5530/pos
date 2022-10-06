@@ -21,6 +21,7 @@ class PaymentTypes extends Fixture
             }else {
                 $paymentType->setCanHaveChangeDue(false);
             }
+            $paymentType->addStore($this->getReference('store'));
 
             $manager->persist($paymentType);
         }

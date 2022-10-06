@@ -4,6 +4,8 @@
 namespace App\Core\Dto\Common\Common;
 
 
+use Symfony\Component\Serializer\Annotation\Groups;
+
 trait IdDtoTrait
 {
     /**

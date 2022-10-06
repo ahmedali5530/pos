@@ -83,6 +83,10 @@ class CreateOrderCommand
      */
     private $discountRateType;
 
+    /**
+     * @var int|null
+     */
+    private $terminal;
 
     /**
      * @return int|null
@@ -306,5 +310,21 @@ class CreateOrderCommand
     public function setDiscountRateType(?string $discountRateType): void
     {
         $this->discountRateType = $discountRateType;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getTerminal(): ?int
+    {
+        return $this->terminal;
+    }
+
+    /**
+     * @param int|null $terminal
+     */
+    public function setTerminal(?int $terminal): void
+    {
+        $this->terminal = $terminal;
     }
 }

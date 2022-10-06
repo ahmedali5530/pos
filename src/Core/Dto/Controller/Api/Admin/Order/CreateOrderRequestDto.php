@@ -119,6 +119,13 @@ class CreateOrderRequestDto
      */
     private $notes;
 
+    /**
+     * @var int|null
+     * @Assert\NotBlank(normalizer="trim")
+     * @ConstraintValidEntity(class="App\Entity\Terminal", entityName="Terminal")
+     */
+    private $terminal;
+
     public static function createFromRequest(Request $request)
     {
         $dto = new self();
@@ -148,6 +155,7 @@ class CreateOrderRequestDto
         $dto->notes = $data['notes'] ?? null;
 
         $dto->store = $data['store'] ?? null;
+        $dto->terminal = $data['terminal'] ?? null;
 
         $dto->finalTotal = $data['total'] ?? 0;
 
@@ -171,6 +179,7 @@ class CreateOrderRequestDto
         $command->setNotes($this->notes);
         $command->setDiscountRateType($this->discountRateType);
         $command->setStore($this->getStore());
+        $command->setTerminal($this->terminal);
     }
 
     /**
@@ -395,5 +404,37 @@ class CreateOrderRequestDto
     public function setDiscountRateType(?string $discountRateType): void
     {
         $this->discountRateType = $discountRateType;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getFinalTotal(): ?float
+    {
+        return $this->finalTotal;
+    }
+
+    /**
+     * @param float|null $finalTotal
+     */
+    public function setFinalTotal(?float $finalTotal): void
+    {
+        $this->finalTotal = $finalTotal;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getTerminal(): ?int
+    {
+        return $this->terminal;
+    }
+
+    /**
+     * @param int|null $terminal
+     */
+    public function setTerminal(?int $terminal): void
+    {
+        $this->terminal = $terminal;
     }
 }

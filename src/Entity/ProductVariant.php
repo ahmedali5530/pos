@@ -47,7 +47,7 @@ class ProductVariant
     private $attributeName;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
      */
     private $attributeValue;

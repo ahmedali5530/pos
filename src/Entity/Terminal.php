@@ -38,7 +38,7 @@ class Terminal
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Store::class)
+     * @ORM\ManyToOne(targetEntity=Store::class, inversedBy="terminals")
      */
     private $store;
 

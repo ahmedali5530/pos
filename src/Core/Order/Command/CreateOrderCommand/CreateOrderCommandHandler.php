@@ -17,6 +17,7 @@ use App\Entity\Product;
 use App\Entity\ProductVariant;
 use App\Entity\Store;
 use App\Entity\Tax;
+use App\Entity\Terminal;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -71,6 +72,7 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
         );
 
         $item->setStore($this->getRepository(Store::class)->find($command->getStore()));
+        $item->setTerminal($this->getRepository(Terminal::class)->find($command->getTerminal()));
 
         foreach($command->getItems() as $itemDto){
             $orderProduct = new OrderProduct();

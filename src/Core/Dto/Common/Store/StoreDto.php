@@ -4,7 +4,7 @@
 namespace App\Core\Dto\Common\Store;
 
 
-use App\Core\Dto\Common\Location\LocationDto;
+use App\Core\Dto\Common\Terminal\TerminalShortDto;
 use App\Entity\Store;
 
 class StoreDto
@@ -24,6 +24,11 @@ class StoreDto
      */
     private $location;
 
+    /**
+     * @var TerminalShortDto[]
+     */
+    private $terminals = [];
+
     public static function createFromStore(?Store $store): ?self
     {
         if($store === null){
@@ -33,6 +38,9 @@ class StoreDto
         $dto->id = $store->getId();
         $dto->name = $store->getName();
         $dto->location = $store->getLocation();
+        foreach($store->getTerminals() as $terminal){
+            $dto->terminals[] = TerminalShortDto::createFromTerminal($terminal);
+        }
 
         return $dto;
     }
@@ -94,5 +102,21 @@ class StoreDto
     public function setLocation(?string $location): void
     {
         $this->location = $location;
+    }
+
+    /**
+     * @return TerminalShortDto[]
+     */
+    public function getTerminals(): array
+    {
+        return $this->terminals;
+    }
+
+    /**
+     * @param TerminalShortDto[] $terminals
+     */
+    public function setTerminals(array $terminals): void
+    {
+        $this->terminals = $terminals;
     }
 }

@@ -31,16 +31,12 @@ class ApiAuthenticator extends AbstractAuthenticator implements AuthenticationEn
 
     const TOKEN_NAME = 'X-AUTH-TOKEN';
 
-    private UrlGeneratorInterface $urlGenerator;
-
     private $apiResponseFactory;
 
     public function __construct(
-        UrlGeneratorInterface $urlGenerator,
         ApiResponseFactory $responseFactory
     )
     {
-        $this->urlGenerator = $urlGenerator;
         $this->apiResponseFactory = $responseFactory;
     }
 

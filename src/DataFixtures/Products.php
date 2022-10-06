@@ -2,7 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Core\Dto\Common\Department\DepartmentDto;
 use App\Entity\Category;
+use App\Entity\Department;
 use App\Entity\Product;
 use App\Entity\ProductPrice;
 use App\Entity\ProductVariant;
@@ -30,6 +32,11 @@ class Products extends Fixture
         $category->setType(Category::TYPE_PRODUCT);
         $manager->persist($category);
 
+        //create department
+        $department = new Department();
+        $department->setName('Shoes');
+        $manager->persist($department);
+
         for($i=1; $i<=1000; $i++){
             $product = new Product();
             $product->setName($this->faker->name());
@@ -39,40 +46,30 @@ class Products extends Fixture
             $product->setQuantity(1000);
             $product->setSku($this->faker->randomNumber());
             $product->setBaseQuantity(1);
-            $product->setUom('G');
-            $product->setShortCode($i);
-            $product->setCategory($category);
+            $product->setPurchaseUnit('G');
+            $product->setSaleUnit('G');
+            $product->addCategory($category);
+            $product->addStore($this->getReference('store'));
+            $product->setDepartment($department);
 
             $manager->persist($product);
 
-            $color = $this->faker->colorName;
-            $productVariant = new ProductVariant();
-            $productVariant->setName($color);
-            $productVariant->setAttributeName('Color');
-            $productVariant->setAttributeValue($color);
-            $productVariant->setProduct($product);
-            $manager->persist($productVariant);
+            $sizes = [36, 38, 40, 42, 44];
 
-            $size = $this->faker->randomNumber(4);
-            $productVariant = new ProductVariant();
-            $productVariant->setName($size);
-            $productVariant->setAttributeName('Size');
-            $productVariant->setAttributeValue(sprintf('%sx%s', $this->faker->randomNumber(2), $this->faker->randomNumber(2)));
-            $productVariant->setProduct($product);
-            $manager->persist($productVariant);
-
-            $weight = $this->faker->randomNumber(4);
-            $productVariant = new ProductVariant();
-            $productVariant->setName($weight);
-            $productVariant->setAttributeName('Weight');
-            $productVariant->setAttributeValue($this->faker->randomNumber(2) . ' KG');
-            $productVariant->setProduct($product);
-            $manager->persist($productVariant);
+            foreach($sizes as $size){
+                $color = $this->faker->colorName;
+                $productVariant = new ProductVariant();
+                $productVariant->setName($product->getName());
+                $productVariant->setAttributeName(sprintf('%s-%s', $this->faker->colorName, $size));
+                $productVariant->setAttributeValue(sprintf('%s-%s', $color, $size));
+                $productVariant->setProduct($product);
+                $manager->persist($productVariant);
+            }
 
             $price = new ProductPrice();
             $price->setProduct($product);
             $price->setBasePrice($this->faker->randomNumber(4));
-            $price->setMonth(1);
+            $price->setMonth(date('m'));
 
             $manager->persist($price);
         }

@@ -1,9 +1,13 @@
-<?php 
+<?php
 
 namespace App\Core\Terminal\Command\UpdateTerminalCommand;
 
+use App\Core\Dto\Common\Common\StoreDtoTrait;
+
 class UpdateTerminalCommand
 {
+    use StoreDtoTrait;
+
     /**
      * @var null|int
      */
@@ -18,6 +22,21 @@ class UpdateTerminalCommand
      * @var null|string
      */
     private $description = null;
+
+    /**
+     * @var int[]|null
+     */
+    private $products;
+
+    /**
+     * @var int[]|null
+     */
+    private $excludeProducts;
+
+    /**
+     * @var int[]|null
+     */
+    private $categories;
 
     public function setId(?int $id)
     {
@@ -50,5 +69,53 @@ class UpdateTerminalCommand
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getProducts(): ?array
+    {
+        return $this->products;
+    }
+
+    /**
+     * @param int[]|null $products
+     */
+    public function setProducts(?array $products): void
+    {
+        $this->products = $products;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getExcludeProducts(): ?array
+    {
+        return $this->excludeProducts;
+    }
+
+    /**
+     * @param int[]|null $excludeProducts
+     */
+    public function setExcludeProducts(?array $excludeProducts): void
+    {
+        $this->excludeProducts = $excludeProducts;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getCategories(): ?array
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param int[]|null $categories
+     */
+    public function setCategories(?array $categories): void
+    {
+        $this->categories = $categories;
     }
 }

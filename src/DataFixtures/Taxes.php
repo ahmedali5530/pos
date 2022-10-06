@@ -13,16 +13,19 @@ class Taxes extends Fixture
         $tax = new Tax();
         $tax->setRate(16);
         $tax->setName('VAT');
+        $tax->addStore($this->getReference('store'));
         $manager->persist($tax);
 
         $tax = new Tax();
         $tax->setRate(20);
         $tax->setName('VAT');
+        $tax->addStore($this->getReference('store'));
         $manager->persist($tax);
 
         $tax = new Tax();
         $tax->setRate(5);
         $tax->setName('VAT');
+        $tax->addStore($this->getReference('store'));
         $manager->persist($tax);
 
         $manager->flush();

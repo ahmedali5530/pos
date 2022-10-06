@@ -5,6 +5,7 @@ namespace App\Controller\Api\Admin;
 
 
 use App\Core\Dto\Controller\Api\Admin\Product\CreateProductRequestDto;
+use App\Core\Dto\Controller\Api\Admin\Product\ProductListKeywordsResponseDto;
 use App\Core\Dto\Controller\Api\Admin\Product\ProductListRequestDto;
 use App\Core\Dto\Controller\Api\Admin\Product\ProductListResponseDto;
 use App\Core\Dto\Controller\Api\Admin\Product\ProductResponseDto;
@@ -17,6 +18,8 @@ use App\Core\Product\Command\DeleteProductCommand\DeleteProductCommand;
 use App\Core\Product\Command\DeleteProductCommand\DeleteProductCommandHandlerInterface;
 use App\Core\Product\Command\UpdateProductCommand\UpdateProductCommand;
 use App\Core\Product\Command\UpdateProductCommand\UpdateProductCommandHandlerInterface;
+use App\Core\Product\Query\GetProductsKeywords\GetProductsKeywordsQuery;
+use App\Core\Product\Query\GetProductsKeywords\GetProductsKeywordsQueryHandlerInterface;
 use App\Core\Product\Query\GetProductsListQuery\GetProductsListQuery;
 use App\Core\Product\Query\GetProductsListQuery\GetProductsListQueryHandlerInterface;
 use App\Core\Validation\ApiRequestDtoValidator;
@@ -107,6 +110,80 @@ class ProductController extends AbstractController
         $list = $productsListQueryHandler->handle($query);
 
         $responseDto = ProductListResponseDto::createFromResult($list);
+
+        return $responseFactory->json($responseDto);
+    }
+
+    /**
+     * @Route("/keywords", methods={"GET"}, name="keywords")
+     *
+     * @OA\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Search in title, description, category, tags"
+     * )
+     *
+     * @OA\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Search in title, description, category, tags"
+     * )
+     *
+     * @OA\Parameter(
+     *     name="categoryName",
+     *     in="query",
+     *     description="Search in categoryName"
+     * )
+     *
+     * @OA\Parameter(
+     *     name="categoryId",
+     *     in="query",
+     *     description="Search in categoryId"
+     * )
+     *
+     * @OA\Parameter(
+     *     name="priceFrom",
+     *     in="query",
+     *     description="price start range"
+     * )
+     *
+     * @OA\Parameter(
+     *     name="priceTo",
+     *     in="query",
+     *     description="price end range"
+     * )
+     *
+     * @OA\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="limit the results"
+     * )
+     *
+     * @OA\Parameter(
+     *     name="offset",
+     *     in="query",
+     *     description="start the results from offset"
+     * )
+     *
+     * @OA\Response(
+     *     @Model(type=ProductListResponseDto::class), response="200", description="OK"
+     * )
+     */
+    public function keywords(
+        Request $request,
+        ApiResponseFactory $responseFactory,
+        GetProductsKeywordsQueryHandlerInterface $productsListQueryHandler
+    )
+    {
+        $requestDto = ProductListRequestDto::createFromRequest($request);
+
+        $query = new GetProductsKeywordsQuery();
+
+        $requestDto->populateQuery($query);
+
+        $list = $productsListQueryHandler->handle($query);
+
+        $responseDto = ProductListKeywordsResponseDto::createFromResult($list);
 
         return $responseFactory->json($responseDto);
     }

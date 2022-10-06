@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Store;
+use App\Entity\Terminal;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -28,7 +30,24 @@ class AppFixtures extends Fixture
         $user->setPassword($this->hasher->hashPassword($user, 'admin'));
         $user->setEmail('admin@gmail.com');
 
+        //create store
+        $store = new Store();
+        $store->setName('Main');
+        $manager->persist($store);
+
+        $this->addReference('store', $store);
+
+        //create terminal
+        $terminal = new Terminal();
+        $terminal->setCode('A1');
+        $terminal->setStore($store);
+
+        $manager->persist($terminal);
+
+        //add store
+        $user->addStore($store);
         $manager->persist($user);
+
         $manager->flush();
     }
 }

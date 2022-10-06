@@ -8,7 +8,6 @@ use App\Core\Dto\Common\Validation\ValidationErrorResponseDto;
 use App\Core\Validation\ValidationResult;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -21,18 +20,11 @@ class ApiResponseFactory
      */
     private $serializer;
 
-    /**
-     * @var RequestStack
-     */
-    private $request;
-
     public function __construct(
-        SerializerInterface $serializer,
-        RequestStack $requestStack
+        SerializerInterface $serializer
     )
     {
         $this->serializer = $serializer;
-        $this->request = $requestStack;
     }
 
     public function json($data = null, int $status = 200, array $headers = [], array $context = []): JsonResponse
@@ -67,7 +59,7 @@ class ApiResponseFactory
         return $this->json($data, Response::HTTP_NOT_FOUND);
     }
 
-    public function download($file, $contentType = 'application/octet-stream')
+    public function download($file, $contentType = 'application/octet-stream'): BinaryFileResponse
     {
         $response = new BinaryFileResponse($file);
         $response->headers->set('Content-Type',$contentType);

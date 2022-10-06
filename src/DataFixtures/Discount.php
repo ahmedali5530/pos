@@ -17,6 +17,7 @@ class Discount extends Fixture
             $discount->setRate($type);
             $discount->setRateType(\App\Entity\Discount::RATE_PERCENT);
             $discount->setScope(\App\Entity\Discount::SCOPE_EXACT);
+            $discount->addStore($this->getReference('store'));
             $manager->persist($discount);
         }
 
@@ -25,12 +26,14 @@ class Discount extends Fixture
         $discount->setScope(\App\Entity\Discount::SCOPE_EXACT);
         $discount->setRate(100);
         $discount->setRateType(\App\Entity\Discount::RATE_FIXED);
+        $discount->addStore($this->getReference('store'));
         $manager->persist($discount);
 
         $discount = new \App\Entity\Discount();
         $discount->setName('Open');
         $discount->setScope(\App\Entity\Discount::SCOPE_OPEN);
         $discount->setRateType(\App\Entity\Discount::RATE_FIXED);
+        $discount->addStore($this->getReference('store'));
         $manager->persist($discount);
 
         $manager->flush();

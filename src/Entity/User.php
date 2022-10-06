@@ -19,6 +19,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @Gedmo\Loggable()
  * @UniqueEntity(fields={"username"})
+ * @ORM\Table("user_account")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

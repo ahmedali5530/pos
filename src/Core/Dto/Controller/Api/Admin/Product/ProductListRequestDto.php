@@ -7,6 +7,7 @@ namespace App\Core\Dto\Controller\Api\Admin\Product;
 use App\Core\Dto\Common\Common\LimitTrait;
 use App\Core\Dto\Common\Common\OrderTrait;
 use App\Core\Dto\Common\Common\StoreDtoTrait;
+use App\Core\Product\Query\GetProductsKeywords\GetProductsKeywordsQuery;
 use App\Core\Product\Query\GetProductsListQuery\GetProductsListQuery;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -76,7 +77,11 @@ class ProductListRequestDto
         return $dto;
     }
 
-    public function populateQuery(GetProductsListQuery $query)
+    /**
+     * @param $query GetProductsKeywordsQuery|GetProductsListQuery
+     * @return void
+     */
+    public function populateQuery($query)
     {
         $query->setName($this->name);
         $query->setCategoryId($this->categoryId);
