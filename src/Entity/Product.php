@@ -137,6 +137,21 @@ class Product
      */
     private $terminals;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Tax::class)
+     */
+    private $taxes;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $manageInventory;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ProductInventory::class, mappedBy="product")
+     */
+    private $inventory;
+
     public function __construct()
     {
         $this->variants = new ArrayCollection();
@@ -147,6 +162,8 @@ class Product
         $this->uuid = Uuid::uuid4();
         $this->stores = new ArrayCollection();
         $this->terminals = new ArrayCollection();
+        $this->taxes = new ArrayCollection();
+        $this->inventory = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -474,6 +491,72 @@ class Product
     public function removeTerminal(Terminal $terminal): self
     {
         $this->terminals->removeElement($terminal);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tax[]
+     */
+    public function getTaxes(): Collection
+    {
+        return $this->taxes;
+    }
+
+    public function addTax(Tax $tax): self
+    {
+        if (!$this->taxes->contains($tax)) {
+            $this->taxes[] = $tax;
+        }
+
+        return $this;
+    }
+
+    public function removeTax(Tax $tax): self
+    {
+        $this->taxes->removeElement($tax);
+
+        return $this;
+    }
+
+    public function getManageInventory(): ?bool
+    {
+        return $this->manageInventory;
+    }
+
+    public function setManageInventory(?bool $manageInventory): self
+    {
+        $this->manageInventory = $manageInventory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductInventory[]
+     */
+    public function getInventory(): Collection
+    {
+        return $this->inventory;
+    }
+
+    public function addInventory(ProductInventory $inventory): self
+    {
+        if (!$this->inventory->contains($inventory)) {
+            $this->inventory[] = $inventory;
+            $inventory->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInventory(ProductInventory $inventory): self
+    {
+        if ($this->inventory->removeElement($inventory)) {
+            // set the owning side to null (unless already changed)
+            if ($inventory->getProduct() === $this) {
+                $inventory->setProduct(null);
+            }
+        }
 
         return $this;
     }

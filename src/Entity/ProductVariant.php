@@ -141,7 +141,7 @@ class ProductVariant
 
     public function setPrice(?string $price): self
     {
-        $this->price = $price;
+        $this->price = trim($price) === '' ? null : $price;
 
         return $this;
     }

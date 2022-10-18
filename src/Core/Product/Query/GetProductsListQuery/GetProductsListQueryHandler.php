@@ -52,8 +52,9 @@ class GetProductsListQueryHandler extends EntityRepository implements GetProduct
         }
 
         if($query->getQ() !== null){
-            $qb->andWhere('product.name LIKE :q OR product.barcode LIKE :q OR product.basePrice LIKE :q OR product.cost LIKE :q OR supplier.name LIKE :q OR category.name LIKE :q OR brand.name LIKE :q OR store.name LIKE :q');
+            $qb->andWhere('LOWER(product.name) LIKE :q OR product.barcode LIKE :q OR product.basePrice = :qq OR product.cost = :qq OR LOWER(supplier.name) LIKE :q OR LOWER(category.name) LIKE :q OR LOWER(brand.name) LIKE :q OR LOWER(store.name) LIKE :q');
             $qb->setParameter('q', '%'.$query->getQ().'%');
+            $qb->setParameter('qq', (int)$query->getQ());
         }
 
         if($query->getLimit() !== null){

@@ -28,7 +28,7 @@ class UpdateProductCommand
     private $barcode;
 
     /**
-     * @var float|null
+     * @var string|null
      */
     private $baseQuantity;
 
@@ -38,12 +38,12 @@ class UpdateProductCommand
     private $isAvailable;
 
     /**
-     * @var float|null
+     * @var string|null
      */
     private $basePrice;
 
     /**
-     * @var float|null
+     * @var string|null
      */
     private $quantity;
 
@@ -58,7 +58,7 @@ class UpdateProductCommand
     private $variants;
 
     /**
-     * @var float|null
+     * @var string|null
      */
     private $cost;
 
@@ -91,6 +91,11 @@ class UpdateProductCommand
      * @var int|null
      */
     private $department;
+
+    /**
+     * @var int[]|null
+     */
+    private $taxes;
 
     /**
      * @return string|null
@@ -173,17 +178,17 @@ class UpdateProductCommand
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getBaseQuantity(): ?float
+    public function getBaseQuantity(): ?string
     {
         return $this->baseQuantity;
     }
 
     /**
-     * @param float|null $baseQuantity
+     * @param string|null $baseQuantity
      */
-    public function setBaseQuantity(?float $baseQuantity): void
+    public function setBaseQuantity(?string $baseQuantity): void
     {
         $this->baseQuantity = $baseQuantity;
     }
@@ -205,33 +210,33 @@ class UpdateProductCommand
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getBasePrice(): ?float
+    public function getBasePrice(): ?string
     {
         return $this->basePrice;
     }
 
     /**
-     * @param float|null $basePrice
+     * @param string|null $basePrice
      */
-    public function setBasePrice(?float $basePrice): void
+    public function setBasePrice(?string $basePrice): void
     {
         $this->basePrice = $basePrice;
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getQuantity(): ?float
+    public function getQuantity(): ?string
     {
         return $this->quantity;
     }
 
     /**
-     * @param float|null $quantity
+     * @param string|null $quantity
      */
-    public function setQuantity(?float $quantity): void
+    public function setQuantity(?string $quantity): void
     {
         $this->quantity = $quantity;
     }
@@ -269,17 +274,17 @@ class UpdateProductCommand
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getCost(): ?float
+    public function getCost(): ?string
     {
         return $this->cost;
     }
 
     /**
-     * @param float|null $cost
+     * @param string|null $cost
      */
-    public function setCost(?float $cost): void
+    public function setCost(?string $cost): void
     {
         $this->cost = $cost;
     }
@@ -362,6 +367,22 @@ class UpdateProductCommand
     public function setDepartment(?int $department): void
     {
         $this->department = $department;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getTaxes(): ?array
+    {
+        return $this->taxes;
+    }
+
+    /**
+     * @param int[]|null $taxes
+     */
+    public function setTaxes(?array $taxes): void
+    {
+        $this->taxes = $taxes;
     }
 
 }

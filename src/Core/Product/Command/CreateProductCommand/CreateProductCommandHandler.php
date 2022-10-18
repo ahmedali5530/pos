@@ -11,6 +11,7 @@ use App\Entity\ProductPrice;
 use App\Entity\ProductVariant;
 use App\Entity\Store;
 use App\Entity\Supplier;
+use App\Entity\Tax;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -44,18 +45,6 @@ class CreateProductCommandHandler extends EntityManager implements CreateProduct
                 }
 
                 $prices[] = $price;
-            }
-        }
-
-        $variants = [];
-        if($command->getVariants() !== null){
-            foreach($command->getVariants() as $variantId){
-                $variant = $this->getRepository(ProductVariant::class)->find($variantId);
-                if($variant === null){
-                    return CreateProductCommandResult::createNotFound('Product Variant with ID "'.$variantId.'" not found');
-                }
-
-                $variants[] = $variant;
             }
         }
 
@@ -99,12 +88,30 @@ class CreateProductCommandHandler extends EntityManager implements CreateProduct
             }
         }
 
+        if($command->getTaxes() !== null){
+            foreach($command->getTaxes() as $tax){
+                $t = $this->getRepository(Tax::class)->find($tax);
+                $item->addTax($t);
+            }
+        }
+
         foreach($prices as $price){
             $item->addPrice($price);
         }
 
-        foreach($variants as $variant){
-            $item->addVariant($variant);
+        if($command->getVariants() !== null) {
+            foreach ($command->getVariants() as $variant) {
+                $productVariant = new ProductVariant();
+                $productVariant->setName($item->getName());
+                $productVariant->setBarcode($variant->getBarcode());
+                $productVariant->setPrice($variant->getPrice());
+                $productVariant->setAttributeValue($variant->getAttributeValue());
+                $productVariant->setAttributeName($variant->getAttributeName());
+
+                $this->persist($productVariant);
+
+                $item->addVariant($productVariant);
+            }
         }
 
         $item->setDepartment($this->getRepository(Department::class)->find($command->getDepartment()));

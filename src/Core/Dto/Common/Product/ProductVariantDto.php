@@ -45,7 +45,7 @@ class ProductVariantDto
     private $sku;
 
     /**
-     * @var float|null
+     * @var string|null
      */
     private $price;
 
@@ -92,9 +92,9 @@ class ProductVariantDto
         $dto->barcode = $data['barcode'] ?? null;
         $dto->sku = $data['sku'] ?? null;
         $dto->price = $data['price'] ?? null;
-        foreach($data['prices'] ?? null as $price){
-            $dto->prices[] = ProductPriceDto::createFromArray($price);
-        }
+//        foreach($data['prices'] ?? null as $price){
+//            $dto->prices[] = ProductPriceDto::createFromArray($price);
+//        }
 
         return $dto;
     }
@@ -165,17 +165,17 @@ class ProductVariantDto
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getPrice(): ?float
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
     /**
-     * @param float|null $price
+     * @param string|null $price
      */
-    public function setPrice(?float $price): void
+    public function setPrice(?string $price): void
     {
         $this->price = $price;
     }

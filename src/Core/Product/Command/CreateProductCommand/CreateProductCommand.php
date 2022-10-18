@@ -3,6 +3,7 @@
 namespace App\Core\Product\Command\CreateProductCommand;
 
 use App\Core\Dto\Common\Common\StoresRequestDtoTrait;
+use App\Core\Dto\Common\Product\ProductVariantDto;
 
 class CreateProductCommand
 {
@@ -24,7 +25,7 @@ class CreateProductCommand
     private $barcode;
 
     /**
-     * @var float|null
+     * @var string|null
      */
     private $baseQuantity;
 
@@ -34,12 +35,12 @@ class CreateProductCommand
     private $isAvailable;
 
     /**
-     * @var float|null
+     * @var string|null
      */
     private $basePrice;
 
     /**
-     * @var float|null
+     * @var string|null
      */
     private $quantity;
 
@@ -54,7 +55,7 @@ class CreateProductCommand
     private $variants;
 
     /**
-     * @var float|null
+     * @var string|null
      */
     private $cost;
 
@@ -87,6 +88,11 @@ class CreateProductCommand
      * @var int|null
      */
     private $department;
+
+    /**
+     * @var int[]|null
+     */
+    private $taxes;
 
     public function getName()
     {
@@ -182,7 +188,7 @@ class CreateProductCommand
     }
 
     /**
-     * @return int[]|null
+     * @return ProductVariantDto[]|null
      */
     public function getVariants(): ?array
     {
@@ -190,7 +196,7 @@ class CreateProductCommand
     }
 
     /**
-     * @param int[]|null $variants
+     * @param ProductVariantDto[]|null $variants
      */
     public function setVariants(?array $variants): void
     {
@@ -214,17 +220,17 @@ class CreateProductCommand
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getCost(): ?float
+    public function getCost(): ?string
     {
         return $this->cost;
     }
 
     /**
-     * @param float|null $cost
+     * @param string|null $cost
      */
-    public function setCost(?float $cost): void
+    public function setCost(?string $cost): void
     {
         $this->cost = $cost;
     }
@@ -323,6 +329,22 @@ class CreateProductCommand
     public function setDepartment(?int $department): void
     {
         $this->department = $department;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getTaxes(): ?array
+    {
+        return $this->taxes;
+    }
+
+    /**
+     * @param int[]|null $taxes
+     */
+    public function setTaxes(?array $taxes): void
+    {
+        $this->taxes = $taxes;
     }
 
 }

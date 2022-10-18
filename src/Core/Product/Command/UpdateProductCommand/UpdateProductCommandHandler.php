@@ -11,6 +11,7 @@ use App\Entity\Product;
 use App\Entity\ProductPrice;
 use App\Entity\ProductVariant;
 use App\Entity\Supplier;
+use App\Entity\Tax;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -47,18 +48,6 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
             }
         }
 
-        $variants = [];
-        if($command->getVariants() !== null){
-            foreach($command->getVariants() as $variantId){
-                $variant = $this->getRepository(ProductVariant::class)->find($variantId->getId());
-                if($variant === null){
-                    return UpdateProductCommandResult::createNotFound('Product Variant with ID "'.$variantId.'" not found');
-                }
-
-                $variants[] = $variant;
-            }
-        }
-
         /** @var Product $item */
         $item = $this->getRepository()->find($command->getId());
 
@@ -74,27 +63,14 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
         if ($command->getBarcode() !== null) {
             $item->setBarcode($command->getBarcode());
         }
-        if ($command->getBaseQuantity() !== null) {
-            $item->setBaseQuantity($command->getBaseQuantity());
-        }
-        if ($command->getIsAvailable() !== null) {
-            $item->setIsAvailable($command->getIsAvailable());
-        }
-        if ($command->getBasePrice() !== null) {
-            $item->setBasePrice($command->getBasePrice());
-        }
-        if ($command->getQuantity() !== null) {
-            $item->setQuantity($command->getQuantity());
-        }
-        if($command->getSaleUnit() !== null) {
-            $item->setSaleUnit($command->getSaleUnit());
-        }
-        if($command->getPurchaseUnit() !== null) {
-            $item->setPurchaseUnit($command->getPurchaseUnit());
-        }
-        if($command->getCost() !== null){
-            $item->setCost($command->getCost());
-        }
+
+        $item->setBaseQuantity($command->getBaseQuantity());
+        $item->setIsAvailable($command->getIsAvailable());
+        $item->setBasePrice($command->getBasePrice());
+        $item->setQuantity($command->getQuantity());
+        $item->setSaleUnit($command->getSaleUnit());
+        $item->setPurchaseUnit($command->getPurchaseUnit());
+        $item->setCost($command->getCost());
 
         $item->setDepartment($this->getRepository(Department::class)->find($command->getDepartment()));
 
@@ -130,6 +106,62 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
                 $s = $this->getRepository(Supplier::class)->find($supplier);
                 $item->addSupplier($s);
             }
+        }
+
+        if($command->getTaxes() !== null){
+            foreach($item->getTaxes() as $tax){
+                $item->removeTax($tax);
+            }
+
+            foreach($command->getTaxes() as $tax){
+                $t = $this->getRepository(Tax::class)->find($tax);
+                $item->addTax($t);
+            }
+        }
+
+        $prevVariants = [];
+        foreach($item->getVariants() as $variant){
+            $prevVariants[] = $variant->getId();
+        }
+
+        $updatedVariants = [];
+        if($command->getVariants() !== null){
+            foreach($command->getVariants() as $variant){
+                if($variant->getId() !== null){
+                    $updatedVariants[] = $variant->getId();
+
+                    $v = $this->getRepository(ProductVariant::class)->find($variant->getId());
+
+                    $v->setName($item->getName());
+                    $v->setAttributeValue($variant->getAttributeValue());
+                    $v->setPrice($variant->getPrice());
+                    $v->setBarcode($variant->getBarcode());
+                    $v->setProduct($item);
+
+                    $this->persist($v);
+                }else {
+                    $v = new ProductVariant();
+                    $v->setName($item->getName());
+                    $v->setAttributeValue($variant->getAttributeValue());
+                    $v->setPrice($variant->getPrice());
+                    $v->setBarcode($variant->getBarcode());
+                    $v->setProduct($item);
+
+                    $this->persist($v);
+
+                    $item->addVariant($v);
+                }
+            }
+        }
+
+        //remove non-persisted items
+        $nonPersistedVariants = array_diff($prevVariants, $updatedVariants);
+        if(count($nonPersistedVariants) > 0){
+            $variants = $this->getRepository(ProductVariant::class)->findBy([
+                'id' => $nonPersistedVariants
+            ]);
+
+            $this->removeAll($variants);
         }
 
         //validate item before creation

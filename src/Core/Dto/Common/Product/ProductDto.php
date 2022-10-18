@@ -14,6 +14,7 @@ use App\Core\Dto\Common\Common\UuidDtoTrait;
 use App\Core\Dto\Common\Department\DepartmentDto;
 use App\Core\Dto\Common\Store\StoreShortDto;
 use App\Core\Dto\Common\Supplier\SupplierDto;
+use App\Core\Dto\Common\Tax\TaxDto;
 use App\Core\Dto\Common\Terminal\TerminalShortDto;
 use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\Product;
@@ -23,7 +24,6 @@ class ProductDto
     use ActiveDtoTrait;
     use TimestampsDtoTrait;
     use UuidDtoTrait;
-    use StoresDtoTrait;
 
     /**
      * @var int|null
@@ -121,6 +121,11 @@ class ProductDto
      */
     private $stores = [];
 
+    /**
+     * @var TaxDto[]
+     */
+    private $taxes = [];
+
 
     public static function createFromProduct(?Product $product): ?self
     {
@@ -169,15 +174,15 @@ class ProductDto
             $dto->stores[] = StoreShortDto::createFromStore($store);
         }
 
+        foreach($product->getTaxes() as $tax){
+            $dto->taxes[] = TaxDto::createFromTax($tax);
+        }
+
         $dto->uuid = $product->getUuid();
         $dto->createdAt = DateTimeDto::createFromDateTime($product->getCreatedAt());
         $dto->cost = $product->getCost();
 
-
-
         $dto->department = DepartmentDto::createFromDepartment($product->getDepartment());
-
-
 
         return $dto;
     }
@@ -502,5 +507,37 @@ class ProductDto
     public function setTerminals(array $terminals): void
     {
         $this->terminals = $terminals;
+    }
+
+    /**
+     * @return StoreShortDto[]
+     */
+    public function getStores(): array
+    {
+        return $this->stores;
+    }
+
+    /**
+     * @param StoreShortDto[] $stores
+     */
+    public function setStores(array $stores): void
+    {
+        $this->stores = $stores;
+    }
+
+    /**
+     * @return TaxDto[]
+     */
+    public function getTaxes(): array
+    {
+        return $this->taxes;
+    }
+
+    /**
+     * @param TaxDto[] $taxes
+     */
+    public function setTaxes(array $taxes): void
+    {
+        $this->taxes = $taxes;
     }
 }

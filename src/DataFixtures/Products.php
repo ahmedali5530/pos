@@ -3,11 +3,14 @@
 namespace App\DataFixtures;
 
 use App\Core\Dto\Common\Department\DepartmentDto;
+use App\Entity\Brand;
 use App\Entity\Category;
 use App\Entity\Department;
 use App\Entity\Product;
 use App\Entity\ProductPrice;
 use App\Entity\ProductVariant;
+use App\Entity\Store;
+use App\Entity\Supplier;
 use App\Factory\Faker\FakerFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -27,10 +30,25 @@ class Products extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        /** @var Store $store */
+        $store = $this->getReference('store');
+
         $category = new Category();
         $category->setName('Main');
         $category->setType(Category::TYPE_PRODUCT);
+        $category->addStore($store);
         $manager->persist($category);
+
+        $supplier = new Supplier();
+        $supplier->setName($this->faker->name());
+        $supplier->setEmail($this->faker->email);
+        $supplier->addStore($store);
+        $manager->persist($supplier);
+
+        $brand = new Brand();
+        $brand->setName($this->faker->company);
+        $brand->addStore($store);
+        $manager->persist($brand);
 
         //create department
         $department = new Department();
@@ -49,7 +67,7 @@ class Products extends Fixture
             $product->setPurchaseUnit('G');
             $product->setSaleUnit('G');
             $product->addCategory($category);
-            $product->addStore($this->getReference('store'));
+            $product->addStore($store);
             $product->setDepartment($department);
 
             $manager->persist($product);

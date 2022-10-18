@@ -32,7 +32,7 @@ class CreateProductRequestDto
     private $barcode;
 
     /**
-     * @var float|null
+     * @var string|null
      * @Assert\NotBlank(normalizer="trim")
      */
     private $baseQuantity;
@@ -43,13 +43,13 @@ class CreateProductRequestDto
     private $isAvailable;
 
     /**
-     * @var float|null
+     * @var string|null
      * @Assert\NotBlank(normalizer="trim")
      */
     private $basePrice;
 
     /**
-     * @var float|null
+     * @var string|null
      */
     private $quantity;
 
@@ -103,7 +103,7 @@ class CreateProductRequestDto
     private $brands;
 
     /**
-     * @var float|null
+     * @var string|null
      * @Assert\NotBlank(normalizer="trim")
      */
     private $cost;
@@ -115,6 +115,14 @@ class CreateProductRequestDto
      * @ConstraintValidEntity(class="App\Entity\Department", entityName="Department")
      */
     private $department;
+
+    /**
+     * @var int[]|null
+     * @Assert\All(
+     *     @ConstraintValidEntity(class="App\Entity\Tax", entityName="Tax")
+     * )
+     */
+    private $taxes;
 
     public static function createFromRequest(Request $request)
     {
@@ -145,6 +153,7 @@ class CreateProductRequestDto
         $dto->suppliers = $data['suppliers'] ?? null;
         $dto->stores = $data['stores'] ?? null;
         $dto->department = $data['department'] ?? null;
+        $dto->taxes = $data['taxes'] ?? null;
 
         return $dto;
     }
@@ -168,6 +177,7 @@ class CreateProductRequestDto
         $command->setSuppliers($this->suppliers);
         $command->setStores($this->getStores());
         $command->setDepartment($this->department);
+        $command->setTaxes($this->taxes);
     }
 
     /**
@@ -219,17 +229,17 @@ class CreateProductRequestDto
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getBaseQuantity(): ?float
+    public function getBaseQuantity(): ?string
     {
         return $this->baseQuantity;
     }
 
     /**
-     * @param float|null $baseQuantity
+     * @param string|null $baseQuantity
      */
-    public function setBaseQuantity(?float $baseQuantity): void
+    public function setBaseQuantity(?string $baseQuantity): void
     {
         $this->baseQuantity = $baseQuantity;
     }
@@ -251,49 +261,49 @@ class CreateProductRequestDto
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getBasePrice(): ?float
+    public function getBasePrice(): ?string
     {
         return $this->basePrice;
     }
 
     /**
-     * @param float|null $basePrice
+     * @param string|null $basePrice
      */
-    public function setBasePrice(?float $basePrice): void
+    public function setBasePrice(?string $basePrice): void
     {
         $this->basePrice = $basePrice;
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getQuantity(): ?float
+    public function getQuantity(): ?string
     {
         return $this->quantity;
     }
 
     /**
-     * @param float|null $quantity
+     * @param string|null $quantity
      */
-    public function setQuantity(?float $quantity): void
+    public function setQuantity(?string $quantity): void
     {
         $this->quantity = $quantity;
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getCost(): ?float
+    public function getCost(): ?string
     {
         return $this->cost;
     }
 
     /**
-     * @param float|null $cost
+     * @param string|null $cost
      */
-    public function setCost(?float $cost): void
+    public function setCost(?string $cost): void
     {
         $this->cost = $cost;
     }
@@ -424,6 +434,22 @@ class CreateProductRequestDto
     public function setDepartment(?int $department): void
     {
         $this->department = $department;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getTaxes(): ?array
+    {
+        return $this->taxes;
+    }
+
+    /**
+     * @param int[]|null $taxes
+     */
+    public function setTaxes(?array $taxes): void
+    {
+        $this->taxes = $taxes;
     }
 }
 
