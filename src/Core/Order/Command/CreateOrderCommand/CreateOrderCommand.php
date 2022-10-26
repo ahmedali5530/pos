@@ -64,6 +64,11 @@ class CreateOrderCommand
     private $tax;
 
     /**
+     * @var float|null
+     */
+    private $taxAmount;
+
+    /**
      * @var OrderPaymentDto[]
      */
     private $payments = [];
@@ -326,5 +331,21 @@ class CreateOrderCommand
     public function setTerminal(?int $terminal): void
     {
         $this->terminal = $terminal;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getTaxAmount(): ?float
+    {
+        return $this->taxAmount;
+    }
+
+    /**
+     * @param float|null $taxAmount
+     */
+    public function setTaxAmount(?float $taxAmount): void
+    {
+        $this->taxAmount = $taxAmount;
     }
 }

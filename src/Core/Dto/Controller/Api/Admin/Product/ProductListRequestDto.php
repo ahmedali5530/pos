@@ -25,7 +25,10 @@ class ProductListRequestDto
         'categories' => 'category.name',
         'suppliers' => 'supplier.name',
         'brands' => 'brand.name',
-        'barcode' => 'product.barcode'
+        'barcode' => 'product.barcode',
+        'taxes' => 'tax.name',
+        'department' => 'department.name',
+        'store' => 'store.name'
     ];
 
     /**

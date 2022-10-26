@@ -21,7 +21,8 @@ class OrderRequestListDto
         'createdAt' => 'entity.createdAt',
         'customer' => 'customer.name',
         'tax' => 'tax.amount',
-        'discount' => 'discount.amount'
+        'discount' => 'discount.amount',
+        'status' => 'entity.status'
     ];
 
     /**

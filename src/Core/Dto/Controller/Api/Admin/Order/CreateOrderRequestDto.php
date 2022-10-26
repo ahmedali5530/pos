@@ -83,6 +83,11 @@ class CreateOrderRequestDto
     private $tax;
 
     /**
+     * @var float|null
+     */
+    private $taxAmount;
+
+    /**
      * @var OrderPaymentDto[]
      * @Assert\Valid()
      */
@@ -132,17 +137,21 @@ class CreateOrderRequestDto
 
         $data = json_decode($request->getContent(), true);
 
-        $dto->customerId = $data['customerId'] ?? null;
         $dto->isSuspended = $data['isSuspended'] ?? null;
         $dto->isDeleted = $data['isDeleted'] ?? null;
         $dto->isReturned = $data['isReturned'] ?? null;
         $dto->isDispatched = $data['isDispatched'] ?? null;
+
+        $dto->customerId = $data['customerId'] ?? null;
         $dto->userId = $data['userId'] ?? null;
+
         foreach($data['items'] ?? [] as $item){
             $dto->items[] = CartProductDto::createFromArray($item);
         }
+
         $dto->discount = DiscountDto::createFromArray($data['discount'] ?? null);
         $dto->tax = TaxDto::createFromArray($data['tax'] ?? null);
+        $dto->taxAmount = $data['taxAmount'] ?? 0;
 
         foreach($data['payments'] ?? [] as $item){
             $dto->payments[] = OrderPaymentDto::createFromArray($item);
@@ -180,6 +189,7 @@ class CreateOrderRequestDto
         $command->setDiscountRateType($this->discountRateType);
         $command->setStore($this->getStore());
         $command->setTerminal($this->terminal);
+        $command->setTaxAmount($this->taxAmount);
     }
 
     /**
@@ -436,5 +446,21 @@ class CreateOrderRequestDto
     public function setTerminal(?int $terminal): void
     {
         $this->terminal = $terminal;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getTaxAmount(): ?float
+    {
+        return $this->taxAmount;
+    }
+
+    /**
+     * @param float|null $taxAmount
+     */
+    public function setTaxAmount(?float $taxAmount): void
+    {
+        $this->taxAmount = $taxAmount;
     }
 }

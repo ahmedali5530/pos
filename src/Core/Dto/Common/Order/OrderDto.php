@@ -70,6 +70,11 @@ class OrderDto
     private $tax;
 
     /**
+     * @var float
+     */
+    private $itemTaxes = 0;
+
+    /**
      * @var OrderPaymentDto[]
      */
     private $payments = [];
@@ -119,16 +124,25 @@ class OrderDto
         $dto->isReturned = $order->getIsReturned();
         $dto->isDispatched = $order->getIsDispatched();
         $dto->user = UserDto::createFromUser($order->getUser());
-        foreach($order->getItems() as $item){
-            $dto->items[] = OrderProductDto::createFromOrderProduct($item);
-        }
+
         $dto->discount = OrderDiscountDto::createFromOrderDiscount($order->getDiscount());
         $dto->tax = OrderTaxDto::createFromOrderTax($order->getTax());
+
+        foreach($order->getItems() as $item){
+            $orderProductDto = OrderProductDto::createFromOrderProduct($item);
+
+            $dto->items[] = $orderProductDto;
+
+            $dto->itemTaxes += $orderProductDto->getTaxesTotal();
+        }
+
         foreach($order->getPayments() as $payment){
             $dto->payments[] = OrderPaymentDto::createFromOrderPayment($payment);
         }
+
         $dto->createdAt = $order->getCreatedAt();
         $dto->status = $order->getStatus();
+
         $dto->returnedFrom = OrderDto::createFromOrder($order->getReturnedFrom());
         $dto->notes = $order->getDescription();
 
@@ -437,5 +451,21 @@ class OrderDto
     public function setTerminal(?TerminalShortDto $terminal): void
     {
         $this->terminal = $terminal;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getItemTaxes()
+    {
+        return $this->itemTaxes;
+    }
+
+    /**
+     * @param float|int $itemTaxes
+     */
+    public function setItemTaxes($itemTaxes): void
+    {
+        $this->itemTaxes = $itemTaxes;
     }
 }

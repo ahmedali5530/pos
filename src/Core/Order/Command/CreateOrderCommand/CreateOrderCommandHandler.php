@@ -80,8 +80,17 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
             $orderProduct->setDiscount($itemDto->getDiscount());
             $orderProduct->setPrice($itemDto->getPrice());
             $orderProduct->setQuantity($itemDto->getQuantity());
+
             if($itemDto->getVariant() !== null) {
                 $orderProduct->setVariant($this->getRepository(ProductVariant::class)->find($itemDto->getVariant()->getId()));
+            }
+
+            if($itemDto->getTaxes()){
+                foreach($itemDto->getTaxes() as $tax){
+                    $t = $this->getRepository(Tax::class)->find($tax->getId());
+
+                    $orderProduct->addTax($t);
+                }
             }
 
             $item->addItem($orderProduct);
@@ -127,7 +136,7 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
             $orderTax->setType($tax);
             $orderTax->setOrder($item);
             $orderTax->setRate($command->getTax()->getRate());
-            $orderTax->setAmount($orderTotal * $tax->getRate() / 100);
+            $orderTax->setAmount($command->getTaxAmount());
             $this->persist($orderTax);
 
             $item->setTax($orderTax);

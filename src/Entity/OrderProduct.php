@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\OrderProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -77,6 +79,16 @@ class OrderProduct
      * @Gedmo\Versioned()
      */
     private $discount;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Tax::class)
+     */
+    private $taxes;
+
+    public function __construct()
+    {
+        $this->taxes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -187,6 +199,30 @@ class OrderProduct
     public function setDiscount(?string $discount): self
     {
         $this->discount = $discount;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tax[]
+     */
+    public function getTaxes(): Collection
+    {
+        return $this->taxes;
+    }
+
+    public function addTax(Tax $tax): self
+    {
+        if (!$this->taxes->contains($tax)) {
+            $this->taxes[] = $tax;
+        }
+
+        return $this;
+    }
+
+    public function removeTax(Tax $tax): self
+    {
+        $this->taxes->removeElement($tax);
 
         return $this;
     }

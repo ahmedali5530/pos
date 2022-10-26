@@ -5,6 +5,7 @@ namespace App\Core\Dto\Common\Product;
 
 
 use App\Core\Dto\Common\Discount\DiscountDto;
+use App\Core\Dto\Common\Tax\TaxDto;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CartProductDto
@@ -39,6 +40,11 @@ class CartProductDto
      */
     private $product;
 
+    /**
+     * @var TaxDto[]|null
+     */
+    private $taxes;
+
     public static function createFromArray(array $data): self
     {
         $dto = new self();
@@ -47,6 +53,13 @@ class CartProductDto
         $dto->quantity = $data['quantity'] ?? null;
         $dto->variant = ProductVariantDto::createFromArray($data['variant'] ?? null);
         $dto->product = ProductDto::createFromArray($data['item'] ?? null);
+
+        if(isset($data['taxes'])) {
+            $dto->taxes = [];
+            foreach($data['taxes'] as $tax){
+                $dto->taxes[] = TaxDto::createFromArray($tax);
+            }
+        }
 
         return $dto;
     }
@@ -129,5 +142,21 @@ class CartProductDto
     public function setProduct(ProductDto $product): void
     {
         $this->product = $product;
+    }
+
+    /**
+     * @return TaxDto[]|null
+     */
+    public function getTaxes(): ?array
+    {
+        return $this->taxes;
+    }
+
+    /**
+     * @param TaxDto[]|null $taxes
+     */
+    public function setTaxes(?array $taxes): void
+    {
+        $this->taxes = $taxes;
     }
 }

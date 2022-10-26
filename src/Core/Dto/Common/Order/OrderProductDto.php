@@ -6,6 +6,7 @@ namespace App\Core\Dto\Common\Order;
 
 use App\Core\Dto\Common\Product\ProductDto;
 use App\Core\Dto\Common\Product\ProductVariantDto;
+use App\Core\Dto\Common\Tax\TaxDto;
 use App\Core\Validation\Custom\ConstraintValidEntity;
 use App\Entity\OrderProduct;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -56,6 +57,11 @@ class OrderProductDto
      */
     private $isReturned;
 
+    /**
+     * @var TaxDto[]
+     */
+    private $taxes = [];
+
     public static function createFromOrderProduct(?OrderProduct $orderProduct): ?self
     {
         if($orderProduct === null){
@@ -71,6 +77,10 @@ class OrderProductDto
         $dto->isSuspended = $orderProduct->getIsSuspended();
         $dto->isDeleted = $orderProduct->getIsDeleted();
         $dto->isReturned = $orderProduct->getIsReturned();
+
+        foreach($orderProduct->getTaxes() as $tax){
+            $dto->taxes[] = TaxDto::createFromTax($tax);
+        }
 
         return $dto;
     }
@@ -220,5 +230,31 @@ class OrderProductDto
     public function setIsReturned(?bool $isReturned): void
     {
         $this->isReturned = $isReturned;
+    }
+
+    /**
+     * @return TaxDto[]
+     */
+    public function getTaxes(): array
+    {
+        return $this->taxes;
+    }
+
+    /**
+     * @param TaxDto[] $taxes
+     */
+    public function setTaxes(array $taxes): void
+    {
+        $this->taxes = $taxes;
+    }
+
+    public function getTaxesTotal(): float
+    {
+        $total = 0;
+        foreach($this->taxes as $tax){
+            $total += ($tax->getRate() * ($this->price * $this->quantity) / 100);
+        }
+
+        return $total;
     }
 }
