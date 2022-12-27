@@ -45,6 +45,11 @@ class SupplierDto
     private $media;
 
     /**
+     * @var float|null
+     */
+    private $openingBalance;
+
+    /**
      * @return string|null
      */
     public function getPhone(): ?string
@@ -140,6 +145,23 @@ class SupplierDto
         $this->media = $media;
     }
 
+    /**
+     * @return float|null
+     */
+    public function getOpeningBalance(): ?float
+    {
+        return $this->openingBalance;
+    }
+
+    /**
+     * @param float|null $openingBalance
+     */
+    public function setOpeningBalance(?float $openingBalance): void
+    {
+        $this->openingBalance = $openingBalance;
+    }
+
+
     public static function createFromSupplier (?Supplier $supplier): ?self
     {
         if($supplier === null){
@@ -156,6 +178,7 @@ class SupplierDto
         $dto->fax = $supplier->getFax();
         $dto->address = $supplier->getAddress();
         $dto->media = MediaDto::createFromMedia($supplier->getMedia());
+        $dto->openingBalance = $supplier->getOpeningBalance();
 
         $dto->setStores($supplier->getStores());
 

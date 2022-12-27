@@ -161,7 +161,11 @@ class UpdateProductCommandHandler extends EntityManager implements UpdateProduct
                 'id' => $nonPersistedVariants
             ]);
 
-            $this->removeAll($variants);
+            try {
+                $this->removeAll($variants);
+            }catch (\Exception $exception){
+                return UpdateProductCommandResult::createFromValidationErrorMessage('Error while removing variants!');
+            }
         }
 
         //validate item before creation

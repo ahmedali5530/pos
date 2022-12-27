@@ -2,28 +2,20 @@
 
 namespace App\Core\Dto\Common\Terminal;
 
-use App\Core\Dto\Common\Common\ActiveDtoTrait;
 use App\Core\Dto\Common\Common\DateTimeDto;
-use App\Core\Dto\Common\Common\DescriptionDtoTrait;
-use App\Core\Dto\Common\Common\IdDtoTrait;
-use App\Core\Dto\Common\Common\TimestampsDtoTrait;
-use App\Core\Dto\Common\Common\UuidDtoTrait;
-use App\Core\Dto\Common\Product\ProductDto;
-use App\Core\Dto\Common\Product\ProductShortDto;
-use App\Core\Dto\Common\Store\StoreDto;
 use App\Entity\Terminal;
+use App\Core\Dto\Common\Store\StoreShortDto;
+use App\Core\Dto\Common\Product\ProductShortDto;
 
 class TerminalShortDto extends TerminalDto
 {
-
-
     public static function createFromTerminal(?Terminal $terminal): ?self
     {
-        if($terminal === null){
+        if ($terminal === null) {
             return null;
         }
 
-        $dto = new self();
+        $dto = new static();
 
         $dto->setId($terminal->getId());
         $dto->setCode($terminal->getCode());

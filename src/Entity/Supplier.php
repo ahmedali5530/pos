@@ -67,6 +67,11 @@ class Supplier
      */
     private $stores;
 
+    /**
+     * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     */
+    private $openingBalance;
+
     public function __construct()
     {
         $this->uuid = Uuid::uuid4();
@@ -182,6 +187,18 @@ class Supplier
     public function removeStore(Store $store): self
     {
         $this->stores->removeElement($store);
+
+        return $this;
+    }
+
+    public function getOpeningBalance(): ?string
+    {
+        return $this->openingBalance;
+    }
+
+    public function setOpeningBalance(?string $openingBalance): self
+    {
+        $this->openingBalance = $openingBalance;
 
         return $this;
     }

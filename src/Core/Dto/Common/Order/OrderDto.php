@@ -109,6 +109,11 @@ class OrderDto
      */
     private $terminal;
 
+    /**
+     * @var float|null
+     */
+    private $adjustment;
+
     public static function createFromOrder(?Order $order): ?self
     {
         if($order === null){
@@ -148,6 +153,8 @@ class OrderDto
 
         $dto->store = StoreDto::createFromStore($order->getStore());
         $dto->terminal = TerminalShortDto::createFromTerminal($order->getTerminal());
+
+        $dto->adjustment = $order->getAdjustment();
 
         return $dto;
     }
@@ -467,5 +474,21 @@ class OrderDto
     public function setItemTaxes($itemTaxes): void
     {
         $this->itemTaxes = $itemTaxes;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getAdjustment(): ?float
+    {
+        return $this->adjustment;
+    }
+
+    /**
+     * @param float|null $adjustment
+     */
+    public function setAdjustment(?float $adjustment): void
+    {
+        $this->adjustment = $adjustment;
     }
 }

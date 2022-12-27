@@ -10,7 +10,6 @@ use App\Core\Dto\Common\Common\KeywordDto;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
 use App\Core\Dto\Common\Common\UuidDtoTrait;
 use App\Core\Dto\Common\Product\ProductShortDto;
-use App\Core\Dto\Common\Store\StoreDto;
 use App\Core\Dto\Common\Store\StoreShortDto;
 use App\Entity\Terminal;
 

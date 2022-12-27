@@ -8,7 +8,6 @@ use App\Core\Dto\Common\Brand\BrandDto;
 use App\Core\Dto\Common\Category\CategoryDto;
 use App\Core\Dto\Common\Common\ActiveDtoTrait;
 use App\Core\Dto\Common\Common\DateTimeDto;
-use App\Core\Dto\Common\Common\StoresDtoTrait;
 use App\Core\Dto\Common\Common\TimestampsDtoTrait;
 use App\Core\Dto\Common\Common\UuidDtoTrait;
 use App\Core\Dto\Common\Department\DepartmentDto;

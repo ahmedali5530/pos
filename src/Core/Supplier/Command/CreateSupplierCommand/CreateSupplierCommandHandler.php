@@ -28,6 +28,7 @@ class CreateSupplierCommandHandler extends EntityManager implements CreateSuppli
         $item->setWhatsApp($command->getWhatsApp());
         $item->setFax($command->getFax());
         $item->setAddress($command->getAddress());
+        $item->setOpeningBalance($command->getOpeningBalance());
 
         if($command->getStores() !== null){
             foreach($command->getStores() as $store){

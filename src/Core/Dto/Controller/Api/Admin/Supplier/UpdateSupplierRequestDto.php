@@ -42,6 +42,11 @@ class UpdateSupplierRequestDto
      */
     private $address = null;
 
+    /**
+     * @var string|null
+     */
+    private $openingBalance;
+
     public function setId(?int $id)
     {
         $this->id = $id;
@@ -119,6 +124,22 @@ class UpdateSupplierRequestDto
         return $this->address;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getOpeningBalance(): ?string
+    {
+        return $this->openingBalance;
+    }
+
+    /**
+     * @param string|null $openingBalance
+     */
+    public function setOpeningBalance(?string $openingBalance): void
+    {
+        $this->openingBalance = $openingBalance;
+    }
+
     public static function createFromRequest(Request $request) : self
     {
         $dto = new self();
@@ -131,6 +152,7 @@ class UpdateSupplierRequestDto
         $dto->whatsApp = $data['whatsApp'] ?? null;
         $dto->fax = $data['fax'] ?? null;
         $dto->address = $data['address'] ?? null;
+        $dto->openingBalance = $data['openingBalance'] ?? null;
 
 
         return $dto;
@@ -145,5 +167,6 @@ class UpdateSupplierRequestDto
         $command->setWhatsApp($this->whatsApp);
         $command->setFax($this->fax);
         $command->setAddress($this->address);
+        $command->setOpeningBalance($this->openingBalance);
     }
 }

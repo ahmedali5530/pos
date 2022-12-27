@@ -84,8 +84,7 @@ class SecurityController extends AbstractController
      *
      * @OA\Response(
      *     response="422",
-     *     description="Violations",
-     *     @Model(type=ValidationDto::class)
+     *     description="Violations"
      * )
      *
      * @OA\Response(

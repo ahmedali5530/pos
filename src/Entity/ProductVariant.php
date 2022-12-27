@@ -42,7 +42,6 @@ class ProductVariant
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Gedmo\Versioned()
      */
     private $attributeName;
 
@@ -60,7 +59,6 @@ class ProductVariant
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Gedmo\Versioned()
      */
     private $sku;
 

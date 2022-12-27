@@ -30,7 +30,7 @@ class UpdateUserRequestDto
     private $displayName = null;
 
     /**
-     * @var null|array
+     * @var null|string[]
      */
     private $roles = null;
 

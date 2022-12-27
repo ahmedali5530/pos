@@ -131,6 +131,11 @@ class CreateOrderRequestDto
      */
     private $terminal;
 
+    /**
+     * @var float|null
+     */
+    private $adjustment;
+
     public static function createFromRequest(Request $request)
     {
         $dto = new self();
@@ -167,6 +172,7 @@ class CreateOrderRequestDto
         $dto->terminal = $data['terminal'] ?? null;
 
         $dto->finalTotal = $data['total'] ?? 0;
+        $dto->adjustment = $data['adjustment'] ?? 0;
 
         return $dto;
     }
@@ -190,6 +196,7 @@ class CreateOrderRequestDto
         $command->setStore($this->getStore());
         $command->setTerminal($this->terminal);
         $command->setTaxAmount($this->taxAmount);
+        $command->setAdjustment($this->adjustment);
     }
 
     /**
@@ -462,5 +469,21 @@ class CreateOrderRequestDto
     public function setTaxAmount(?float $taxAmount): void
     {
         $this->taxAmount = $taxAmount;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getAdjustment(): ?float
+    {
+        return $this->adjustment;
+    }
+
+    /**
+     * @param float|null $adjustment
+     */
+    public function setAdjustment(?float $adjustment): void
+    {
+        $this->adjustment = $adjustment;
     }
 }

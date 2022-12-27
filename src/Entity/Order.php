@@ -124,6 +124,11 @@ class Order
      */
     private $terminal;
 
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $adjustment;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -380,6 +385,18 @@ class Order
     public function setTerminal(?Terminal $terminal): self
     {
         $this->terminal = $terminal;
+
+        return $this;
+    }
+
+    public function getAdjustment(): ?string
+    {
+        return $this->adjustment;
+    }
+
+    public function setAdjustment(?string $adjustment): self
+    {
+        $this->adjustment = $adjustment;
 
         return $this;
     }

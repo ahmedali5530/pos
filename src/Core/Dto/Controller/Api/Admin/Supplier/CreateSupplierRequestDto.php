@@ -43,6 +43,11 @@ class CreateSupplierRequestDto
      */
     private $address = null;
 
+    /**
+     * @var string|null
+     */
+    private $openingBalance;
+
     public function setName(?string $name)
     {
         $this->name = $name;
@@ -109,6 +114,23 @@ class CreateSupplierRequestDto
         return $this->address;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getOpeningBalance(): ?string
+    {
+        return $this->openingBalance;
+    }
+
+    /**
+     * @param string|null $openingBalance
+     */
+    public function setOpeningBalance(?string $openingBalance): void
+    {
+        $this->openingBalance = $openingBalance;
+    }
+
+
     public static function createFromRequest(Request $request) : self
     {
         $dto = new self();
@@ -121,6 +143,7 @@ class CreateSupplierRequestDto
         $dto->fax = $data['fax'] ?? null;
         $dto->address = $data['address'] ?? null;
         $dto->stores = $data['stores'] ?? null;
+        $dto->openingBalance = $data['openingBalance'] ?? null;
 
 
         return $dto;
@@ -135,5 +158,6 @@ class CreateSupplierRequestDto
         $command->setFax($this->fax);
         $command->setAddress($this->address);
         $command->setStores($this->stores);
+        $command->setOpeningBalance($this->openingBalance);
     }
 }

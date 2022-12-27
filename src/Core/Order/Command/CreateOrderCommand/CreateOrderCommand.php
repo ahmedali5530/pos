@@ -94,6 +94,11 @@ class CreateOrderCommand
     private $terminal;
 
     /**
+     * @var float|null
+     */
+    private $adjustment;
+
+    /**
      * @return int|null
      */
     public function getCustomerId(): ?int
@@ -347,5 +352,21 @@ class CreateOrderCommand
     public function setTaxAmount(?float $taxAmount): void
     {
         $this->taxAmount = $taxAmount;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getAdjustment(): ?float
+    {
+        return $this->adjustment;
+    }
+
+    /**
+     * @param float|null $adjustment
+     */
+    public function setAdjustment(?float $adjustment): void
+    {
+        $this->adjustment = $adjustment;
     }
 }

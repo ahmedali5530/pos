@@ -85,6 +85,11 @@ class Customer
      */
     private $payments;
 
+    /**
+     * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     */
+    private $openingBalance;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -249,6 +254,18 @@ class Customer
                 $payment->setCustomer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOpeningBalance(): ?string
+    {
+        return $this->openingBalance;
+    }
+
+    public function setOpeningBalance(?string $openingBalance): self
+    {
+        $this->openingBalance = $openingBalance;
 
         return $this;
     }

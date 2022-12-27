@@ -6,6 +6,7 @@ use App\Core\Dto\Common\Common\StoreDtoTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Request;
 use App\Core\Terminal\Command\CreateTerminalCommand\CreateTerminalCommand;
+use App\Core\Validation\Custom\ConstraintValidEntity;
 
 class CreateTerminalRequestDto
 {

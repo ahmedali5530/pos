@@ -28,7 +28,7 @@ class CreateUserRequestDto
     private $displayName = null;
 
     /**
-     * @var null|array
+     * @var null|string[]
      * @Assert\NotBlank(normalizer="trim")
      */
     private $roles = null;

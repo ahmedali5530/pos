@@ -44,6 +44,9 @@ class UpdateSupplierCommandHandler extends EntityManager implements UpdateSuppli
         if($command->getAddress() !== null){
             $item->setAddress($command->getAddress());
         }
+        if($command->getOpeningBalance() !== null){
+            $item->setOpeningBalance($command->getOpeningBalance());
+        }
 
 
         //validate item before creation

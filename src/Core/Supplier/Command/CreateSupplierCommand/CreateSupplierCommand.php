@@ -38,6 +38,11 @@ class CreateSupplierCommand
      */
     private $address = null;
 
+    /**
+     * @var string|null
+     */
+    private $openingBalance;
+
     public function setName(?string $name)
     {
         $this->name = $name;
@@ -103,4 +108,21 @@ class CreateSupplierCommand
     {
         return $this->address;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getOpeningBalance(): ?string
+    {
+        return $this->openingBalance;
+    }
+
+    /**
+     * @param string|null $openingBalance
+     */
+    public function setOpeningBalance(?string $openingBalance): void
+    {
+        $this->openingBalance = $openingBalance;
+    }
+
 }
