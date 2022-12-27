@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Customer;
 
@@ -48,6 +48,11 @@ class CreateCustomerRequestDto
      * @var string|null
      */
     private $cnic;
+
+    /**
+     * @var string|null
+     */
+    private $openingBalance;
 
     public function setName(?string $name)
     {
@@ -142,6 +147,23 @@ class CreateCustomerRequestDto
         $this->cnic = $cnic;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getOpeningBalance(): ?string
+    {
+        return $this->openingBalance;
+    }
+
+    /**
+     * @param string|null $openingBalance
+     */
+    public function setOpeningBalance(?string $openingBalance): void
+    {
+        $this->openingBalance = $openingBalance;
+    }
+
+
     public static function createFromRequest(Request $request) : self
     {
         $dto = new self();
@@ -155,6 +177,7 @@ class CreateCustomerRequestDto
         $dto->lat = $data['lat'] ?? null;
         $dto->lng = $data['lng'] ?? null;
         $dto->cnic = $data['cnic'] ?? null;
+        $dto->openingBalance = $data['openingBalance'] ?? null;
 
 
         return $dto;
@@ -170,5 +193,6 @@ class CreateCustomerRequestDto
         $command->setLat($this->lat);
         $command->setLng($this->lng);
         $command->setCnic($this->cnic);
+        $command->setOpeningBalance($this->openingBalance);
     }
 }

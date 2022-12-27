@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Core\Dto\Controller\Api\Admin\Customer;
 
@@ -46,6 +46,11 @@ class UpdateCustomerRequestDto
      * @var null|float
      */
     private $lng = null;
+
+    /**
+     * @var string|null
+     */
+    private $openingBalance;
 
     public function setId(?int $id)
     {
@@ -135,6 +140,23 @@ class UpdateCustomerRequestDto
         return $this->lng;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getOpeningBalance(): ?string
+    {
+        return $this->openingBalance;
+    }
+
+    /**
+     * @param string|null $openingBalance
+     */
+    public function setOpeningBalance(?string $openingBalance): void
+    {
+        $this->openingBalance = $openingBalance;
+    }
+
+
     public static function createFromRequest(Request $request) : self
     {
         $dto = new self();
@@ -148,6 +170,7 @@ class UpdateCustomerRequestDto
         $dto->address = $data['address'] ?? null;
         $dto->lat = $data['lat'] ?? null;
         $dto->lng = $data['lng'] ?? null;
+        $dto->openingBalance = $data['openingBalance'] ?? null;
 
 
         return $dto;
@@ -163,5 +186,6 @@ class UpdateCustomerRequestDto
         $command->setAddress($this->address);
         $command->setLat($this->lat);
         $command->setLng($this->lng);
+        $command->setOpeningBalance($this->openingBalance);
     }
 }

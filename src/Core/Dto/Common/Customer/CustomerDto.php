@@ -85,6 +85,11 @@ class CustomerDto
      */
     private $orders = [];
 
+    /**
+     * @var string|null
+     */
+    private $openingBalance;
+
     public static function createFromCustomer(?Customer $customer): ?self
     {
         if($customer === null){
@@ -118,6 +123,8 @@ class CustomerDto
         foreach($customer->getOrders() as $order){
             $dto->orders[] = OrderShortDto::createFromOrder($order);
         }
+
+        $dto->openingBalance = $customer->getOpeningBalance();
 
         return $dto;
     }
@@ -345,5 +352,21 @@ class CustomerDto
     public function setOrders(array $orders): void
     {
         $this->orders = $orders;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOpeningBalance(): ?string
+    {
+        return $this->openingBalance;
+    }
+
+    /**
+     * @param string|null $openingBalance
+     */
+    public function setOpeningBalance(?string $openingBalance): void
+    {
+        $this->openingBalance = $openingBalance;
     }
 }

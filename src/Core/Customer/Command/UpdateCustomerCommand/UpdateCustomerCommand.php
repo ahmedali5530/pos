@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Core\Customer\Command\UpdateCustomerCommand;
 
@@ -43,6 +43,11 @@ class UpdateCustomerCommand
      * @var null|float
      */
     private $lng = null;
+
+    /**
+     * @var string|null
+     */
+    private $openingBalance;
 
     public function setId(?int $id)
     {
@@ -130,5 +135,21 @@ class UpdateCustomerCommand
     public function getLng()
     {
         return $this->lng;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOpeningBalance(): ?string
+    {
+        return $this->openingBalance;
+    }
+
+    /**
+     * @param string|null $openingBalance
+     */
+    public function setOpeningBalance(?string $openingBalance): void
+    {
+        $this->openingBalance = $openingBalance;
     }
 }

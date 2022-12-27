@@ -21,6 +21,7 @@ class SelectSupplierRequestDto
         'name' => 'Supplier.name',
         'phone' => 'Supplier.phone',
         'email' => 'Supplier.email',
+        'openingBalance' => 'Supplier.openingBalance'
     ];
 
     /**
