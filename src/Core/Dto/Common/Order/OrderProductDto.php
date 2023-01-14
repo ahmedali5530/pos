@@ -62,6 +62,11 @@ class OrderProductDto
      */
     private $taxes = [];
 
+    /**
+     * @var float|null
+     */
+    private $discount;
+
     public static function createFromOrderProduct(?OrderProduct $orderProduct): ?self
     {
         if($orderProduct === null){
@@ -81,6 +86,8 @@ class OrderProductDto
         foreach($orderProduct->getTaxes() as $tax){
             $dto->taxes[] = TaxDto::createFromTax($tax);
         }
+
+        $dto->discount = $orderProduct->getDiscount();
 
         return $dto;
     }
@@ -256,5 +263,21 @@ class OrderProductDto
         }
 
         return $total;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getDiscount(): ?float
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @param float|null $discount
+     */
+    public function setDiscount(?float $discount): void
+    {
+        $this->discount = $discount;
     }
 }
