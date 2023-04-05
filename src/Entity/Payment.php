@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -11,10 +12,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PaymentRepository::class)
  * @Gedmo\Loggable()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"payment.read"}},
+ *     denormalizationContext={"groups"={"payment.create", "payment.update"}}
+ * )
  */
 class Payment
 {
@@ -32,29 +38,34 @@ class Payment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"payment.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
+     * @Groups({"payment.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
+     * @Groups({"payment.read"})
      */
     private $type;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"payment.read"})
      */
     private $canHaveChangeDue;
 
     /**
      * @ORM\ManyToMany(targetEntity=Store::class)
+     * @Groups({"payment.read"})
      */
     private $stores;
 

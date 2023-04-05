@@ -55,7 +55,7 @@ class Products extends Fixture
         $department->setName('Shoes');
         $manager->persist($department);
 
-        for($i=1; $i<=1000; $i++){
+        for($i=1; $i<=500; $i++){
             $product = new Product();
             $product->setName($this->faker->name());
             $product->setBarcode($this->faker->randomNumber());

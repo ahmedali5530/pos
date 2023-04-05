@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\UserRepository;
+use App\State\UserPasswordHasher;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,12 +16,18 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @Gedmo\Loggable()
  * @UniqueEntity(fields={"username"})
  * @ORM\Table("user_account")
+ * @ApiResource(
+ *     normalizationContext={"groups"={"user.read"}, "skip_null_values"=false},
+ *     denormalizationContext={"groups"={"user.create", "user.update"}},
+ * )
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -31,11 +39,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user.read", "order.read", "purchase.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user.read", "order.read", "purchase.read", "user.create"})
+     * @Assert\NotBlank()
      */
     private $username;
 
@@ -46,12 +57,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user.create"})
      */
     private $salt;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
+     * @Groups({"user.read", "order.read", "purchase.read", "user.create"})
+     * @Assert\NotBlank()
      */
     private $displayName;
 
@@ -67,11 +81,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="array")
+     * @Groups({"user.read", "order.read", "purchase.read", "user.create"})
+     * @Assert\NotBlank()
      */
     private $roles = [];
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"user.read", "order.read", "purchase.read", "user.create"})
+     * @Assert\NotBlank()
      */
     private $email;
 
@@ -82,8 +100,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\ManyToMany(targetEntity=Store::class)
+     * @Groups({"user.read", "user.create"})
+     * @Assert\NotBlank()
      */
     private $stores;
+
+    /**
+     * @Groups({"user.create", "user.update"})
+     * @Assert\NotBlank()
+     */
+    private $plainPassword;
 
     public function __construct()
     {
@@ -193,7 +219,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials()
     {
-
+        $this->plainPassword = null;
     }
 
     public function getEmail(): ?string
@@ -258,6 +284,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeStore(Store $store): self
     {
         $this->stores->removeElement($store);
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $painPassword): self
+    {
+        $this->plainPassword = $painPassword;
 
         return $this;
     }

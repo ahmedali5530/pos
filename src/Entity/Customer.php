@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\CustomerRepository;
@@ -10,10 +11,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  * @Gedmo\Loggable()
+ * @ApiResource()
  */
 class Customer
 {
@@ -24,48 +27,56 @@ class Customer
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"order.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $phone;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $birthday;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $address;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $lat;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $lng;
 
@@ -77,6 +88,7 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $cnic;
 
@@ -87,6 +99,7 @@ class Customer
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Groups({"order.read"})
      */
     private $openingBalance;
 

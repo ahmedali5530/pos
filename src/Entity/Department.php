@@ -2,15 +2,21 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\DepartmentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=DepartmentRepository::class)
+ * @ApiResource(
+ *     normalizationContext={"groups"={"department.read"}},
+ *     denormalizationContext={"groups"={"department.create", "department.update"}}
+ * )
  */
 class Department
 {
@@ -22,21 +28,25 @@ class Department
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"department.read", "product.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"department.read", "product.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"department.read", "product.read"})
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=Store::class)
+     * @Groups({"department.read"})
      */
     private $store;
 

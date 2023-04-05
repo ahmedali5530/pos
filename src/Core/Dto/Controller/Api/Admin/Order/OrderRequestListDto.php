@@ -346,10 +346,17 @@ class OrderRequestListDto
         $dto->isDispatched = $request->query->get('isDispatched');
         $dto->orderIds = $request->query->get('orderIds');
         $dto->ids = $request->query->get('ids');
-        $dto->limit = $request->query->get('limit');
-        $dto->offset = $request->query->get('offset');
-        $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
-        $dto->orderMode = $request->query->get('orderMode', 'ASC');
+        $dto->limit = $request->query->get('itemsPerPage');
+        $dto->offset = $request->query->get('page');
+        if($request->query->has('order')){
+
+            $orderBy = array_keys($request->query->get('order'))[0];
+            $orderMode = array_values($request->query->get('order'))[0];
+
+            $dto->orderBy = self::ORDERS_LIST[$orderBy] ?? null;
+            $dto->orderMode = $orderMode ?? 'ASC';
+        }
+
         $dto->dateTimeFrom = DateTimeDto::createFromDateTime($request->query->get('dateTimeFrom'));
         $dto->dateTimeTo = DateTimeDto::createFromDateTime($request->query->get('dateTimeTo'));
         $dto->q = $request->query->get('q');

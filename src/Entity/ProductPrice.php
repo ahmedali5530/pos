@@ -2,16 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\ProductPriceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProductPriceRepository::class)
  * @Gedmo\Loggable()
+ * @ApiResource()
  */
 class ProductPrice
 {
@@ -21,6 +24,7 @@ class ProductPrice
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"product.read"})
      */
     private $id;
 
@@ -34,78 +38,91 @@ class ProductPrice
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $date;
 
     /**
      * @ORM\Column(type="time", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $time;
 
     /**
      * @ORM\Column(type="time", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $timeTo;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $day;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $week;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $month;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $quarter;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $rate;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $minQuantity;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $maxQuantity;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductVariant::class, inversedBy="prices")
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $productVariant;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $basePrice;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read"})
      */
     private $baseQuantity;
 

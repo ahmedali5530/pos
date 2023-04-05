@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\DeviceRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,6 +10,7 @@ use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=DeviceRepository::class)
+ * @ApiResource()
  */
 class Device
 {

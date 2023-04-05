@@ -21,7 +21,7 @@
         "gesdinet/jwt-refresh-token-bundle": "^1.0",
         "league/glide-symfony": "^2.0",
         "lexik/jwt-authentication-bundle": "^2.14",
-        "nelmio/api-doc-bundle": "^4.8",
+        "nelmio/api-doc-bundle": "^4.10",
         "nelmio/cors-bundle": "^2.2",
         "nesbot/carbon": "^2.55",
         "phpdocumentor/reflection-docblock": "^5.3",

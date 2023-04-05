@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -10,9 +11,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TerminalRepository::class)
+ * @ApiResource(
+ *     normalizationContext={"groups"={"terminal.read"}},
+ *     denormalizationContext={"groups"={"terminal.create", "terminal.update"}}
+ * )
  */
 class Terminal
 {
@@ -24,26 +30,31 @@ class Terminal
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"store.read", "product.read", "terminal.read", "order.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"store.read", "product.read", "terminal.read", "order.read"})
      */
     private $code;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"store.read", "product.read", "terminal.read", "order.read"})
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=Store::class, inversedBy="terminals")
+     * @Groups({"terminal.read"})
      */
     private $store;
 
     /**
      * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="terminals")
+     * @Groups({"terminal.read"})
      */
     private $products;
 

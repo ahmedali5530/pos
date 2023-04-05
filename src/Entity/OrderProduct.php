@@ -2,16 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\OrderProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=OrderProductRepository::class)
  * @Gedmo\Loggable()
+ * @ApiResource()
  */
 class OrderProduct
 {
@@ -21,42 +24,50 @@ class OrderProduct
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"order.read"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class)
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"order.read"})
      */
     private $product;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductVariant::class)
+     * @Groups({"order.read"})
      */
     private $variant;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Groups({"order.read"})
      */
     private $quantity;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @Groups({"order.read"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"order.read"})
      */
     private $isSuspended;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"order.read"})
      */
     private $isDeleted;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"order.read"})
      */
     private $isReturned;
 
@@ -68,11 +79,13 @@ class OrderProduct
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
+     * @Groups({"order.read"})
      */
     private $discount;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tax::class)
+     * @Groups({"order.read"})
      */
     private $taxes;
 

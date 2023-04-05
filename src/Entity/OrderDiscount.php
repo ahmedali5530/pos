@@ -2,15 +2,18 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\OrderDiscountRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
  * @ORM\Entity(repositoryClass=OrderDiscountRepository::class)
  * @Gedmo\Loggable()
+ * @ApiResource()
  */
 class OrderDiscount
 {
@@ -20,6 +23,7 @@ class OrderDiscount
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"order.read"})
      */
     private $id;
 
@@ -33,23 +37,27 @@ class OrderDiscount
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $rate;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"order.read"})
      */
     private $rateType;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $amount;
 
     /**
      * @ORM\ManyToOne(targetEntity=Discount::class)
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $type;
 

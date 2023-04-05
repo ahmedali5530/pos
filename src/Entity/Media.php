@@ -2,14 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
+ * @ApiResource(
+ *     normalizationContext={"groups"={"media.read"}}
+ * )
  */
 class Media
 {
@@ -20,26 +25,31 @@ class Media
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"product.read", "media.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"product.read", "media.read"})
      */
     private $originalName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"product.read", "media.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"product.read", "media.read"})
      */
     private $extension;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"product.read", "media.read"})
      */
     private $mimeType;
 

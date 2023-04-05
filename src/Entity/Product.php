@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -12,12 +16,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  * @UniqueEntity(fields={"barcode"}, message="Use a different value")
  * @Gedmo\Loggable()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"product.read"}}
+ * )
  */
 class Product
 {
@@ -29,126 +37,150 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $sku;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $barcode;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $baseQuantity;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $isAvailable;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $basePrice;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $cost;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $quantity;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductVariant::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=ProductVariant::class, mappedBy="product", cascade={"persist", "remove"})
+     * @Groups({"product.read"})
+     * @ApiSubresource()
      */
     private $variants;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductPrice::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=ProductPrice::class, mappedBy="product", cascade={"persist", "remove"})
+     * @Groups({"product.read"})
      */
     private $prices;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $purchaseUnit;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $saleUnit;
 
     /**
      * @ORM\ManyToOne(targetEntity=Media::class)
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $media;
 
     /**
      * @ORM\ManyToMany(targetEntity=Brand::class)
+     * @Groups({"product.read"})
      */
     private $brands;
 
     /**
      * @ORM\ManyToMany(targetEntity=Supplier::class)
+     * @Groups({"product.read"})
      */
     private $suppliers;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class)
+     * @Groups({"product.read"})
      */
     private $categories;
 
     /**
      * @ORM\ManyToMany(targetEntity=Store::class)
+     * @Groups({"product.read"})
      */
     private $stores;
 
     /**
      * @ORM\ManyToOne(targetEntity=Department::class)
+     * @Groups({"product.read"})
      */
     private $department;
 
     /**
      * @ORM\ManyToMany(targetEntity=Terminal::class, inversedBy="products")
+     * @Groups({"product.read"})
      */
     private $terminals;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tax::class)
+     * @Groups({"product.read"})
      */
     private $taxes;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
      */
     private $manageInventory;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductInventory::class, mappedBy="product")
+     * @Groups({"product.read", "order.read", "terminal.read"})
      */
     private $inventory;
 

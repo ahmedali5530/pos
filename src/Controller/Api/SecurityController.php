@@ -8,8 +8,6 @@ use App\Core\Dto\Controller\Api\Auth\ResetRequestDto;
 use App\Entity\User;
 use App\Factory\Controller\ApiResponseFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use OpenApi\Annotations as OA;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,25 +17,17 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use App\Core\Dto\Controller\Api\Auth\LoginRequestDto;
 use App\Core\Dto\Common\User\UserDto;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use App\Core\Dto\Common\Validation\ValidationErrorResponseDto;
 
 /**
  * Class SecurityController
  * @package App\Controller\Api
- * @OA\Tag(name="Auth")
  */
 class SecurityController extends AbstractController
 {
     /**
      * @Route("/auth/login", name="app_login", methods={"POST"})
-     *
-     * @OA\RequestBody(
-     *     required=true,
-     *     @Model(type=LoginRequestDto::class)
-     * )
      */
     public function login(AuthenticationUtils $authenticationUtils)
     {
@@ -45,12 +35,6 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/auth/info", name="auth_info", methods={"GET"})
-     *
-     * @OA\Response(
-     *     description="User info",
-     *     response="200",
-     *     @Model(type=UserDto::class)
-     * )
      */
     public function info(
         ApiResponseFactory $responseFactory
@@ -76,26 +60,6 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/auth/forgot-password", name="forgot_password", methods={"POST"})
-     *
-     * @OA\RequestBody(
-     *     required=true,
-     *     @Model(type=ForgotPasswordRequestDto::class)
-     * )
-     *
-     * @OA\Response(
-     *     response="422",
-     *     description="Violations"
-     * )
-     *
-     * @OA\Response(
-     *     response="200",
-     *     description="Success",
-     *     @OA\Schema(
-     *          @OA\Property(property="status", type="boolean"),
-     *          @OA\Property(property="code", type="integer"),
-     *          @OA\Property(property="message", type="string"),
-     *     )
-     * )
      */
     public function forgotPassword(
         Request                $request,
@@ -158,27 +122,6 @@ HTML
 
     /**
      * @Route("/auth/reset-password", name="reset_password", methods={"POST"})
-     *
-     * @OA\RequestBody(
-     *     required=true,
-     *     @Model(type=ResetRequestDto::class)
-     * )
-     *
-     * @OA\Response(
-     *     response="422",
-     *     description="Violations",
-     *     @Model(type=ValidationErrorResponseDto::class)
-     * )
-     *
-     * @OA\Response(
-     *     response="200",
-     *     description="Success",
-     *     @OA\Schema(
-     *          @OA\Property(property="status", type="boolean"),
-     *          @OA\Property(property="code", type="integer"),
-     *          @OA\Property(property="message", type="string"),
-     *     )
-     * )
      */
     public function resetPassword(
         Request                     $request,
