@@ -20,8 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"category.read"}},
- *     denormalizationContext={"groups"={"category.create", "category.update"}}
+ *     normalizationContext={"groups"={"category.read", "time.read", "uuid.read"}}
  * )
  */
 class Category

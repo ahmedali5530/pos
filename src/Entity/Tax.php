@@ -18,8 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=TaxRepository::class)
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"tax.read"}},
- *     denormalizationContext={"groups"={"tax.create", "tax.update"}}
+ *     normalizationContext={"groups"={"tax.read", "time.read", "uuid.read"}}
  * )
  */
 class Tax
@@ -32,21 +31,21 @@ class Tax
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"tax.read", "order.read"})
+     * @Groups({"tax.read", "order.read", "product.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
-     * @Groups({"tax.read", "order.read"})
+     * @Groups({"tax.read", "order.read", "product.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
-     * @Groups({"tax.read", "order.read"})
+     * @Groups({"tax.read", "order.read", "product.read"})
      */
     private $rate;
 

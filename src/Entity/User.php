@@ -25,8 +25,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(fields={"username"})
  * @ORM\Table("user_account")
  * @ApiResource(
- *     normalizationContext={"groups"={"user.read"}, "skip_null_values"=false},
- *     denormalizationContext={"groups"={"user.create", "user.update"}},
+ *     normalizationContext={"groups"={"user.read", "time.read", "uuid.read"}, "skip_null_values"=false},
+ *     collectionOperations={
+ *         "get",
+ *         "post"={"validation_groups"={"create.validation"}}
+ *     },
+ *     itemOperations={
+ *         "delete",
+ *         "get",
+ *         "put"={"validation_groups"={"update.validation"}}
+ *     }
  * )
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -45,8 +53,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user.read", "order.read", "purchase.read", "user.create"})
-     * @Assert\NotBlank()
+     * @Groups({"user.read", "order.read", "purchase.read"})
+     * @Assert\NotBlank(groups={"create.validation", "update.validation"})
      */
     private $username;
 
@@ -64,8 +72,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
-     * @Groups({"user.read", "order.read", "purchase.read", "user.create"})
-     * @Assert\NotBlank()
+     * @Groups({"user.read", "order.read", "purchase.read"})
+     * @Assert\NotBlank(groups={"create.validation", "update.validation"})
      */
     private $displayName;
 
@@ -81,15 +89,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="array")
-     * @Groups({"user.read", "order.read", "purchase.read", "user.create"})
-     * @Assert\NotBlank()
+     * @Groups({"user.read", "order.read", "purchase.read"})
+     * @Assert\NotBlank(groups={"create.validation", "update.validation"})
      */
     private $roles = [];
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"user.read", "order.read", "purchase.read", "user.create"})
-     * @Assert\NotBlank()
+     * @Groups({"user.read", "order.read", "purchase.read"})
+     * @Assert\NotBlank(groups={"create.validation", "update.validation"})
      */
     private $email;
 
@@ -100,14 +108,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\ManyToMany(targetEntity=Store::class)
-     * @Groups({"user.read", "user.create"})
-     * @Assert\NotBlank()
+     * @Groups({"user.read"})
+     * @Assert\NotBlank(groups={"create.validation", "update.validation"})
      */
     private $stores;
 
     /**
      * @Groups({"user.create", "user.update"})
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"create.validation"})
      */
     private $plainPassword;
 

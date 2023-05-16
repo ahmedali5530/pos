@@ -18,8 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=ProductVariantRepository::class)
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"variant.read"}},
- *     denormalizationContext={"groups"={"variant.create"}}
+ *     normalizationContext={"groups"={"variant.read", "time.read", "uuid.read"}}
  * )
  */
 class ProductVariant
@@ -43,46 +42,46 @@ class ProductVariant
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "variant.create"})
+     * @Groups({"product.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"product.read", "variant.create"})
+     * @Groups({"product.read"})
      */
     private $attributeName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "variant.create"})
+     * @Groups({"product.read"})
      */
     private $attributeValue;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "variant.create"})
+     * @Groups({"product.read"})
      */
     private $barcode;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"product.read", "variant.create"})
+     * @Groups({"product.read"})
      */
     private $sku;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "variant.create"})
+     * @Groups({"product.read"})
      */
     private $price;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductPrice::class, mappedBy="productVariant")
-     * @Groups({"product.read", "variant.create"})
+     * @Groups({"product.read"})
      */
     private $prices;
 

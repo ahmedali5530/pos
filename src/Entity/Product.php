@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @UniqueEntity(fields={"barcode"}, message="Use a different value")
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"product.read"}}
+ *     normalizationContext={"groups"={"product.read", "time.read", "uuid.read"}}
  * )
  */
 class Product
@@ -37,63 +37,63 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $sku;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $barcode;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $baseQuantity;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $isAvailable;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $basePrice;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $cost;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $quantity;
 
@@ -113,20 +113,20 @@ class Product
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $purchaseUnit;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $saleUnit;
 
     /**
      * @ORM\ManyToOne(targetEntity=Media::class)
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $media;
 
@@ -174,7 +174,7 @@ class Product
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
      */
     private $manageInventory;
 

@@ -12,8 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=PurchaseItemRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"purchaseItem.read"}},
- *     denormalizationContext={"groups"={"purchaseItem.create", "purchaseItem.update"}}
+ *     normalizationContext={"groups"={"purchaseItem.read", "time.read", "uuid.read"}}
  * )
  */
 class PurchaseItem
@@ -65,6 +64,12 @@ class PurchaseItem
      * @ORM\JoinColumn(nullable=false)
      */
     private $purchase;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create"})
+     */
+    private $comments;
 
     public function getId(): ?int
     {
@@ -139,6 +144,18 @@ class PurchaseItem
     public function setPurchase(?Purchase $purchase): self
     {
         $this->purchase = $purchase;
+
+        return $this;
+    }
+
+    public function getComments(): ?string
+    {
+        return $this->comments;
+    }
+
+    public function setComments(?string $comments): self
+    {
+        $this->comments = $comments;
 
         return $this;
     }

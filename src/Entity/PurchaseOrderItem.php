@@ -12,8 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=PurchaseOrderItemRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"purchaseOrderItem.read"}},
- *     denormalizationContext={"groups"={"purchaseOrderItem.create", "purchaseOrderItem.update"}}
+ *     normalizationContext={"groups"={"purchaseOrderItem.read", "time.read", "uuid.read"}}
  * )
  */
 class PurchaseOrderItem
@@ -32,25 +31,25 @@ class PurchaseOrderItem
     /**
      * @ORM\ManyToOne(targetEntity=Product::class)
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read"})
+     * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
      */
     private $item;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
-     * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read"})
+     * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
      */
     private $quantity;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
-     * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read"})
+     * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read"})
+     * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
      */
     private $unit;
 
@@ -60,6 +59,12 @@ class PurchaseOrderItem
      * @Groups({"purchaseOrderItem.read"})
      */
     private $purchaseOrder;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
+     */
+    private $comments;
 
     public function getId(): ?int
     {
@@ -122,6 +127,18 @@ class PurchaseOrderItem
     public function setPurchaseOrder(?PurchaseOrder $purchaseOrder): self
     {
         $this->purchaseOrder = $purchaseOrder;
+
+        return $this;
+    }
+
+    public function getComments(): ?string
+    {
+        return $this->comments;
+    }
+
+    public function setComments(?string $comments): self
+    {
+        $this->comments = $comments;
 
         return $this;
     }

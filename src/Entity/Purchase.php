@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\PurchaseRepository;
@@ -16,8 +15,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=PurchaseRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"purchase.read"}},
- *     denormalizationContext={"groups"={"purchase.create", "purchase.update"}}
+ *     normalizationContext={"groups"={"purchase.read", "time.read", "uuid.read"}, "skip_null_values"=false},
+ *     denormalizationContext={"groups"={"purchase.create"}}
  * )
  */
 class Purchase
@@ -76,6 +75,18 @@ class Purchase
      * @Groups({"purchase.read", "purchase.create"})
      */
     private $purchaseOrder;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Groups({"purchase.read", "purchase.create"})
+     */
+    private $purchaseNumber;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Groups({"purchase.read", "purchase.create"})
+     */
+    private $purchaseMode;
 
     public function __construct()
     {
@@ -186,6 +197,30 @@ class Purchase
     public function setPurchaseOrder(?PurchaseOrder $purchaseOrder): self
     {
         $this->purchaseOrder = $purchaseOrder;
+
+        return $this;
+    }
+
+    public function getPurchaseNumber(): ?string
+    {
+        return $this->purchaseNumber;
+    }
+
+    public function setPurchaseNumber(?string $purchaseNumber): self
+    {
+        $this->purchaseNumber = $purchaseNumber;
+
+        return $this;
+    }
+
+    public function getPurchaseMode(): ?string
+    {
+        return $this->purchaseMode;
+    }
+
+    public function setPurchaseMode(?string $purchaseMode): self
+    {
+        $this->purchaseMode = $purchaseMode;
 
         return $this;
     }

@@ -294,6 +294,9 @@
     "ramsey/uuid": {
         "version": "4.2.3"
     },
+    "rollbar/rollbar": {
+        "version": "v2.1.0"
+    },
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },

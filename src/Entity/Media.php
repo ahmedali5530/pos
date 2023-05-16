@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"media.read"}}
+ *     normalizationContext={"groups"={"media.read", "time.read", "uuid.read"}}
  * )
  */
 class Media

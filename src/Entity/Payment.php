@@ -18,8 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=PaymentRepository::class)
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"payment.read"}},
- *     denormalizationContext={"groups"={"payment.create", "payment.update"}}
+ *     normalizationContext={"groups"={"payment.read", "time.read", "uuid.read"}}
  * )
  */
 class Payment

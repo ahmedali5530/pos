@@ -6,12 +6,14 @@ namespace App\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 use \DateTime;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 trait TimestampableTrait
 {
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
+     * @Groups({"time.read"})
      */
     private $createdAt;
 
@@ -23,6 +25,7 @@ trait TimestampableTrait
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
+     * @Groups({"time.read"})
      */
     private $updatedAt;
 

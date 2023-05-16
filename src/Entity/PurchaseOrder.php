@@ -14,8 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=PurchaseOrderRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"purchaseOrder.read"}},
- *     denormalizationContext={"groups"={"purchaseOrder.create", "purchaseOrder.update"}}
+ *     normalizationContext={"groups"={"purchaseOrder.read", "time.read", "uuid.read"}},
+ *     denormalizationContext={"groups"={"purchaseOrder.create"}}
  * )
  */
 class PurchaseOrder
@@ -27,39 +27,33 @@ class PurchaseOrder
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"purchaseOrder.read", "purchase.read"})
+     * @Groups({"purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
-     * @Groups({"purchaseOrder.read", "purchase.read"})
-     */
-    private $createdAt;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Supplier::class, inversedBy="purchaseOrders")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"purchaseOrder.read", "purchase.read"})
+     * @Groups({"purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
      */
     private $supplier;
 
     /**
-     * @ORM\OneToMany(targetEntity=PurchaseOrderItem::class, mappedBy="purchaseOrder", orphanRemoval=true)
-     * @Groups({"purchaseOrder.read", "purchase.read"})
+     * @ORM\OneToMany(targetEntity=PurchaseOrderItem::class, mappedBy="purchaseOrder", orphanRemoval=true, orphanRemoval=true, cascade={"PERSIST", "REMOVE"})
+     * @Groups({"purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
      */
     private $items;
 
     /**
      * @ORM\ManyToOne(targetEntity=Store::class)
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"purchaseOrder.read"})
+     * @Groups({"purchaseOrder.read", "purchaseOrder.create"})
      */
     private $store;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"purchaseOrder.read"})
+     * @Groups({"purchaseOrder.read", "purchaseOrder.create", "purchase.read"})
      */
     private $poNumber;
 
@@ -71,18 +65,6 @@ class PurchaseOrder
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     public function getSupplier(): ?Supplier

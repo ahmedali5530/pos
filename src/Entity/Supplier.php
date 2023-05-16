@@ -12,12 +12,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SupplierRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"supplier.read"}},
- *     denormalizationContext={"groups"={"supplier.create", "supplier.update"}}
+ *     normalizationContext={"groups"={"supplier.read", "time.read", "uuid.read"}}
  * )
  */
 class Supplier
@@ -37,18 +37,22 @@ class Supplier
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"supplier.read", "product.read", "purchase.read", "purchaseOrder.read"})
+     * @Assert\NotBlank()
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
      * @Groups({"supplier.read", "product.read", "purchase.read", "purchaseOrder.read"})
+     * @Assert\NotBlank()
      */
     private $phone;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
      * @Groups({"supplier.read", "product.read", "purchase.read", "purchaseOrder.read"})
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
@@ -79,12 +83,14 @@ class Supplier
     /**
      * @ORM\ManyToMany(targetEntity=Store::class)
      * @Groups({"supplier.read"})
+     * @Assert\NotBlank()
      */
     private $stores;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Groups({"supplier.read", "product.read", "purchase.read", "purchaseOrder.read"})
+     * @Assert\NotBlank()
      */
     private $openingBalance;
 
@@ -96,6 +102,7 @@ class Supplier
 
     /**
      * @ORM\OneToMany(targetEntity=PurchaseOrder::class, mappedBy="supplier", orphanRemoval=true)
+     * @Groups({"supplier.read"})
      */
     private $purchaseOrders;
 

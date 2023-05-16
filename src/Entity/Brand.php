@@ -16,8 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=BrandRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"brand.read"}},
- *     denormalizationContext={"groups"={"brand.create", "brand.update"}}
+ *     normalizationContext={"groups"={"brand.read", "time.read", "uuid.read"}}
  * )
  */
 class Brand

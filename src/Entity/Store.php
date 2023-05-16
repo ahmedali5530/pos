@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=StoreRepository::class)
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"store.read"}, "skip_null_values"=false}
+ *     normalizationContext={"groups"={"store.read", "time.read", "uuid.read"}, "skip_null_values"=false}
  * )
  */
 class Store

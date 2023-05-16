@@ -20,8 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @UniqueEntity(fields={"orderId"})
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"order.read"}},
- *     denormalizationContext={"groups"={"order.write", "order.update"}}
+ *     normalizationContext={"groups"={"order.read", "time.read", "uuid.read"}}
  * )
  */
 class Order

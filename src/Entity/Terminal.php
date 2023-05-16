@@ -16,8 +16,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=TerminalRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"terminal.read"}},
- *     denormalizationContext={"groups"={"terminal.create", "terminal.update"}}
+ *     normalizationContext={"groups"={"terminal.read", "time.read", "uuid.read"}},
+ *     denormalizationContext={"groups"={"terminal.create"}}
  * )
  */
 class Terminal
@@ -36,25 +36,25 @@ class Terminal
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"store.read", "product.read", "terminal.read", "order.read"})
+     * @Groups({"store.read", "product.read", "terminal.read", "order.read", "terminal.create"})
      */
     private $code;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"store.read", "product.read", "terminal.read", "order.read"})
+     * @Groups({"store.read", "product.read", "terminal.read", "order.read", "terminal.create"})
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=Store::class, inversedBy="terminals")
-     * @Groups({"terminal.read"})
+     * @Groups({"terminal.read", "terminal.create"})
      */
     private $store;
 
     /**
      * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="terminals")
-     * @Groups({"terminal.read"})
+     * @Groups({"terminal.read", "terminal.create"})
      */
     private $products;
 
