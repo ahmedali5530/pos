@@ -37,21 +37,21 @@ class Payment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"payment.read"})
+     * @Groups({"payment.read", "order.read","customer.read", "purchase.read", "supplier.read", "supplierPayment.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
-     * @Groups({"payment.read"})
+     * @Groups({"payment.read", "order.read","customer.read", "purchase.read", "supplier.read", "supplierPayment.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
-     * @Groups({"payment.read"})
+     * @Groups({"payment.read", "order.read","customer.read", "purchase.read", "supplier.read", "supplierPayment.read"})
      */
     private $type;
 

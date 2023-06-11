@@ -22,7 +22,7 @@ class OrderPayment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $id;
 
@@ -36,28 +36,28 @@ class OrderPayment
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $total;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $received;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $due;
 
     /**
      * @ORM\ManyToOne(targetEntity=Payment::class)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $type;
 

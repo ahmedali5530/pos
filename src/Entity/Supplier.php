@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -95,16 +97,25 @@ class Supplier
     private $openingBalance;
 
     /**
+     * @ApiSubresource()
      * @ORM\OneToMany(targetEntity=Purchase::class, mappedBy="supplier")
      * @Groups({"supplier.read"})
      */
     private $purchases;
 
     /**
+     * @ApiSubresource()
      * @ORM\OneToMany(targetEntity=PurchaseOrder::class, mappedBy="supplier", orphanRemoval=true)
      * @Groups({"supplier.read"})
      */
     private $purchaseOrders;
+
+    /**
+     * @ApiSubresource()
+     * @ORM\OneToMany(targetEntity=SupplierPayment::class, mappedBy="supplier", orphanRemoval=true)
+     * @Groups({"supplier.read"})
+     */
+    private $payments;
 
     public function __construct()
     {
@@ -112,6 +123,7 @@ class Supplier
         $this->stores = new ArrayCollection();
         $this->purchases = new ArrayCollection();
         $this->purchaseOrders = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -297,5 +309,80 @@ class Supplier
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|SupplierPayment[]
+     */
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(SupplierPayment $payment): self
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments[] = $payment;
+            $payment->setSupplier($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(SupplierPayment $payment): self
+    {
+        if ($this->payments->removeElement($payment)) {
+            // set the owning side to null (unless already changed)
+            if ($payment->getSupplier() === $this) {
+                $payment->setSupplier(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     * @ApiProperty()
+     * @Groups({"supplier.read"})
+     */
+    public function getPurchaseTotal(): float
+    {
+        $sale = 0;
+        foreach($this->getPurchases() as $purchase){
+            if(
+                $purchase->getPaymentType() !== null &&
+                $purchase->getPaymentType()->getType() === Payment::PAYMENT_TYPE_CREDIT
+            ) {
+                $sale += $purchase->getTotal();
+            }
+        }
+
+        return $sale + $this->getOpeningBalance();
+    }
+
+    /**
+     * @return float
+     * @ApiProperty()
+     * @Groups({"supplier.read"})
+     */
+    public function getPaid(): float
+    {
+        $paid = 0;
+        foreach($this->getPayments() as $payment){
+            $paid += $payment->getAmount();
+        }
+
+        return $paid;
+    }
+
+    /**
+     * @return float
+     * @ApiProperty()
+     * @Groups({"supplier.read"})
+     */
+    public function getOutstanding(): float
+    {
+        return $this->getPurchaseTotal() - $this->getPaid();
     }
 }

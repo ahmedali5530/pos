@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\OrderProductRepository;
@@ -14,7 +15,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=OrderProductRepository::class)
  * @Gedmo\Loggable()
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"skip_null_values"=false}
+ * )
  */
 class OrderProduct
 {
@@ -24,50 +27,50 @@ class OrderProduct
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class)
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $product;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductVariant::class)
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $variant;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $quantity;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $isSuspended;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $isDeleted;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $isReturned;
 
@@ -79,13 +82,13 @@ class OrderProduct
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $discount;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tax::class)
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $taxes;
 
@@ -229,5 +232,20 @@ class OrderProduct
         $this->taxes->removeElement($tax);
 
         return $this;
+    }
+
+    /**
+     * @return float
+     * @ApiProperty()
+     * @Groups({"order.read", "customer.read"})
+     */
+    public function getTaxesTotal(): float
+    {
+        $total = 0;
+        foreach($this->getTaxes() as $tax){
+            $total += ($tax->getRate() * ($this->getPrice() * $this->getQuantity()) / 100);
+        }
+
+        return $total;
     }
 }

@@ -6,7 +6,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\PurchaseOrderItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -65,6 +68,18 @@ class PurchaseOrderItem
      * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
      */
     private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PurchaseOrderItemVariant::class, mappedBy="purchaseOrderItem", orphanRemoval=true, cascade={"persist"})
+     * @Groups({"purchaseOrderItem.read", "purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
+     */
+    private $variants;
+
+    public function __construct()
+    {
+        $this->variants = new ArrayCollection();
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {
@@ -139,6 +154,36 @@ class PurchaseOrderItem
     public function setComments(?string $comments): self
     {
         $this->comments = $comments;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PurchaseOrderItemVariant[]
+     */
+    public function getVariants(): Collection
+    {
+        return $this->variants;
+    }
+
+    public function addVariant(PurchaseOrderItemVariant $variant): self
+    {
+        if (!$this->variants->contains($variant)) {
+            $this->variants[] = $variant;
+            $variant->setPurchaseOrderItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVariant(PurchaseOrderItemVariant $variant): self
+    {
+        if ($this->variants->removeElement($variant)) {
+            // set the owning side to null (unless already changed)
+            if ($variant->getPurchaseOrderItem() === $this) {
+                $variant->setPurchaseOrderItem(null);
+            }
+        }
 
         return $this;
     }

@@ -6,7 +6,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\PurchaseItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -24,38 +27,38 @@ class PurchaseItem
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"purchase.read", "purchaseItem.read"})
+     * @Groups({"purchase.read", "purchaseItem.read", "supplier.read", "supplierPayment.read"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class)
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchaseItem.read", "supplier.read", "purchase.create", "supplierPayment.read"})
      */
     private $item;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
-     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchaseItem.read", "supplier.read", "purchase.create", "supplierPayment.read"})
      */
     private $quantity;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
-     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchaseItem.read", "supplier.read", "purchase.create", "supplierPayment.read"})
      */
     private $purchasePrice;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"purchase.read", "purchaseItem.read", "supplier.read", "purchase.create", "supplierPayment.read"})
      */
     private $purchaseUnit;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchaseItem.read", "supplier.read", "purchase.create", "supplierPayment.read"})
      */
     private $barcode;
 
@@ -67,9 +70,21 @@ class PurchaseItem
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchaseItem.read", "supplier.read", "purchase.create", "supplierPayment.read"})
      */
     private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PurchaseItemVariant::class, mappedBy="purchaseItem", orphanRemoval=true, cascade={"PERSIST"})
+     * @Groups({"purchase.read", "purchaseItem.read", "supplier.read", "purchase.create", "supplierPayment.read"})
+     */
+    private $variants;
+
+    public function __construct()
+    {
+        $this->variants = new ArrayCollection();
+        $this->uuid = Uuid::uuid4();
+    }
 
     public function getId(): ?int
     {
@@ -156,6 +171,36 @@ class PurchaseItem
     public function setComments(?string $comments): self
     {
         $this->comments = $comments;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PurchaseItemVariant[]
+     */
+    public function getVariants(): Collection
+    {
+        return $this->variants;
+    }
+
+    public function addVariant(PurchaseItemVariant $variant): self
+    {
+        if (!$this->variants->contains($variant)) {
+            $this->variants[] = $variant;
+            $variant->setPurchaseItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVariant(PurchaseItemVariant $variant): self
+    {
+        if ($this->variants->removeElement($variant)) {
+            // set the owning side to null (unless already changed)
+            if ($variant->getPurchaseItem() === $this) {
+                $variant->setPurchaseItem(null);
+            }
+        }
 
         return $this;
     }

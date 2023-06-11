@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -10,10 +11,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PurchaseRepository::class)
+ * @UniqueEntity(fields={"purchaseNumber"})
  * @ApiResource(
  *     normalizationContext={"groups"={"purchase.read", "time.read", "uuid.read"}, "skip_null_values"=false},
  *     denormalizationContext={"groups"={"purchase.create"}}
@@ -28,7 +31,7 @@ class Purchase
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"purchase.read", "supplier.read"})
+     * @Groups({"purchase.read", "supplier.read", "supplier.read", "supplierPayment.read"})
      */
     private $id;
 
@@ -47,46 +50,52 @@ class Purchase
 
     /**
      * @ORM\OneToMany(targetEntity=PurchaseItem::class, mappedBy="purchase", orphanRemoval=true, cascade={"PERSIST", "REMOVE"})
-     * @Groups({"purchase.read", "supplier.read", "purchase.create"})
+     * @Groups({"purchase.read", "supplier.read", "purchase.create", "supplierPayment.read"})
      */
     private $items;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"purchase.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchase.create", "supplier.read", "supplierPayment.read"})
      */
     private $updateStocks;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"purchase.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchase.create", "supplier.read", "supplierPayment.read"})
      */
     private $updatePrice;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"purchase.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchase.create", "supplier.read"})
      */
     private $purchasedBy;
 
     /**
      * @ORM\OneToOne(targetEntity=PurchaseOrder::class, cascade={"persist", "remove"})
-     * @Groups({"purchase.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchase.create", "supplier.read", "supplierPayment.read"})
      */
     private $purchaseOrder;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Groups({"purchase.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchase.create", "supplier.read", "supplierPayment.read"})
      */
     private $purchaseNumber;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Groups({"purchase.read", "purchase.create"})
+     * @Groups({"purchase.read", "purchase.create", "supplier.read", "supplierPayment.read"})
      */
     private $purchaseMode;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Payment::class)
+     * @Groups({"purchase.read", "purchase.create", "supplier.read", "supplierPayment.read"})
+     */
+    private $paymentType;
 
     public function __construct()
     {
@@ -223,5 +232,32 @@ class Purchase
         $this->purchaseMode = $purchaseMode;
 
         return $this;
+    }
+
+    public function getPaymentType(): ?Payment
+    {
+        return $this->paymentType;
+    }
+
+    public function setPaymentType(?Payment $paymentType): self
+    {
+        $this->paymentType = $paymentType;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     * @Groups({"purchase.read", "purchase.create", "supplier.read", "supplierPayment.read"})
+     * @ApiProperty()
+     */
+    public function getTotal(): float
+    {
+        $total = 0;
+        foreach($this->getItems() as $item){
+            $total += $item->getQuantity() * $item->getPurchasePrice();
+        }
+
+        return $total;
     }
 }

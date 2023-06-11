@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -16,7 +17,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  * @Gedmo\Loggable()
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"customer.read", "time.read", "uuid.read"}}
+ * )
  */
 class Customer
 {
@@ -27,79 +30,81 @@ class Customer
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $phone;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $birthday;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $address;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $lat;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $lng;
 
     /**
      * @ORM\OneToMany(targetEntity=Order::class, mappedBy="customer")
+     * @Groups({"customer.read"})
      */
     private $orders;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $cnic;
 
     /**
      * @ORM\OneToMany(targetEntity=CustomerPayment::class, mappedBy="customer")
+     * @Groups({"customer.read"})
      */
     private $payments;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $openingBalance;
 
@@ -281,5 +286,49 @@ class Customer
         $this->openingBalance = $openingBalance;
 
         return $this;
+    }
+
+    /**
+     * @return float
+     * @ApiProperty()
+     * @Groups({"order.read", "customer.read"})
+     */
+    public function getSale(): float
+    {
+        $sale = 0;
+        foreach($this->getOrders() as $order){
+            foreach($order->getPayments() as $payment){
+                if($payment->getType()->getType() === Payment::PAYMENT_TYPE_CREDIT) {
+                    $sale += $payment->getReceived();
+                }
+            }
+        }
+
+        return $sale + $this->getOpeningBalance();
+    }
+
+    /**
+     * @return float
+     * @ApiProperty()
+     * @Groups({"order.read", "customer.read"})
+     */
+    public function getPaid(): float
+    {
+        $paid = 0;
+        foreach($this->getPayments() as $payment){
+            $paid += $payment->getAmount();
+        }
+
+        return $paid;
+    }
+
+    /**
+     * @return float
+     * @ApiProperty()
+     * @Groups({"order.read", "customer.read"})
+     */
+    public function getOutstanding(): float
+    {
+        return $this->getSale() - $this->getPaid();
     }
 }

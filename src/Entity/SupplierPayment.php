@@ -3,19 +3,22 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
-use App\Repository\CustomerPaymentRepository;
+use App\Repository\SupplierPaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ORM\Entity(repositoryClass=CustomerPaymentRepository::class)
- * @ApiResource()
+ * @ORM\Entity(repositoryClass=SupplierPaymentRepository::class)
+ * @ApiResource(
+ *     normalizationContext={"groups"={"time.read", "uuid.read", "supplierPayment.read"}}
+ * )
  */
-class CustomerPayment
+class SupplierPayment
 {
+    use ActiveTrait;
     use TimestampableTrait;
     use UuidTrait;
 
@@ -23,37 +26,33 @@ class CustomerPayment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"customer.read"})
+     * @Groups({"supplier.read", "supplierPayment.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
-     * @Groups({"customer.read"})
+     * @Groups({"supplier.read", "supplierPayment.read"})
      */
     private $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Order::class)
+     * @ORM\ManyToOne(targetEntity=Purchase::class)
+     * @Groups({"supplier.read", "supplierPayment.read"})
      */
-    private $order;
+    private $purchase;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="payments")
+     * @ORM\ManyToOne(targetEntity=Supplier::class, inversedBy="payments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $customer;
+    private $supplier;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"customer.read"})
+     * @Groups({"supplier.read", "supplierPayment.read"})
      */
     private $description;
-
-    public function __construct()
-    {
-        $this->uuid = Uuid::uuid4();
-    }
 
     public function getId(): ?int
     {
@@ -72,26 +71,26 @@ class CustomerPayment
         return $this;
     }
 
-    public function getOrder(): ?Order
+    public function getPurchase(): ?Purchase
     {
-        return $this->order;
+        return $this->purchase;
     }
 
-    public function setOrder(?Order $order): self
+    public function setPurchase(?Purchase $purchase): self
     {
-        $this->order = $order;
+        $this->purchase = $purchase;
 
         return $this;
     }
 
-    public function getCustomer(): ?Customer
+    public function getSupplier(): ?Supplier
     {
-        return $this->customer;
+        return $this->supplier;
     }
 
-    public function setCustomer(?Customer $customer): self
+    public function setSupplier(?Supplier $supplier): self
     {
-        $this->customer = $customer;
+        $this->supplier = $supplier;
 
         return $this;
     }

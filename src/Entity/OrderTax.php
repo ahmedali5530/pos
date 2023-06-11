@@ -22,7 +22,7 @@ class OrderTax
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $id;
 
@@ -36,21 +36,21 @@ class OrderTax
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $rate;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $amount;
 
     /**
      * @ORM\ManyToOne(targetEntity=Tax::class)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $type;
 

@@ -26,7 +26,10 @@ use App\Entity\Product;
 use App\Factory\Controller\ApiResponseFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class ProductController
@@ -41,7 +44,8 @@ class ProductController extends AbstractController
     public function keywords(
         Request $request,
         ApiResponseFactory $responseFactory,
-        GetProductsKeywordsQueryHandlerInterface $productsListQueryHandler
+        GetProductsKeywordsQueryHandlerInterface $productsListQueryHandler,
+        SerializerInterface $serializer
     )
     {
         $requestDto = ProductListRequestDto::createFromRequest($request);
@@ -52,9 +56,13 @@ class ProductController extends AbstractController
 
         $list = $productsListQueryHandler->handle($query);
 
-        $responseDto = ProductListKeywordsResponseDto::createFromResult($list);
+        $result = $serializer->serialize($list->getList(), 'jsonld', [
+            'groups' => ['keyword', 'uuid.read', 'time.read']
+        ]);
 
-        return $responseFactory->json($responseDto);
+        return $this->json([
+            'list' => json_decode($result)
+        ]);
     }
 
     /**

@@ -61,10 +61,22 @@ class ProductListRequestDto
      */
     private $q;
 
+    /**
+     * @var string|null
+     */
+    private $itemId;
+
+    /**
+     * @var string[]|null
+     */
+    private $itemIds;
+
     public static function createFromRequest(Request $request): self
     {
         $dto = new self();
         $dto->name = $request->query->get('name');
+        $dto->itemId = $request->query->get('itemId');
+        $dto->itemIds = $request->query->get('itemIds');
         $dto->categoryName = $request->query->get('categoryName');
         $dto->categoryId = $request->query->get('categoryId');
         $dto->priceFrom = $request->query->get('priceFrom');
@@ -97,6 +109,8 @@ class ProductListRequestDto
         $query->setOrderMode($this->getOrderMode());
         $query->setQ($this->q);
         $query->setStore($this->getStore());
+        $query->setItemIds($this->itemIds);
+        $query->setItemId($this->itemId);
     }
 
     /**
@@ -193,5 +207,37 @@ class ProductListRequestDto
     public function setQ(?string $q): void
     {
         $this->q = $q;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getItemId(): ?string
+    {
+        return $this->itemId;
+    }
+
+    /**
+     * @param string|null $itemId
+     */
+    public function setItemId(?string $itemId): void
+    {
+        $this->itemId = $itemId;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getItemIds(): ?array
+    {
+        return $this->itemIds;
+    }
+
+    /**
+     * @param string[]|null $itemIds
+     */
+    public function setItemIds(?array $itemIds): void
+    {
+        $this->itemIds = $itemIds;
     }
 }

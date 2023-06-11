@@ -2,21 +2,26 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\PurchaseOrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PurchaseOrderRepository::class)
+ * @UniqueEntity(fields={"poNumber"})
  * @ApiResource(
- *     normalizationContext={"groups"={"purchaseOrder.read", "time.read", "uuid.read"}},
+ *     normalizationContext={"groups"={"purchaseOrder.read", "time.read", "uuid.read"}, "skip_null_values"=false},
  *     denormalizationContext={"groups"={"purchaseOrder.create"}}
  * )
+ * @ApiFilter(filterClass=BooleanFilter::class, properties={"isUsed"})
  */
 class PurchaseOrder
 {
@@ -27,7 +32,7 @@ class PurchaseOrder
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"purchaseOrder.read", "purchase.read", "purchaseOrder.create"})
+     * @Groups({"purchaseOrder.read", "purchase.read", "purchaseOrder.create", "supplierPayment.read"})
      */
     private $id;
 
@@ -53,9 +58,15 @@ class PurchaseOrder
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"purchaseOrder.read", "purchaseOrder.create", "purchase.read"})
+     * @Groups({"purchaseOrder.read", "purchaseOrder.create", "purchase.read", "supplierPayment.read"})
      */
     private $poNumber;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"purchaseOrder.read", "purchaseOrder.create", "purchase.read", "supplierPayment.read"})
+     */
+    private $isUsed;
 
     public function __construct()
     {
@@ -129,6 +140,18 @@ class PurchaseOrder
     public function setPoNumber(?string $poNumber): self
     {
         $this->poNumber = $poNumber;
+
+        return $this;
+    }
+
+    public function getIsUsed(): ?bool
+    {
+        return $this->isUsed;
+    }
+
+    public function setIsUsed(?bool $isUsed): self
+    {
+        $this->isUsed = $isUsed;
 
         return $this;
     }

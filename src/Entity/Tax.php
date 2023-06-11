@@ -31,21 +31,21 @@ class Tax
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"tax.read", "order.read", "product.read"})
+     * @Groups({"tax.read", "order.read", "product.read", "customer.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
-     * @Groups({"tax.read", "order.read", "product.read"})
+     * @Groups({"tax.read", "order.read", "product.read", "customer.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
-     * @Groups({"tax.read", "order.read", "product.read"})
+     * @Groups({"tax.read", "order.read", "product.read", "customer.read"})
      */
     private $rate;
 

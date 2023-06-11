@@ -32,14 +32,14 @@ class Order
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $orderId;
 
@@ -53,41 +53,41 @@ class Order
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $isSuspended;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $isDeleted;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $isReturned;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $isDispatched;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity=OrderProduct::class, mappedBy="order", cascade={"persist", "remove"})
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $items;
 
@@ -95,7 +95,7 @@ class Order
      * @var OrderDiscount
      * @ORM\OneToOne(targetEntity=OrderDiscount::class, mappedBy="order", cascade={"persist", "remove"})
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $discount;
 
@@ -103,20 +103,20 @@ class Order
      * @var OrderTax
      * @ORM\OneToOne(targetEntity=OrderTax::class, mappedBy="order", cascade={"persist", "remove"})
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $tax;
 
     /**
      * @ORM\OneToMany(targetEntity=OrderPayment::class, mappedBy="order", cascade={"persist", "remove"})
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $payments;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $status;
 
@@ -124,13 +124,13 @@ class Order
      * @ORM\OneToOne(targetEntity=Order::class)
      * @ORM\JoinColumn(nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $returnedFrom;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $description;
 
@@ -142,13 +142,13 @@ class Order
 
     /**
      * @ORM\ManyToOne(targetEntity=Terminal::class)
-     * @Groups({"order.read"})
+     * @Groups({"order.read",})
      */
     private $terminal;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
-     * @Groups({"order.read"})
+     * @Groups({"order.read", "customer.read"})
      */
     private $adjustment;
 

@@ -37,28 +37,28 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read","customer.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "supplier.read", "supplierPayment.read", "keyword"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read","customer.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "supplier.read", "supplierPayment.read", "keyword"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read","customer.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword"})
      */
     private $sku;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read","customer.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword"})
      */
     private $barcode;
 
@@ -93,7 +93,7 @@ class Product
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword"})
      */
     private $quantity;
 
@@ -113,14 +113,14 @@ class Product
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "supplier.read", "keyword"})
      */
     private $purchaseUnit;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword"})
      */
     private $saleUnit;
 

@@ -29,7 +29,7 @@ class ProductVariant
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read"})
      */
     private $id;
 
@@ -42,27 +42,27 @@ class ProductVariant
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read"})
      */
     private $attributeName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read"})
      */
     private $attributeValue;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read"})
      */
     private $barcode;
 
@@ -84,6 +84,12 @@ class ProductVariant
      * @Groups({"product.read"})
      */
     private $prices;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true, options={"default": 0})
+     * @Groups({"product.read"})
+     */
+    private $quantity;
 
     public function __construct()
     {
@@ -206,6 +212,18 @@ class ProductVariant
     public function setAttributeValue(?string $attributeValue): self
     {
         $this->attributeValue = $attributeValue;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?string
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(?string $quantity): self
+    {
+        $this->quantity = $quantity;
 
         return $this;
     }

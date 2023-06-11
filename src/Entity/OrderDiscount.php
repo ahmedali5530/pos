@@ -23,7 +23,7 @@ class OrderDiscount
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $id;
 
@@ -37,27 +37,27 @@ class OrderDiscount
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $rate;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $rateType;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $amount;
 
     /**
      * @ORM\ManyToOne(targetEntity=Discount::class)
      * @Gedmo\Versioned()
-     * @Groups({"order.read"})
+     * @Groups({"order.read","customer.read"})
      */
     private $type;
 

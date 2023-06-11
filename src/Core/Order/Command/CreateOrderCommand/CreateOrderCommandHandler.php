@@ -78,13 +78,20 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
 
         foreach($command->getItems() as $itemDto){
             $orderProduct = new OrderProduct();
-            $orderProduct->setProduct($this->getRepository(Product::class)->find($itemDto->getProduct()->getId()));
+            $product = $this->getRepository(Product::class)->find($itemDto->getProduct()->getId());
+            $orderProduct->setProduct($product);
             $orderProduct->setDiscount($itemDto->getDiscount());
             $orderProduct->setPrice($itemDto->getPrice());
             $orderProduct->setQuantity($itemDto->getQuantity());
 
+            if($product->getManageInventory()){
+                $product->setQuantity($product->getQuantity() - $orderProduct->getQuantity());
+                $this->persist($product);
+            }
+
             if($itemDto->getVariant() !== null) {
-                $orderProduct->setVariant($this->getRepository(ProductVariant::class)->find($itemDto->getVariant()->getId()));
+                $variant = $this->getRepository(ProductVariant::class)->find($itemDto->getVariant()->getId());
+                $orderProduct->setVariant($variant);
             }
 
             if($itemDto->getTaxes()){
