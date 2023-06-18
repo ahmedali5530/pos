@@ -18,6 +18,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -36,6 +40,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "put"={"validation_groups"={"update.validation"}}
  *     }
  * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"displayName": "partial", "username": "exact", "email": "exact"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"displayName", "username", "email"})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

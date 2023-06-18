@@ -13,6 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+
 
 /**
  * @ORM\Entity(repositoryClass=DiscountRepository::class)
@@ -21,6 +25,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *     normalizationContext={"groups"={"discount.read", "time.read", "uuid.read"}}
  * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "rate": "partial", "rateType": "exact", "scope": "exact"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "rate", "rateType", "scope"})
  */
 class Discount
 {

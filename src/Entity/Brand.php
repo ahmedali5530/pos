@@ -12,12 +12,18 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+
 
 /**
  * @ORM\Entity(repositoryClass=BrandRepository::class)
  * @ApiResource(
  *     normalizationContext={"groups"={"brand.read", "time.read", "uuid.read"}}
  * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"name"})
  */
 class Brand
 {

@@ -15,12 +15,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass=SupplierRepository::class)
  * @ApiResource(
  *     normalizationContext={"groups"={"supplier.read", "time.read", "uuid.read"}}
  * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "ipartial", "phone": "ipartial", "email": "partial", "openingBalance": "exact"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "phone", "email", "openingBalance"})
  */
 class Supplier
 {

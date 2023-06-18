@@ -2,10 +2,8 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -17,7 +15,9 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -26,6 +26,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *     normalizationContext={"groups"={"product.read", "time.read", "uuid.read"}}
  * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "barcode": "exact", "basePrice": "exact", "department.name": "partial", "cost": "exact", "suppliers.name": "partial", "categories.name": "partial", "brands.name": "partial", "taxes.name": "partial"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "department.name", "barcode", "basePrice", "cost", "suppliers.name", "categories.name", "brands.name", "taxes.name"})
  */
 class Product
 {

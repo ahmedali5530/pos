@@ -13,6 +13,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+
 
 /**
  * @ORM\Entity(repositoryClass=PurchaseOrderRepository::class)
@@ -22,6 +25,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     denormalizationContext={"groups"={"purchaseOrder.create"}}
  * )
  * @ApiFilter(filterClass=BooleanFilter::class, properties={"isUsed"})
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"poNumber": "exact", "supplier.name": "ipartial", "createdAt": "partial"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"poNumber", "supplier.name", "createdAt"})
  */
 class PurchaseOrder
 {

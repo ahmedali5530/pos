@@ -10,12 +10,17 @@ use App\Repository\DepartmentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass=DepartmentRepository::class)
  * @ApiResource(
  *     normalizationContext={"groups"={"department.read", "time.read", "uuid.read"}}
  * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "description": "partial"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"name"})
  */
 class Department
 {

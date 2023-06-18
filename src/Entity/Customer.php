@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
@@ -20,6 +23,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *     normalizationContext={"groups"={"customer.read", "time.read", "uuid.read"}}
  * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "ipartial", "email": "exact", "cnic": "exact", "openingBalance": "exact", "phone": "exact"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "stores.name", "email", "cnic", "openingBalance", "phone"})
  */
 class Customer
 {

@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass=PurchaseRepository::class)
@@ -21,6 +24,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={"groups"={"purchase.read", "time.read", "uuid.read"}, "skip_null_values"=false},
  *     denormalizationContext={"groups"={"purchase.create"}}
  * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"purchaseNumber": "exact", "purchaseOrder.poNumber": "exact", "supplier.name": "ipartial", "paymentType.name": "ipartial", "createdAt": "partial"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"purchaseNumber", "purchaseOrder.poNumber", "supplier.name", "paymentType.name", "createdAt"})
  */
 class Purchase
 {
