@@ -346,8 +346,8 @@ class OrderRequestListDto
         $dto->isDispatched = $request->query->get('isDispatched');
         $dto->orderIds = $request->query->get('orderIds');
         $dto->ids = $request->query->get('ids');
-        $dto->limit = $request->query->get('itemsPerPage');
-        $dto->offset = $request->query->get('page');
+        $dto->limit = $request->query->get('itemsPerPage', 10);
+        $dto->offset = $request->query->get('page', 1);
         if($request->query->has('order')){
 
             $orderBy = array_keys($request->query->get('order'))[0];
@@ -367,6 +367,11 @@ class OrderRequestListDto
 
     public function populateQuery(GetOrdersListQuery $query)
     {
+        $query->setLimit($this->limit);
+        if($query->getOffset() !== null) {
+            $query->setOffset($this->offset * $query->getLimit());
+        }
+
         $query->setCustomerId($this->customerId);
         $query->setUserId($this->userId);
         $query->setItemId($this->itemId);
@@ -380,8 +385,6 @@ class OrderRequestListDto
         $query->setIsDispatched($this->isDispatched);
         $query->setOrderIds($this->orderIds);
         $query->setIds($this->ids);
-        $query->setLimit($this->limit);
-        $query->setOffset($this->offset);
         $query->setOrderMode($this->orderMode);
         $query->setOrderBy($this->getOrderBy());
         $query->setDateTimeFrom($this->dateTimeFrom);

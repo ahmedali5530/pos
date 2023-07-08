@@ -29,7 +29,7 @@ class ProductVariant
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read", "product.write", "keyword"})
      */
     private $id;
 
@@ -42,52 +42,52 @@ class ProductVariant
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read", "product.write"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read", "product.write"})
      */
     private $attributeName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read", "product.write"})
      */
     private $attributeValue;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read"})
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "product.write", "keyword"})
      */
     private $barcode;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write"})
      */
     private $sku;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write", "keyword"})
      */
     private $price;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductPrice::class, mappedBy="productVariant")
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write"})
      */
     private $prices;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true, options={"default": 0})
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write", "keyword"})
      */
     private $quantity;
 

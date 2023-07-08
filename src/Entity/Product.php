@@ -24,7 +24,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  * @UniqueEntity(fields={"barcode"}, message="Use a different value")
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"product.read", "time.read", "uuid.read"}}
+ *     normalizationContext={"groups"={"product.read", "time.read", "uuid.read"}},
+ *     denormalizationContext={"groups"={"product.write"}}
  * )
  * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "barcode": "exact", "basePrice": "exact", "department.name": "partial", "cost": "exact", "suppliers.name": "partial", "categories.name": "partial", "brands.name": "partial", "taxes.name": "partial"})
  * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "department.name", "barcode", "basePrice", "cost", "suppliers.name", "categories.name", "brands.name", "taxes.name"})
@@ -46,137 +47,137 @@ class Product
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read","customer.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "supplier.read", "supplierPayment.read", "keyword"})
+     * @Groups({"product.read", "order.read","customer.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "supplier.read", "supplierPayment.read", "keyword", "product.write"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read","customer.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword"})
+     * @Groups({"product.read", "order.read","customer.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword", "product.write"})
      */
     private $sku;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read","customer.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword"})
+     * @Groups({"product.read", "order.read","customer.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword", "product.write"})
      */
     private $barcode;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "product.write"})
      */
     private $baseQuantity;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "product.write"})
      */
     private $isAvailable;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "product.write"})
      */
     private $basePrice;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "product.write"})
      */
     private $cost;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword", "product.write"})
      */
     private $quantity;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductVariant::class, mappedBy="product", cascade={"persist", "remove"})
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write", "keyword"})
      * @ApiSubresource()
      */
     private $variants;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductPrice::class, mappedBy="product", cascade={"persist", "remove"})
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write"})
      */
     private $prices;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "supplier.read", "keyword"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "supplier.read", "keyword", "product.write"})
      */
     private $purchaseUnit;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Gedmo\Versioned()
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "keyword", "product.write"})
      */
     private $saleUnit;
 
     /**
      * @ORM\ManyToOne(targetEntity=Media::class)
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "product.write"})
      */
     private $media;
 
     /**
      * @ORM\ManyToMany(targetEntity=Brand::class)
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write"})
      */
     private $brands;
 
     /**
      * @ORM\ManyToMany(targetEntity=Supplier::class)
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write"})
      */
     private $suppliers;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class)
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write"})
      */
     private $categories;
 
     /**
      * @ORM\ManyToMany(targetEntity=Store::class)
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write"})
      */
     private $stores;
 
     /**
      * @ORM\ManyToOne(targetEntity=Department::class)
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write"})
      */
     private $department;
 
     /**
      * @ORM\ManyToMany(targetEntity=Terminal::class, inversedBy="products")
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write"})
      */
     private $terminals;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tax::class)
-     * @Groups({"product.read"})
+     * @Groups({"product.read", "product.write"})
      */
     private $taxes;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read"})
+     * @Groups({"product.read", "order.read", "terminal.read", "purchaseItem.read", "purchase.read", "purchaseOrder.read", "product.write"})
      */
     private $manageInventory;
 

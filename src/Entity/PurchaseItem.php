@@ -80,6 +80,12 @@ class PurchaseItem
      */
     private $variants;
 
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @Groups({"purchase.read", "purchaseItem.read", "supplier.read", "purchase.create", "supplierPayment.read"})
+     */
+    private $quantityRequested;
+
     public function __construct()
     {
         $this->variants = new ArrayCollection();
@@ -201,6 +207,18 @@ class PurchaseItem
                 $variant->setPurchaseItem(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getQuantityRequested(): ?string
+    {
+        return $this->quantityRequested;
+    }
+
+    public function setQuantityRequested(?string $quantityRequested): self
+    {
+        $this->quantityRequested = $quantityRequested;
 
         return $this;
     }

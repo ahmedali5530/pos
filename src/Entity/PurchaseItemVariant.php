@@ -70,6 +70,12 @@ class PurchaseItemVariant
      */
     private $purchaseItem;
 
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create", "supplier.read", "supplierPayment.read"})
+     */
+    private $quantityRequested;
+
     public function __construct()
     {
         $this->uuid = Uuid::uuid4();
@@ -160,6 +166,18 @@ class PurchaseItemVariant
     public function setPurchaseItem(?PurchaseItem $purchaseItem): self
     {
         $this->purchaseItem = $purchaseItem;
+
+        return $this;
+    }
+
+    public function getQuantityRequested(): ?string
+    {
+        return $this->quantityRequested;
+    }
+
+    public function setQuantityRequested(?string $quantityRequested): self
+    {
+        $this->quantityRequested = $quantityRequested;
 
         return $this;
     }
