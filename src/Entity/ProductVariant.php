@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\ProductVariantRepository;
@@ -10,11 +11,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
  * @ORM\Entity(repositoryClass=ProductVariantRepository::class)
  * @Gedmo\Loggable()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"variant.read", "time.read", "uuid.read"}}
+ * )
  */
 class ProductVariant
 {
@@ -24,12 +29,12 @@ class ProductVariant
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read", "product.write", "keyword"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="variants")
-     * @ORM\JoinColumn(nullable=false)
      * @Gedmo\Versioned()
      */
     private $product;
@@ -37,41 +42,54 @@ class ProductVariant
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read", "product.write"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read", "product.write"})
      */
     private $attributeName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "purchaseOrder.read", "product.write"})
      */
     private $attributeValue;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "purchase.read", "supplier.read", "variant.read", "product.write", "keyword"})
      */
     private $barcode;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"product.read", "product.write"})
      */
     private $sku;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"product.read", "product.write", "keyword"})
      */
     private $price;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductPrice::class, mappedBy="productVariant")
+     * @Groups({"product.read", "product.write"})
      */
     private $prices;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true, options={"default": 0})
+     * @Groups({"product.read", "product.write", "keyword"})
+     */
+    private $quantity;
 
     public function __construct()
     {
@@ -194,6 +212,18 @@ class ProductVariant
     public function setAttributeValue(?string $attributeValue): self
     {
         $this->attributeValue = $attributeValue;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?string
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(?string $quantity): self
+    {
+        $this->quantity = $quantity;
 
         return $this;
     }

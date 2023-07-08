@@ -2,14 +2,17 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
 use App\Repository\CustomerPaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerPaymentRepository::class)
+ * @ApiResource()
  */
 class CustomerPayment
 {
@@ -20,11 +23,13 @@ class CustomerPayment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"customer.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @Groups({"customer.read"})
      */
     private $amount;
 
@@ -41,6 +46,7 @@ class CustomerPayment
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"customer.read"})
      */
     private $description;
 

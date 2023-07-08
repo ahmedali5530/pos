@@ -22,6 +22,16 @@ class GetProductsKeywordsQueryHandler extends EntityRepository implements GetPro
             $qb->setParameter('name', '%'.$query->getName().'%');
         }
 
+        if($query->getItemId() !== null){
+            $qb->andWhere('product.id = :itemId');
+            $qb->setParameter('itemId', $query->getItemId());
+        }
+
+        if($query->getItemIds() !== null){
+            $qb->andWhere('product.id IN(:itemIds)');
+            $qb->setParameter('itemIds', $query->getItemIds());
+        }
+
         if($query->getLimit() !== null){
             $qb->setMaxResults($query->getLimit());
         }

@@ -140,7 +140,7 @@ class TerminalController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", methods={"POST"}, name="update")
+     * @Route("/{id}", methods={"PUT"}, name="update")
      *
      * @OA\RequestBody(
      *   @Model(type=UpdateTerminalRequestDto::class)

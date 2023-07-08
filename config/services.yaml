@@ -52,3 +52,7 @@ services:
     App\EventSubscriber\LoggerSubscriber:
         arguments:
             $loggableListener: '@gedmo.listener.loggable'
+
+#    App\State\UserPasswordHasher:
+#        bind:
+#            $processor: '@api_platform.doctrine.orm.state.persist_processor'

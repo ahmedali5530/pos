@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -13,6 +14,7 @@ use Ramsey\Uuid\Uuid;
 /**
  * @ORM\Entity(repositoryClass=LocationRepository::class)
  * @Gedmo\Loggable()
+ * @ApiResource()
  */
 class Location
 {

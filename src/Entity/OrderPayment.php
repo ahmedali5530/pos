@@ -2,14 +2,17 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\OrderPaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=OrderPaymentRepository::class)
  * @Gedmo\Loggable()
+ * @ApiResource()
  */
 class OrderPayment
 {
@@ -19,36 +22,42 @@ class OrderPayment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"order.read","customer.read"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="payments")
      * @Gedmo\Versioned()
+     * @Groups({"order.read"})
      */
     private $order;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
+     * @Groups({"order.read","customer.read"})
      */
     private $total;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
+     * @Groups({"order.read","customer.read"})
      */
     private $received;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2)
      * @Gedmo\Versioned()
+     * @Groups({"order.read","customer.read"})
      */
     private $due;
 
     /**
      * @ORM\ManyToOne(targetEntity=Payment::class)
      * @Gedmo\Versioned()
+     * @Groups({"order.read","customer.read"})
      */
     private $type;
 

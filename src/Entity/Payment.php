@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -11,10 +12,19 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass=PaymentRepository::class)
  * @Gedmo\Loggable()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"payment.read", "time.read", "uuid.read"}}
+ * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "type": "exact"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "type"})
  */
 class Payment
 {
@@ -32,29 +42,34 @@ class Payment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"payment.read", "order.read","customer.read", "purchase.read", "supplier.read", "supplierPayment.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
+     * @Groups({"payment.read", "order.read","customer.read", "purchase.read", "supplier.read", "supplierPayment.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
+     * @Groups({"payment.read", "order.read","customer.read", "purchase.read", "supplier.read", "supplierPayment.read"})
      */
     private $type;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"payment.read"})
      */
     private $canHaveChangeDue;
 
     /**
      * @ORM\ManyToMany(targetEntity=Store::class)
+     * @Groups({"payment.read"})
      */
     private $stores;
 

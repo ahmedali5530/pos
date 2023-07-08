@@ -4,6 +4,7 @@ namespace App\Core\Product\Query\GetProductsKeywords;
 
 use App\Core\Cqrs\Traits\CqrsResultEntityNotFoundTrait;
 use App\Entity\Product;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class GetProductsKeywordsQueryResult
 {
@@ -16,7 +17,7 @@ class GetProductsKeywordsQueryResult
     private int $total = 0;
 
     /**
-     * @return Product[]
+     * @return Product[]|Paginator
      */
     public function getList(): iterable
     {

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -11,11 +12,21 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+
 
 /**
  * @ORM\Entity(repositoryClass=DiscountRepository::class)
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @Gedmo\Loggable()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"discount.read", "time.read", "uuid.read"}}
+ * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "rate": "partial", "rateType": "exact", "scope": "exact"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "rate", "rateType", "scope"})
  */
 class Discount
 {
@@ -33,35 +44,41 @@ class Discount
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"discount.read", "order.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
+     * @Groups({"discount.read", "order.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=2, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"discount.read", "order.read"})
      */
     private $rate;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"discount.read", "order.read"})
      */
     private $rateType;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"discount.read", "order.read"})
      */
     private $scope;
 
     /**
      * @ORM\ManyToMany(targetEntity=Store::class)
+     * @Groups({"discount.read"})
      */
     private $stores;
 

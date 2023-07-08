@@ -138,7 +138,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", methods={"POST"}, name="update")
+     * @Route("/{id}", methods={"PUT"}, name="update")
      *
      * @OA\RequestBody(
      *   @Model(type=UpdateUserRequestDto::class)

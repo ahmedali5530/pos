@@ -1,14 +1,8 @@
 version: '3'
 
-services:
-###> symfony/mailer ###
-  mailer:
-    image: schickling/mailcatcher
-    ports: [1025, 1080]
-###< symfony/mailer ###
-
+#services:
 ###> doctrine/doctrine-bundle ###
-  database:
-    ports:
-      - "5432"
+#  database:
+#    ports:
+#      - "5432"
 ###< doctrine/doctrine-bundle ###

@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductInventoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProductInventoryRepository::class)
+ * @ApiResource()
  */
 class ProductInventory
 {
@@ -20,21 +23,25 @@ class ProductInventory
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="inventory")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"product.read"})
      */
     private $product;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"product.read"})
      */
     private $quantity;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"product.read"})
      */
     private $entity;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"product.read"})
      */
     private $entityType;
 

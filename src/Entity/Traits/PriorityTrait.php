@@ -3,11 +3,13 @@
 namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 trait PriorityTrait
 {
     /**
      * @ORM\Column(type="bigint", nullable=true)
+     * @Groups({"priority.read"})
      */
     private $priority;
 

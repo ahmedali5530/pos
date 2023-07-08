@@ -23,43 +23,17 @@ use App\Repository\StoreRepository;
 use App\Repository\TerminalRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/admin/closing", name="admin_closings_")
- * @OA\Tag(name="Admin")
  */
 class ClosingController extends AbstractController
 {
     /**
      * @Route("/list", methods={"GET"}, name="list")
-     *
-     * @OA\Parameter(
-     *   name="name",
-     *   in="query",
-     *   description="Search in name"
-     * )
-     *
-     * @OA\Parameter(
-     *   name="limit",
-     *   in="query",
-     *   description="limit the results"
-     * )
-     *
-     * @OA\Parameter(
-     *   name="offset",
-     *   in="query",
-     *   description="start the results from offset"
-     * )
-     *
-     * @OA\Response(
-     *   @Model(type=SelectClosingListResponseDto::class), response="200",
-     * description="OK"
-     * )
      */
     public function list(Request $request, ApiResponseFactory $responseFactory, ApiRequestDtoValidator $requestDtoValidator, SelectClosingQueryHandlerInterface $handler)
     {
@@ -78,22 +52,6 @@ class ClosingController extends AbstractController
 
     /**
      * @Route("/create", methods={"POST"}, name="create")
-     *
-     * @OA\RequestBody(
-     *   @Model(type=CreateClosingRequestDto::class)
-     * )
-     *
-     * @OA\Response(
-     *   response="200", description="OK", @Model(type=SelectClosingResponseDto::class)
-     * )
-     *
-     * @OA\Response(
-     *   response="422", description="Validations"
-     * )
-     *
-     * @OA\Response(
-     *   response="404", description="Not found"
-     * )
      */
     public function create(Request $request, ApiRequestDtoValidator $requestDtoValidator, ApiResponseFactory $responseFactory, CreateClosingCommandHandlerInterface $handler)
     {
@@ -122,26 +80,6 @@ class ClosingController extends AbstractController
 
     /**
      * @Route("/opened", methods={"GET"}, name="opened")
-     *
-     * @OA\Parameter(
-     *   name="store",
-     *   in="query",
-     *   description="current store"
-     * )
-     *
-     * @OA\Parameter(
-     *   name="terminal",
-     *   in="query",
-     *   description="current terminal"
-     * )
-     *
-     * @OA\Response(
-     *   response="200", description="OK", @Model(type=SelectClosingResponseDto::class)
-     * )
-     *
-     * @OA\Response(
-     *   response="404", description="Not found"
-     * )
      */
     public function getOpened(
         ApiResponseFactory $responseFactory,
@@ -183,14 +121,6 @@ class ClosingController extends AbstractController
 
     /**
      * @Route("/{id}", methods={"GET"}, name="get")
-     *
-     * @OA\Response(
-     *   response="200", description="OK", @Model(type=SelectClosingResponseDto::class)
-     * )
-     *
-     * @OA\Response(
-     *   response="404", description="Not found"
-     * )
      */
     public function getById(Closing $entity, ApiResponseFactory $responseFactory)
     {
@@ -205,22 +135,6 @@ class ClosingController extends AbstractController
 
     /**
      * @Route("/{id}", methods={"POST"}, name="update")
-     *
-     * @OA\RequestBody(
-     *   @Model(type=UpdateClosingRequestDto::class)
-     * )
-     *
-     * @OA\Response(
-     *   response="200", description="OK", @Model(type=SelectClosingResponseDto::class)
-     * )
-     *
-     * @OA\Response(
-     *   response="422", description="Validations"
-     * )
-     *
-     * @OA\Response(
-     *   response="404", description="Not found"
-     * )
      */
     public function update(Request $request, ApiRequestDtoValidator $requestDtoValidator, ApiResponseFactory $responseFactory, UpdateClosingCommandHandlerInterface $handler)
     {
@@ -249,14 +163,6 @@ class ClosingController extends AbstractController
 
     /**
      * @Route("/{id}", methods={"DELETE"}, name="delete")
-     *
-     * @OA\Response(
-     *   response="200", description="OK"
-     * )
-     *
-     * @OA\Response(
-     *   response="404", description="Not found"
-     * )
      */
     public function delete($id, ApiResponseFactory $responseFactory, DeleteClosingCommandHandlerInterface $handler)
     {

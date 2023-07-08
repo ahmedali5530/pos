@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -11,12 +12,20 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
-
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @Gedmo\Loggable()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"category.read", "time.read", "uuid.read"}}
+ * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "type": "partial"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"name"})
  */
 class Category
 {
@@ -30,33 +39,39 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"category.read", "product.read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned()
+     * @Groups({"category.read", "product.read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Gedmo\Versioned()
+     * @Groups({"category.read", "product.read"})
      */
     private $type;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="children")
+     * @Groups({"category.read", "product.read"})
      */
     private $parent;
 
     /**
      * @ORM\OneToMany(targetEntity=Category::class, mappedBy="parent")
+     * @Groups({"category.read", "product.read"})
      */
     private $children;
 
     /**
      * @ORM\ManyToMany(targetEntity=Store::class)
+     * @Groups({"category.read", "product.read"})
      */
     private $stores;
 

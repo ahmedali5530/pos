@@ -22,8 +22,6 @@ use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQuery;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQueryHandlerInterface;
 use App\Core\Validation\ApiRequestDtoValidator;
 use App\Factory\Controller\ApiResponseFactory;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,48 +31,11 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class OrderController
  * @package App\Controller\Api\Admin
  * @Route("/admin/order", name="admin_orders_")
- * @OA\Tag(name="Admin")
  */
 class OrderController extends AbstractController
 {
     /**
      * @Route("/list", name="list", methods={"GET"})
-     *
-     * @OA\Parameter(name="customerId", in="query", description="customer id to search for")
-     *
-     * @OA\Parameter(name="userId", in="query", description="user id to search for")
-     *
-     * @OA\Parameter(name="itemId", in="query", description="item id to search for")
-     *
-     * @OA\Parameter(name="variantId", in="query", description="variant id to search for")
-     *
-     * @OA\Parameter(name="discount", in="query", description="discount amount to search for")
-     *
-     * @OA\Parameter(name="tax", in="query", description="tax percent to search for")
-     *
-     * @OA\Parameter(name="payment", in="query", description="payment amount to search for")
-     *
-     * @OA\Parameter(name="isSuspended", in="query", description="search for suspended orders")
-     *
-     * @OA\Parameter(name="isDeleted", in="query", description="search for deleted orders")
-     *
-     * @OA\Parameter(name="isReturned", in="query", description="search for returned orders")
-     *
-     * @OA\Parameter(name="orderIds[]", in="query", description="search in orders ids", @OA\Schema(type="array", @OA\Items(type="string")))
-     *
-     * @OA\Parameter(name="ids[]", in="query", description="search in ids", @OA\Schema(type="array", @OA\Items(type="string")))
-     *
-     * @OA\Parameter(name="dateTimeFrom", in="query", description="Date of order create start")
-     *
-     * @OA\Parameter(name="dateTimeTo", in="query", description="Date of order create end")
-     *
-     * @OA\Parameter(name="q", in="query", description="Search in orderid and customer")
-     *
-     * @OA\Parameter(name="store", in="query", description="Search in store")
-     *
-     * @OA\Response(
-     *     response="200", description="OK", @Model(type=OrderListResponseDto::class)
-     * )
      */
     public function list(
         Request $request,
@@ -97,12 +58,6 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/create", methods={"POST"}, name="create")
-     *
-     * @OA\RequestBody(
-     *     @Model(type=CreateOrderRequestDto::class)
-     * )
-     *
-     * @OA\Response(response="200", description="Order Created", @Model(type=OrderResponseDto::class))
      */
     public function create(
         Request $request,
@@ -137,8 +92,6 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/restore/{id}", methods={"POST"}, name="restore")
-     *
-     * @OA\Response(response="200", description="Order Created", @Model(type=OrderResponseDto::class))
      */
     public function restore(
         $id,
@@ -162,8 +115,6 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/dispatch/{id}", methods={"POST"}, name="dispatch")
-     *
-     * @OA\Response(response="200", description="Order Created", @Model(type=OrderResponseDto::class))
      */
     public function dispatch(
         $id,
@@ -187,8 +138,6 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/refund/{id}", methods={"POST"}, name="refund")
-     *
-     * @OA\Response(response="200", description="Order Created", @Model(type=OrderResponseDto::class))
      */
     public function refund(
         $id,
@@ -212,8 +161,6 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/{id}", methods={"DELETE"}, name="delete")
-     *
-     * @OA\Response(response="200", description="Order Created", @Model(type=OrderResponseDto::class))
      */
     public function delete(
         $id,

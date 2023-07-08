@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\ActiveTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Entity\Traits\UuidTrait;
@@ -11,10 +12,21 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+
 
 /**
  * @ORM\Entity(repositoryClass=StoreRepository::class)
  * @Gedmo\Loggable()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"store.read", "time.read", "uuid.read"}, "skip_null_values"=false}
+ * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "location": "partial"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "location"})
  */
 class Store
 {
@@ -27,21 +39,26 @@ class Store
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"store.read", "user.read", "brand.read", "category.read", "payment.read", "discount.read", "tax.read", "department.read", "product.read", "terminal.read", "order.read", "supplier.read", "purchase.read", "purchaseOrder.read"})
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"store.read", "user.read", "brand.read", "category.read", "payment.read", "discount.read", "tax.read", "department.read", "product.read", "terminal.read", "order.read", "supplier.read", "purchase.read", "purchaseOrder.read"})
+     * @Assert\NotBlank()
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"store.read", "user.read", "brand.read", "category.read", "payment.read", "discount.read", "tax.read", "department.read", "product.read", "terminal.read", "order.read", "supplier.read", "purchase.read", "purchaseOrder.read"})
      */
-    private $location;
+    private ?string $location;
 
     /**
      * @ORM\OneToMany(targetEntity=Terminal::class, mappedBy="store", cascade={"persist", "remove"})
+     * @Groups({"store.read"})
      */
     private $terminals;
 
