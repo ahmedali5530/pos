@@ -17,16 +17,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 
 /**
  * @ORM\Entity(repositoryClass=StoreRepository::class)
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"store.read", "time.read", "uuid.read"}, "skip_null_values"=false}
+ *     normalizationContext={"groups"={"store.read", "time.read", "uuid.read", "active.read"}, "skip_null_values"=false}
  * )
  * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "location": "partial"})
  * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "location"})
+ * @ApiFilter(filterClass=BooleanFilter::class, properties={"isActive"})
  */
 class Store
 {

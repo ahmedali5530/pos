@@ -66,6 +66,46 @@ class ProductController extends AbstractController
     }
 
     /**
+     * @Route("/quantities", methods={"GET"}, name="quantities")
+     */
+    public function getQuantity(
+        Request $request,
+        ApiResponseFactory $responseFactory,
+        GetProductsKeywordsQueryHandlerInterface $productsListQueryHandler,
+        SerializerInterface $serializer
+    ){
+        $requestDto = ProductListRequestDto::createFromRequest($request);
+
+        $query = new GetProductsKeywordsQuery();
+
+        $requestDto->populateQuery($query);
+
+        $list = $productsListQueryHandler->handle($query);
+
+        $quantity = null;
+        foreach($list->getList() as $item){
+            if($requestDto->getVariantId() !== null){
+                foreach($item->getVariants() as $variant){
+                    if((int) $requestDto->getVariantId() === $variant->getId()){
+                        $quantity = $variant->getQuantity();
+                        break 2;
+                    }
+                }
+            }
+            foreach($item->getStores() as $store){
+                if($store->getStore()->getId() === (int) $requestDto->getStore()){
+                    $quantity = $store->getQuantity();
+                    break 2;
+                }
+            }
+        }
+
+        return $this->json([
+            'quantity' => $quantity
+        ]);
+    }
+
+    /**
      * @Route("/export", name="download_products", methods={"GET"})
      */
     public function download(

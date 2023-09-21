@@ -53,9 +53,13 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
         }
 
         if($command->getReturnedFrom() !== null) {
-            $item->setReturnedFrom(
-                $this->getRepository(Order::class)->find($command->getReturnedFrom())
-            );
+            $returnedFrom = $this->getRepository(Order::class)->find($command->getReturnedFrom());
+            $item->setReturnedFrom($returnedFrom);
+
+            $returnedFrom->setIsReturned(true);
+            $returnedFrom->setStatus(OrderStatus::RETURNED);
+
+            $this->save($returnedFrom);
         }
         $item->setIsSuspended($command->getIsSuspended());
         $item->setIsDeleted($command->getIsDeleted());
@@ -64,6 +68,12 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
         if($command->getCustomerId() !== null) {
             $item->setCustomer(
                 $this->getRepository(Customer::class)->find($command->getCustomerId())
+            );
+        }
+
+        if($command->getCustomer() !== null){
+            $item->setCustomer(
+                (new Customer())->setName($command->getCustomer())
             );
         }
 
@@ -84,14 +94,30 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
             $orderProduct->setPrice($itemDto->getPrice());
             $orderProduct->setQuantity($itemDto->getQuantity());
 
-            if($product->getManageInventory()){
-                $product->setQuantity($product->getQuantity() - $orderProduct->getQuantity());
-                $this->persist($product);
-            }
-
             if($itemDto->getVariant() !== null) {
                 $variant = $this->getRepository(ProductVariant::class)->find($itemDto->getVariant()->getId());
                 $orderProduct->setVariant($variant);
+
+                // manage variants quantity
+                if($product->getManageInventory()){
+                    $variant->setQuantity($variant->getQuantity() - $itemDto->getQuantity());
+                    $this->save($variant);
+                }
+            }
+
+            // manage product quantity
+            if($product->getManageInventory()){
+                $store = null;
+                foreach($product->getStores() as $s){
+                    if($s->getStore()->getId() === $item->getStore()->getId()){
+                        $store = $s;
+                        break;
+                    }
+                }
+                if($store !== null) {
+                    $store->setQuantity($store->getQuantity() - $orderProduct->getQuantity());
+                    $this->save($store);
+                }
             }
 
             if($itemDto->getTaxes()){

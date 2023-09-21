@@ -27,6 +27,11 @@ class CreateOrderRequestDto
     private $customerId;
 
     /**
+     * @var string|null
+     */
+    private $customer;
+
+    /**
      * @var bool|null
      */
     private $isSuspended;
@@ -174,6 +179,8 @@ class CreateOrderRequestDto
         $dto->finalTotal = $data['total'] ?? 0;
         $dto->adjustment = $data['adjustment'] ?? 0;
 
+        $dto->customer = $data['customer'] ?? null;
+
         return $dto;
     }
 
@@ -197,6 +204,7 @@ class CreateOrderRequestDto
         $command->setTerminal($this->terminal);
         $command->setTaxAmount($this->taxAmount);
         $command->setAdjustment($this->adjustment);
+        $command->setCustomer($this->customer);
     }
 
     /**
@@ -485,5 +493,21 @@ class CreateOrderRequestDto
     public function setAdjustment(?float $adjustment): void
     {
         $this->adjustment = $adjustment;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCustomer(): ?string
+    {
+        return $this->customer;
+    }
+
+    /**
+     * @param string|null $customer
+     */
+    public function setCustomer(?string $customer): void
+    {
+        $this->customer = $customer;
     }
 }

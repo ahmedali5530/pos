@@ -11,6 +11,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass=OrderProductRepository::class)
@@ -18,6 +21,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *     normalizationContext={"skip_null_values"=false}
  * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"product.id": "exact", "variant.id": "exact", "quantity": "exact", "price": "exact", "discount": "exact", "order.orderId": "exact", "createdAt": "partial"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"order.orderId", "variant.attributeValue", "createdAt", "quantity", "price", "discount"})
  */
 class OrderProduct
 {

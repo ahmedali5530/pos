@@ -18,16 +18,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
- * @UniqueEntity(fields={"barcode"}, message="Use a different value")
+ * @UniqueEntity(fields={"barcode"}, message="Barcode already used. Please use a different value")
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"product.read", "time.read", "uuid.read"}},
- *     denormalizationContext={"groups"={"product.write"}}
+ *     normalizationContext={"groups"={"product.read", "time.read", "uuid.read", "active.read"}},
+ *     denormalizationContext={"groups"={"product.write", "active.read"}}
  * )
  * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "barcode": "exact", "basePrice": "exact", "department.name": "partial", "cost": "exact", "suppliers.name": "partial", "categories.name": "partial", "brands.name": "partial", "taxes.name": "partial"})
+ * @ApiFilter(filterClass=BooleanFilter::class, properties={"isActive"})
  * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "department.name", "barcode", "basePrice", "cost", "suppliers.name", "categories.name", "brands.name", "taxes.name"})
  */
 class Product
@@ -152,13 +154,8 @@ class Product
     private $categories;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Store::class)
-     * @Groups({"product.read", "product.write"})
-     */
-    private $stores;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Department::class)
+     * @ORM\JoinColumn(onDelete="set null")
      * @Groups({"product.read", "product.write"})
      */
     private $department;
@@ -187,6 +184,12 @@ class Product
      */
     private $inventory;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ProductStore::class, mappedBy="product", cascade={"persist", "remove"})
+     * @Groups({"product.read", "product.write", "keyword"})
+     */
+    private $stores;
+
     public function __construct()
     {
         $this->variants = new ArrayCollection();
@@ -195,10 +198,10 @@ class Product
         $this->suppliers = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->uuid = Uuid::uuid4();
-        $this->stores = new ArrayCollection();
         $this->terminals = new ArrayCollection();
         $this->taxes = new ArrayCollection();
         $this->inventory = new ArrayCollection();
+        $this->stores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -470,30 +473,6 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection|Store[]
-     */
-    public function getStores(): Collection
-    {
-        return $this->stores;
-    }
-
-    public function addStore(Store $store): self
-    {
-        if (!$this->stores->contains($store)) {
-            $this->stores[] = $store;
-        }
-
-        return $this;
-    }
-
-    public function removeStore(Store $store): self
-    {
-        $this->stores->removeElement($store);
-
-        return $this;
-    }
-
     public function getDepartment(): ?Department
     {
         return $this->department;
@@ -590,6 +569,36 @@ class Product
             // set the owning side to null (unless already changed)
             if ($inventory->getProduct() === $this) {
                 $inventory->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductStore[]
+     */
+    public function getStores(): Collection
+    {
+        return $this->stores;
+    }
+
+    public function addStore(ProductStore $store): self
+    {
+        if (!$this->stores->contains($store)) {
+            $this->stores[] = $store;
+            $store->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStore(ProductStore $store): self
+    {
+        if ($this->stores->removeElement($store)) {
+            // set the owning side to null (unless already changed)
+            if ($store->getProduct() === $this) {
+                $store->setProduct(null);
             }
         }
 

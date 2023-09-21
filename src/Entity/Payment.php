@@ -16,14 +16,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
  * @ORM\Entity(repositoryClass=PaymentRepository::class)
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"payment.read", "time.read", "uuid.read"}}
+ *     normalizationContext={"groups"={"payment.read", "time.read", "uuid.read", "active.read"}}
  * )
  * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "type": "exact"})
+ * @ApiFilter(filterClass=BooleanFilter::class, properties={"isActive"})
  * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "type"})
  */
 class Payment

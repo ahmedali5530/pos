@@ -16,15 +16,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
  * @ORM\Entity(repositoryClass=TaxRepository::class)
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"tax.read", "time.read", "uuid.read"}}
+ *     normalizationContext={"groups"={"tax.read", "time.read", "uuid.read", "active.read"}}
  * )
  * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "exact", "rate": "exact"})
  * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "rate"})
+ * @ApiFilter(filterClass=BooleanFilter::class, properties={"isActive"})
  */
 class Tax
 {
@@ -36,7 +38,7 @@ class Tax
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"tax.read", "order.read", "product.read", "customer.read"})
+     * @Groups({"tax.read", "order.read", "product.read", "customer.read", "active.read"})
      */
     private $id;
 

@@ -71,6 +71,11 @@ class ProductListRequestDto
      */
     private $itemIds;
 
+    /**
+     * @var string|null
+     */
+    private $variantId;
+
     public static function createFromRequest(Request $request): self
     {
         $dto = new self();
@@ -86,6 +91,7 @@ class ProductListRequestDto
         $dto->orderBy = self::ORDERS_LIST[$request->query->get('orderBy')] ?? null;
         $dto->orderMode = $request->query->get('orderMode', 'ASC');
         $dto->q = $request->query->get('q');
+        $dto->variantId = $request->query->get('variantId');
 
         $dto->store = $request->query->get('store');
 
@@ -111,6 +117,7 @@ class ProductListRequestDto
         $query->setStore($this->getStore());
         $query->setItemIds($this->itemIds);
         $query->setItemId($this->itemId);
+        $query->setVariantId($this->variantId);
     }
 
     /**
@@ -239,5 +246,21 @@ class ProductListRequestDto
     public function setItemIds(?array $itemIds): void
     {
         $this->itemIds = $itemIds;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getVariantId(): ?string
+    {
+        return $this->variantId;
+    }
+
+    /**
+     * @param string|null $variantId
+     */
+    public function setVariantId(?string $variantId): void
+    {
+        $this->variantId = $variantId;
     }
 }

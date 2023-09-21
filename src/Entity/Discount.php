@@ -16,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 
 /**
@@ -23,10 +24,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @Gedmo\Loggable()
  * @ApiResource(
- *     normalizationContext={"groups"={"discount.read", "time.read", "uuid.read"}}
+ *     normalizationContext={"groups"={"discount.read", "time.read", "uuid.read", "active.read"}}
  * )
  * @ApiFilter(filterClass=SearchFilter::class, properties={"name": "partial", "rate": "partial", "rateType": "exact", "scope": "exact"})
  * @ApiFilter(filterClass=OrderFilter::class, properties={"name", "rate", "rateType", "scope"})
+ * @ApiFilter(filterClass=BooleanFilter::class, properties={"isActive"})
  */
 class Discount
 {

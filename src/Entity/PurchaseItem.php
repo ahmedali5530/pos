@@ -11,12 +11,17 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass=PurchaseItemRepository::class)
  * @ApiResource(
  *     normalizationContext={"groups"={"purchaseItem.read", "time.read", "uuid.read"}}
  * )
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"item.id": "exact", "quantity": "exact", "quantityRequested": "exact", "purchasePrice": "exact", "createdAt": "partial", "purchase.purchaseNumber": "exact"})
+ * @ApiFilter(filterClass=OrderFilter::class, properties={"purchase.purchaseNumber", "createdAt", "quantity", "purchasePrice", "quantityRequested"})
  */
 class PurchaseItem
 {
@@ -65,6 +70,7 @@ class PurchaseItem
     /**
      * @ORM\ManyToOne(targetEntity=Purchase::class, inversedBy="items")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"purchaseItem.read"})
      */
     private $purchase;
 
@@ -138,7 +144,7 @@ class PurchaseItem
         return $this->purchaseUnit;
     }
 
-    public function setPurchaseUnit(string $purchaseUnit): self
+    public function setPurchaseUnit(?string $purchaseUnit): self
     {
         $this->purchaseUnit = $purchaseUnit;
 

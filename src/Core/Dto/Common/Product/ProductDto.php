@@ -116,7 +116,7 @@ class ProductDto
     private $terminals = [];
 
     /**
-     * @var StoreShortDto[]
+     * @var ProductStoreDto[]
      */
     private $stores = [];
 
@@ -170,7 +170,7 @@ class ProductDto
         }
 
         foreach($product->getStores() as $store){
-            $dto->stores[] = StoreShortDto::createFromStore($store);
+            $dto->stores[] = ProductStoreDto::createFromProductStore($store);
         }
 
         foreach($product->getTaxes() as $tax){
@@ -509,7 +509,7 @@ class ProductDto
     }
 
     /**
-     * @return StoreShortDto[]
+     * @return ProductStoreDto[]
      */
     public function getStores(): array
     {
@@ -517,7 +517,7 @@ class ProductDto
     }
 
     /**
-     * @param StoreShortDto[] $stores
+     * @param ProductStoreDto[] $stores
      */
     public function setStores(array $stores): void
     {

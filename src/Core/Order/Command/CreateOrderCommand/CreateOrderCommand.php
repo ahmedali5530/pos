@@ -19,6 +19,11 @@ class CreateOrderCommand
     private $customerId;
 
     /**
+     * @var string|null
+     */
+    private $customer;
+
+    /**
      * @var bool|null
      */
     private $isSuspended;
@@ -368,5 +373,21 @@ class CreateOrderCommand
     public function setAdjustment(?float $adjustment): void
     {
         $this->adjustment = $adjustment;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCustomer(): ?string
+    {
+        return $this->customer;
+    }
+
+    /**
+     * @param string|null $customer
+     */
+    public function setCustomer(?string $customer): void
+    {
+        $this->customer = $customer;
     }
 }

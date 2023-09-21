@@ -32,6 +32,15 @@ class GetProductsKeywordsQueryHandler extends EntityRepository implements GetPro
             $qb->setParameter('itemIds', $query->getItemIds());
         }
 
+        if($query->getVariantId() !== null){
+            $qb->join('product.variants', 'variant');
+            $qb->andWhere('variant.id = :variantId');
+            $qb->setParameter('variantId', $query->getVariantId());
+        }
+
+        $qb->andWhere('product.isActive = :true');
+        $qb->setParameter('true', true);
+
         if($query->getLimit() !== null){
             $qb->setMaxResults($query->getLimit());
         }

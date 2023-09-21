@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 
 /**
@@ -29,7 +30,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  * @UniqueEntity(fields={"username"})
  * @ORM\Table("user_account")
  * @ApiResource(
- *     normalizationContext={"groups"={"user.read", "time.read", "uuid.read"}, "skip_null_values"=false},
+ *     normalizationContext={"groups"={"user.read", "time.read", "uuid.read", "active.read"}, "skip_null_values"=false},
  *     collectionOperations={
  *         "get",
  *         "post"={"validation_groups"={"create.validation"}}
@@ -42,6 +43,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  * )
  * @ApiFilter(filterClass=SearchFilter::class, properties={"displayName": "partial", "username": "exact", "email": "exact"})
  * @ApiFilter(filterClass=OrderFilter::class, properties={"displayName", "username", "email"})
+ * @ApiFilter(filterClass=BooleanFilter::class, properties={"isActive"})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

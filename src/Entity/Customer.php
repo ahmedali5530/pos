@@ -309,7 +309,7 @@ class Customer
             }
         }
 
-        return $sale + $this->getOpeningBalance();
+        return $sale;
     }
 
     /**

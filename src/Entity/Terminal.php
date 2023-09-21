@@ -15,15 +15,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
  * @ORM\Entity(repositoryClass=TerminalRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"terminal.read", "time.read", "uuid.read"}},
- *     denormalizationContext={"groups"={"terminal.create"}}
+ *     normalizationContext={"groups"={"terminal.read", "time.read", "uuid.read", "active.read"}},
+ *     denormalizationContext={"groups"={"terminal.create", "active.read"}}
  * )
  * @ApiFilter(filterClass=SearchFilter::class, properties={"code": "exact", "description": "ipartial", "products.name": "ipartial"})
  * @ApiFilter(filterClass=OrderFilter::class, properties={"code", "description", "products.name"})
+ * @ApiFilter(filterClass=BooleanFilter::class, properties={"isActive"})
  */
 class Terminal
 {

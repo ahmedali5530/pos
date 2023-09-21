@@ -58,6 +58,7 @@ class OrderDiscount
      * @ORM\ManyToOne(targetEntity=Discount::class)
      * @Gedmo\Versioned()
      * @Groups({"order.read","customer.read"})
+     * @ORM\JoinColumn(onDelete="set null")
      */
     private $type;
 
