@@ -24,11 +24,13 @@ A point of sale system built using [React.js](https://github.com/ahmedali5530/po
 - Supports Refunds
 
 ## Requirements
-- Apache2/Nginx web server
+- [Composer 2.x](https://getcomposer.org/download/)
+- [Apache2/Nginx web server](https://symfony.com/doc/current/setup/web_server_configuration.html)
 - php >= 7.4
 - MariaDB or Mysql or PostgreSQL
+- Windows users can install [xampp](https://www.apachefriends.org/) for all in one solution
 ## Installation
-
+- Open project directory and run `composer install` to install all third party libraries
 - Edit .env file and update DATABASE_URL variable
 - Create database using `php bin/console doctrine:database:create`
 - Run migrations `php bin/console doctrine:migrations:migrate`
