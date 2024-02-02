@@ -92,6 +92,24 @@ class PurchaseItem
      */
     private $quantityRequested;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create"})
+     */
+    private $isExpire;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create"})
+     */
+    private $expiryDate;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @Groups({"purchase.read", "purchaseItem.read", "purchase.create"})
+     */
+    private $quantityUsed;
+
     public function __construct()
     {
         $this->variants = new ArrayCollection();
@@ -225,6 +243,42 @@ class PurchaseItem
     public function setQuantityRequested(?string $quantityRequested): self
     {
         $this->quantityRequested = $quantityRequested;
+
+        return $this;
+    }
+
+    public function getIsExpire(): ?bool
+    {
+        return $this->isExpire;
+    }
+
+    public function setIsExpire(?bool $isExpire): self
+    {
+        $this->isExpire = $isExpire;
+
+        return $this;
+    }
+
+    public function getExpiryDate(): ?\DateTimeInterface
+    {
+        return $this->expiryDate;
+    }
+
+    public function setExpiryDate(?\DateTimeInterface $expiryDate): self
+    {
+        $this->expiryDate = $expiryDate;
+
+        return $this;
+    }
+
+    public function getQuantityUsed(): ?string
+    {
+        return $this->quantityUsed;
+    }
+
+    public function setQuantityUsed(?string $quantityUsed): self
+    {
+        $this->quantityUsed = $quantityUsed;
 
         return $this;
     }

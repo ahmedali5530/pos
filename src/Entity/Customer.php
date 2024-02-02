@@ -113,6 +113,18 @@ class Customer
      */
     private $openingBalance;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"order.read", "customer.read"})
+     */
+    private $allowCreditSale;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @Groups({"order.read", "customer.read"})
+     */
+    private $creditLimit;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -335,5 +347,29 @@ class Customer
     public function getOutstanding(): float
     {
         return $this->getSale() - $this->getPaid();
+    }
+
+    public function getAllowCreditSale(): ?bool
+    {
+        return $this->allowCreditSale;
+    }
+
+    public function setAllowCreditSale(?bool $allowCreditSale): self
+    {
+        $this->allowCreditSale = $allowCreditSale;
+
+        return $this;
+    }
+
+    public function getCreditLimit(): ?string
+    {
+        return $this->creditLimit;
+    }
+
+    public function setCreditLimit(?string $creditLimit): self
+    {
+        $this->creditLimit = $creditLimit;
+
+        return $this;
     }
 }

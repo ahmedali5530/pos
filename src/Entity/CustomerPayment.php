@@ -35,6 +35,7 @@ class CustomerPayment
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class)
+     * @Groups({"customer.read"})
      */
     private $order;
 

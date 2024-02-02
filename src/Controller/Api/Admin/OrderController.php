@@ -18,9 +18,12 @@ use App\Core\Order\Command\RefundOrderCommand\RefundOrderCommand;
 use App\Core\Order\Command\RefundOrderCommand\RefundOrderCommandHandlerInterface;
 use App\Core\Order\Command\RestoreOrderCommand\RestoreOrderCommand;
 use App\Core\Order\Command\RestoreOrderCommand\RestoreOrderCommandHandlerInterface;
+use App\Core\Order\Command\UpdateOrderCommand\UpdateOrderCommand;
+use App\Core\Order\Command\UpdateOrderCommand\UpdateOrderCommandHandlerInterface;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQuery;
 use App\Core\Order\Query\GetOrdersListQuery\GetOrdersListQueryHandlerInterface;
 use App\Core\Validation\ApiRequestDtoValidator;
+use App\Entity\Order;
 use App\Factory\Controller\ApiResponseFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,6 +79,52 @@ class OrderController extends AbstractController
         $requestDto->populateCommand($command);
 
         $result = $handler->handle($command);
+
+        if($result->hasValidationError()){
+            return $responseFactory->validationError($result->getValidationError());
+        }
+
+        if($result->isNotFound()){
+            return $responseFactory->notFound($result->getNotFoundMessage());
+        }
+
+        return $responseFactory->json(
+            OrderResponseDto::createFromOrder($result->getOrder())
+        );
+    }
+
+    /**
+     * @Route("/edit/{id}", methods={"PUT"}, name="edit")
+     */
+    public function update(
+        Order $order,
+        ApiResponseFactory $responseFactory,
+        UpdateOrderCommandHandlerInterface $updateOrderCommandHandler,
+        Request $request,
+        ApiRequestDtoValidator $requestDtoValidator
+    ){
+        $requestDto = CreateOrderRequestDto::createFromRequest($request);
+        $requestDto->setUserId($this->getUser()->getId());
+        if(null !== $violations = $requestDtoValidator->validate($requestDto)){
+            return $responseFactory->validationError($violations);
+        }
+
+        $command = new UpdateOrderCommand();
+        $command->setId($order->getId());
+        $command->setCustomerId($requestDto->getCustomerId());
+        $command->setDiscount($requestDto->getDiscount());
+        $command->setTax($requestDto->getTax());
+        $command->setPayments($requestDto->getPayments());
+        $command->setDiscountAmount($requestDto->getDiscountAmount());
+        $command->setDescription($requestDto->getNotes());
+        $command->setDiscountRateType($requestDto->getDiscountRateType());
+        $command->setTerminal($requestDto->getTerminal());
+        $command->setTaxAmount($requestDto->getTaxAmount());
+        $command->setAdjustment($requestDto->getAdjustment());
+        $command->setCustomer($requestDto->getCustomer());
+        $command->setStatus($requestDto->getStatus());
+
+        $result = $updateOrderCommandHandler->handle($command);
 
         if($result->hasValidationError()){
             return $responseFactory->validationError($result->getValidationError());

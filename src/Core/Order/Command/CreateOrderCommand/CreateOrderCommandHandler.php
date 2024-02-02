@@ -52,6 +52,10 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
             $item->setStatus(OrderStatus::COMPLETED);
         }
 
+        if($command->getStatus() !== null){
+            $item->setStatus($command->getStatus());
+        }
+
         if($command->getReturnedFrom() !== null) {
             $returnedFrom = $this->getRepository(Order::class)->find($command->getReturnedFrom());
             $item->setReturnedFrom($returnedFrom);
@@ -72,9 +76,9 @@ class CreateOrderCommandHandler extends EntityManager implements CreateOrderComm
         }
 
         if($command->getCustomer() !== null){
-            $item->setCustomer(
-                (new Customer())->setName($command->getCustomer())
-            );
+            $customer = (new Customer())->setName($command->getCustomer());
+            $this->save($customer);
+            $item->setCustomer($customer);
         }
 
         $item->setUser(

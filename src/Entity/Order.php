@@ -25,7 +25,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
  * @ApiResource(
  *     normalizationContext={"groups"={"order.read", "time.read", "uuid.read"}}
  * )
- * @ApiFilter(filterClass=SearchFilter::class, properties={"orderId": "exact"})
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"orderId": "exact", "status": "exact"})
  */
 class Order
 {

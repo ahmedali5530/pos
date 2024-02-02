@@ -6,6 +6,7 @@ namespace App\Command\Crud\Update;
 
 use App\Command\Crud\GenerateCrud;
 use Doctrine\ORM\EntityManagerInterface;
+use Laminas\Code\Generator\AbstractMemberGenerator;
 use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Generator\ParameterGenerator;
@@ -54,7 +55,7 @@ class UpdateCommand
 
             $property = new PropertyGenerator();
             $property->setName($mapping['fieldName']);
-            $property->setFlags(PropertyGenerator::FLAG_PRIVATE);
+            $property->setFlags(AbstractMemberGenerator::FLAG_PRIVATE);
             $property->setDocBlock(
                 '@var null|' . str_replace('?', '', $this->getPhpType($mapping['type']))
             );

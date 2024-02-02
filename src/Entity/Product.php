@@ -190,6 +190,26 @@ class Product
      */
     private $stores;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"product.read", "product.write"})
+     */
+    private $isExpire;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=ProductAttribute::class)
+     * @Groups({"product.read", "product.write"})
+     */
+    private $attributes;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"product.read", "product.write"})
+     */
+    private $inventoryMethod;
+
+
+
     public function __construct()
     {
         $this->variants = new ArrayCollection();
@@ -202,6 +222,7 @@ class Product
         $this->taxes = new ArrayCollection();
         $this->inventory = new ArrayCollection();
         $this->stores = new ArrayCollection();
+        $this->attributes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -601,6 +622,54 @@ class Product
                 $store->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsExpire(): ?bool
+    {
+        return $this->isExpire;
+    }
+
+    public function setIsExpire(?bool $isExpire): self
+    {
+        $this->isExpire = $isExpire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductAttribute[]
+     */
+    public function getAttributes(): Collection
+    {
+        return $this->attributes;
+    }
+
+    public function addAttribute(ProductAttribute $attribute): self
+    {
+        if (!$this->attributes->contains($attribute)) {
+            $this->attributes[] = $attribute;
+        }
+
+        return $this;
+    }
+
+    public function removeAttribute(ProductAttribute $attribute): self
+    {
+        $this->attributes->removeElement($attribute);
+
+        return $this;
+    }
+
+    public function getInventoryMethod(): ?string
+    {
+        return $this->inventoryMethod;
+    }
+
+    public function setInventoryMethod(?string $inventoryMethod): self
+    {
+        $this->inventoryMethod = $inventoryMethod;
 
         return $this;
     }

@@ -141,6 +141,11 @@ class CreateOrderRequestDto
      */
     private $adjustment;
 
+    /**
+     * @var string|null
+     */
+    private $status;
+
     public static function createFromRequest(Request $request)
     {
         $dto = new self();
@@ -181,6 +186,8 @@ class CreateOrderRequestDto
 
         $dto->customer = $data['customer'] ?? null;
 
+        $dto->status = $data['status'] ?? null;
+
         return $dto;
     }
 
@@ -205,6 +212,7 @@ class CreateOrderRequestDto
         $command->setTaxAmount($this->taxAmount);
         $command->setAdjustment($this->adjustment);
         $command->setCustomer($this->customer);
+        $command->setStatus($this->status);
     }
 
     /**
@@ -509,5 +517,29 @@ class CreateOrderRequestDto
     public function setCustomer(?string $customer): void
     {
         $this->customer = $customer;
+    }
+
+    /**
+     * Get the value of status
+     *
+     * @return  string|null
+     */ 
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the value of status
+     *
+     * @param  string|null  $status
+     *
+     * @return  self
+     */ 
+    public function setStatus(?string $status)
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }

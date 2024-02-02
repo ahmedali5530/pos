@@ -11,4 +11,5 @@ class OrderStatus
     const DELETED = 'Deleted';
     const DISPATCHED = 'Dispatched';
     const RETURNED = 'Returned';
+    const PENDING = 'Pending';
 }

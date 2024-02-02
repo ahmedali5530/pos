@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Laminas\Code\Generator\AbstractMemberGenerator;
 use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Generator\PropertyGenerator;
@@ -102,7 +103,7 @@ class MakeCommand extends Command
         return Command::SUCCESS;
     }
 
-    public function getPhpType($type)
+    public function getPhpType($type): string
     {
         $phpTypes = [
             'integer' => 'int',
@@ -114,7 +115,7 @@ class MakeCommand extends Command
         return $phpTypes[$type] ?? $type;
     }
 
-    private function getCommandMarkup($folder, $command, $entityFields, $isCreate)
+    private function getCommandMarkup($folder, $command, $entityFields, $isCreate): string
     {
         $exclude = $this->exclude;
 
@@ -139,19 +140,19 @@ class MakeCommand extends Command
             }
 
             $generator->addProperty(
-                $field['fieldName'], null, PropertyGenerator::FLAG_PRIVATE
+                $field['fieldName'], null, AbstractMemberGenerator::FLAG_PRIVATE
             );
 
             $generator->addMethod(
                 'set' . ucfirst($field['fieldName']), [$field['fieldName'] => $this->getPhpType($field['type'])],
-                MethodGenerator::FLAG_PUBLIC, <<<SIGNATURE
-                \$this->$field[fieldName] = ${$field};
+                AbstractMemberGenerator::FLAG_PUBLIC, <<<SIGNATURE
+                \$this->$field[fieldName] = \$field;
                 return \$this;
 SIGNATURE
             );
 
             $generator->addMethod(
-                'get'.ucfirst($field['fieldName']), null, MethodGenerator::FLAG_PUBLIC,
+                'get'.ucfirst($field['fieldName']), [], AbstractMemberGenerator::FLAG_PUBLIC,
                 <<<SIGNATURE
                 return \$this->$field[fieldName];
 SIGNATURE
@@ -162,7 +163,7 @@ SIGNATURE
         return "<?php \n\n" . $generator->generate();
     }
 
-    private function getCommandResultMarkup($folder, $command, $entity, $entityWithNamespace)
+    private function getCommandResultMarkup($folder, $command, $entity, $entityWithNamespace): string
     {
         $entityUpper = ucfirst($entity);
         $entity = lcfirst($entity);
@@ -197,7 +198,7 @@ class {$command}Result
 CommandResult;
     }
 
-    private function getCommandHandlerInterfaceMarkup($folder, $command)
+    private function getCommandHandlerInterfaceMarkup($folder, $command): string
     {
         return <<<CommandHandlerInterface
 <?php
@@ -211,7 +212,7 @@ interface {$command}HandlerInterface
 CommandHandlerInterface;
     }
 
-    private function getCommandHandlerMarkup($folder, $command, $fields, $entity, $entityWithNamespace, $isCreate)
+    private function getCommandHandlerMarkup($folder, $command, $fields, $entity, $entityWithNamespace, $isCreate): string
     {
         $handle = '';
         if ($isCreate === 'create') {
@@ -382,16 +383,12 @@ HTML;
 
     private function _deleteEntityCommand($entity, $fields, $command): string
     {
-        $exclude = $this->exclude;
-
-        $string = <<<HTML
+        return <<<HTML
         /** @var $entity \$item */
         \$item = \$this->getRepository()->find(\$command->getId());\n
         if(\$item === null){
             return {$command}Result::createNotFound();
         }
 HTML;
-
-        return $string;
     }
 }
