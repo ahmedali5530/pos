@@ -23,7 +23,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  *     normalizationContext={"groups"={"terminal.read", "time.read", "uuid.read", "active.read"}},
  *     denormalizationContext={"groups"={"terminal.create", "active.read"}}
  * )
- * @ApiFilter(filterClass=SearchFilter::class, properties={"code": "exact", "description": "ipartial", "products.name": "ipartial"})
+ * @ApiFilter(filterClass=SearchFilter::class, properties={"code": "exact", "description": "ipartial", "products.name": "ipartial", "store.id": "exact"})
  * @ApiFilter(filterClass=OrderFilter::class, properties={"code", "description", "products.name"})
  * @ApiFilter(filterClass=BooleanFilter::class, properties={"isActive"})
  */
